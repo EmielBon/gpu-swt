@@ -1,0 +1,87 @@
+//
+//  ContentLoader.cpp
+//  OGLTest
+//
+//  Created by Emiel Bon on 03-02-14.
+//  Copyright (c) 2014 Emiel Bon. All rights reserved.
+//
+
+#include "ContentLoader.h"
+#include "Program.h"
+#include "VertexShader.h"
+#include "FragmentShader.h"
+#include "Image.h"
+#include "Texture.h"
+#include <opencv2/highgui/highgui.hpp>
+
+using namespace std;
+
+String ContentLoader::contentPath = "";
+GraphicsDevice* ContentLoader::device = nullptr;
+
+template<>
+Ptr<VertexShader> ContentLoader::Load(const String &resourceName)
+{
+    String sourceText = FileReadAll(contentPath + resourceName + ".vsh");
+    return New<VertexShader>(sourceText);
+}
+
+template<>
+Ptr<FragmentShader> ContentLoader::Load(const String &resourceName)
+{
+    String sourceText = FileReadAll(contentPath + resourceName + ".fsh");
+    return New<FragmentShader>(sourceText);
+}
+
+template<>
+Ptr<Program> ContentLoader::Load(const String &resourceName)
+{
+    List< Ptr<Shader> > shaders;
+    
+    auto vs = Load<VertexShader>(resourceName);
+    auto fs = Load<FragmentShader>(resourceName);
+    
+    shaders.push_back(std::dynamic_pointer_cast<Shader>(vs));
+    shaders.push_back(std::dynamic_pointer_cast<Shader>(fs));
+    
+    return New<Program>(device, shaders);
+}
+
+template<>
+cv::Mat ContentLoader::LoadV(const String &resourceName)
+{
+    cv::Mat image = cvLoadImage((contentPath + resourceName + ".jpg").c_str());
+    if (image.data == NULL)
+        throw std::runtime_error("Error reading file");
+    return image;
+}
+
+/*template<>
+Ptr<Image> ContentLoader::Load(const String &resourceName)
+{
+    return New<Image>( LoadV<cv::Mat>(resourceName) );
+}*/
+
+template<>
+Ptr<Texture> ContentLoader::Load(const String &resourceName)
+{
+    return New<Texture>( LoadV<cv::Mat>(resourceName) );
+}
+
+String ContentLoader::FileReadAll(const String &filePath)
+{
+    //open file
+    InputFileStream fs;
+    fs.open(filePath.c_str(), ios::in | ios::binary);
+    if(!fs.is_open()){
+        throw runtime_error(String("Failed to open file: ") + filePath);
+    }
+    
+    //read whole file into stringstream buffer
+    StringStream buffer;
+    buffer << fs.rdbuf();
+    
+    fs.close();
+    
+    return buffer.str();
+}
