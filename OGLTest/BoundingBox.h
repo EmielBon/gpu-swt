@@ -27,7 +27,9 @@ public:
     
     ContainmentType Contains(const BoundingBox &other) const;
     
-    cv::Vec2i Center() const;
+    Point Center() const;
+    
+    Point BaseLineCenter() const;
     
     int X() const;
     
@@ -36,6 +38,8 @@ public:
     int Width() const;
     
     int Height() const;
+    
+    int Area() const;
     
 public:
     
@@ -47,21 +51,14 @@ inline BoundingBox::BoundingBox(const cv::Rect &bounds) : Bounds(bounds)
     
 }
 
-inline ContainmentType BoundingBox::Contains(const BoundingBox &other) const
-{
-    if (Bounds.contains(other.Bounds.tl()) && Bounds.contains(other.Bounds.br()))
-        return ContainmentType::Contains;
-    if (other.X() + other.Width() < X() ||
-        other.X() + other.Width() > X() + Width() ||
-        other.Y() + other.Height() < Y() ||
-        other.Y() + other.Height() > Y() + Height())
-        return ContainmentType::Disjoint;
-    return ContainmentType::Intersects;
-}
-
-inline cv::Vec2i BoundingBox::Center() const
+inline Point BoundingBox::Center() const
 {
     return {Bounds.x + Bounds.width / 2, Bounds.y + Bounds.height / 2};
+}
+
+inline Point BoundingBox::BaseLineCenter() const
+{
+    return {Bounds.x + Bounds.width / 2, Bounds.y + Bounds.height};
 }
 
 inline int BoundingBox::X() const
@@ -82,4 +79,9 @@ inline int BoundingBox::Width() const
 inline int BoundingBox::Height() const
 {
     return Bounds.height;
+}
+
+inline int BoundingBox::Area() const
+{
+    return Bounds.area();
 }

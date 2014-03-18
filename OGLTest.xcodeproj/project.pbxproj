@@ -67,7 +67,6 @@
 		171A0315189BD4B200A72B91 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 171A0313189BD4B200A72B91 /* Window.cpp */; };
 		171A0319189BD85A00A72B91 /* RenderWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 171A0317189BD85A00A72B91 /* RenderWindow.cpp */; };
 		1744D95818C09130004605D1 /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1744D95618C09130004605D1 /* BoundingBox.cpp */; };
-		1744D95B18C0AD12004605D1 /* Pair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1744D95918C0AD12004605D1 /* Pair.cpp */; };
 		1744D95E18C0B193004605D1 /* Chain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1744D95C18C0B193004605D1 /* Chain.cpp */; };
 		17658F25189FA444003A8B11 /* glew.c in Sources */ = {isa = PBXBuildFile; fileRef = 17658F24189FA443003A8B11 /* glew.c */; };
 		17658F29189FA824003A8B11 /* SimpleShader.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 17658F28189FA824003A8B11 /* SimpleShader.fsh */; };
@@ -76,9 +75,9 @@
 		17658F33189FC7C8003A8B11 /* ContentLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F31189FC7C8003A8B11 /* ContentLoader.cpp */; };
 		17658F36189FC8B2003A8B11 /* VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F34189FC8B2003A8B11 /* VertexShader.cpp */; };
 		17658F39189FC8BF003A8B11 /* FragmentShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F37189FC8BF003A8B11 /* FragmentShader.cpp */; };
-		17658F3C189FCB0B003A8B11 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F3A189FCB0B003A8B11 /* Image.cpp */; };
 		17658F3F18A0EF5F003A8B11 /* VertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F3D18A0EF5F003A8B11 /* VertexBuffer.cpp */; };
 		17658F4218A0F96E003A8B11 /* VertexArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F4018A0F96E003A8B11 /* VertexArray.cpp */; };
+		1776532D18C8A13A004553B6 /* ConnectedComponentsHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1776532B18C8A13A004553B6 /* ConnectedComponentsHelper.cpp */; };
 		17EED2DA18A392280094A37D /* DrawableRect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED2D818A392280094A37D /* DrawableRect.cpp */; };
 		17EED2DD18A396E80094A37D /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED2DB18A396E80094A37D /* Texture.cpp */; };
 		17EED2E018A398350094A37D /* VertexPositionTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED2DE18A398350094A37D /* VertexPositionTexture.cpp */; };
@@ -87,7 +86,7 @@
 		17EED2E918A3B67A0094A37D /* VertexDeclarationElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED2E718A3B67A0094A37D /* VertexDeclarationElement.cpp */; };
 		17EED2EC18A3C6240094A37D /* GraphicsDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED2EA18A3C6240094A37D /* GraphicsDevice.cpp */; };
 		17EED57118A505910094A37D /* Uniform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED56F18A505910094A37D /* Uniform.cpp */; };
-		17EED57B18AD16340094A37D /* StrokeWidthTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED57918AD16340094A37D /* StrokeWidthTransform.cpp */; };
+		17EED57B18AD16340094A37D /* SWTHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED57918AD16340094A37D /* SWTHelper.cpp */; };
 		17EED57E18AD205B0094A37D /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED57C18AD205B0094A37D /* Ray.cpp */; };
 		17EEEF1818AE6D7000B5A290 /* ImgProc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EEEF1618AE6D7000B5A290 /* ImgProc.cpp */; };
 		17F3F9E118BBAE0900C78815 /* Component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F3F9DF18BBAE0900C78815 /* Component.cpp */; };
@@ -171,13 +170,11 @@
 		171A0317189BD85A00A72B91 /* RenderWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderWindow.cpp; sourceTree = "<group>"; };
 		171A0318189BD85A00A72B91 /* RenderWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderWindow.h; sourceTree = "<group>"; };
 		171A031C189BDD2600A72B91 /* types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
+		1739564418CDE7DE003BF7D0 /* SWTParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWTParameters.h; sourceTree = "<group>"; };
 		1744D95618C09130004605D1 /* BoundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBox.cpp; sourceTree = "<group>"; };
 		1744D95718C09130004605D1 /* BoundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoundingBox.h; sourceTree = "<group>"; };
-		1744D95918C0AD12004605D1 /* Pair.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pair.cpp; sourceTree = "<group>"; };
-		1744D95A18C0AD12004605D1 /* Pair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pair.h; sourceTree = "<group>"; };
 		1744D95C18C0B193004605D1 /* Chain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Chain.cpp; sourceTree = "<group>"; };
 		1744D95D18C0B193004605D1 /* Chain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chain.h; sourceTree = "<group>"; };
-		17658F23189BED5A003A8B11 /* NEW_YORK_1965-66_LICENSE_PLATE_multiyear_baseplate_-_Flickr_-_woody1778a.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "NEW_YORK_1965-66_LICENSE_PLATE_multiyear_baseplate_-_Flickr_-_woody1778a.jpg"; path = "/Users/emiel/Desktop/OGLTest/OGLTest/NEW_YORK_1965-66_LICENSE_PLATE_multiyear_baseplate_-_Flickr_-_woody1778a.jpg"; sourceTree = "<absolute>"; };
 		17658F24189FA443003A8B11 /* glew.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glew.c; path = OGLTest/glew.c; sourceTree = "<group>"; };
 		17658F27189FA6AC003A8B11 /* SimpleShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SimpleShader.vsh; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		17658F28189FA824003A8B11 /* SimpleShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SimpleShader.fsh; sourceTree = "<group>"; };
@@ -192,12 +189,12 @@
 		17658F35189FC8B2003A8B11 /* VertexShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexShader.h; sourceTree = "<group>"; };
 		17658F37189FC8BF003A8B11 /* FragmentShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FragmentShader.cpp; sourceTree = "<group>"; };
 		17658F38189FC8BF003A8B11 /* FragmentShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FragmentShader.h; sourceTree = "<group>"; };
-		17658F3A189FCB0B003A8B11 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
-		17658F3B189FCB0B003A8B11 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
 		17658F3D18A0EF5F003A8B11 /* VertexBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexBuffer.cpp; sourceTree = "<group>"; };
 		17658F3E18A0EF5F003A8B11 /* VertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexBuffer.h; sourceTree = "<group>"; };
 		17658F4018A0F96E003A8B11 /* VertexArray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexArray.cpp; sourceTree = "<group>"; };
 		17658F4118A0F96E003A8B11 /* VertexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexArray.h; sourceTree = "<group>"; };
+		1776532B18C8A13A004553B6 /* ConnectedComponentsHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConnectedComponentsHelper.cpp; sourceTree = "<group>"; };
+		1776532C18C8A13A004553B6 /* ConnectedComponentsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectedComponentsHelper.h; sourceTree = "<group>"; };
 		17EED2D818A392280094A37D /* DrawableRect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DrawableRect.cpp; sourceTree = "<group>"; };
 		17EED2D918A392280094A37D /* DrawableRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawableRect.h; sourceTree = "<group>"; };
 		17EED2DB18A396E80094A37D /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture.cpp; sourceTree = "<group>"; };
@@ -215,8 +212,8 @@
 		17EED2EE18A3C8140094A37D /* PrimitiveType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrimitiveType.h; sourceTree = "<group>"; };
 		17EED56F18A505910094A37D /* Uniform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Uniform.cpp; sourceTree = "<group>"; };
 		17EED57018A505910094A37D /* Uniform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Uniform.h; sourceTree = "<group>"; };
-		17EED57918AD16340094A37D /* StrokeWidthTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StrokeWidthTransform.cpp; sourceTree = "<group>"; };
-		17EED57A18AD16340094A37D /* StrokeWidthTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrokeWidthTransform.h; sourceTree = "<group>"; };
+		17EED57918AD16340094A37D /* SWTHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SWTHelper.cpp; sourceTree = "<group>"; };
+		17EED57A18AD16340094A37D /* SWTHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTHelper.h; sourceTree = "<group>"; };
 		17EED57C18AD205B0094A37D /* Ray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ray.cpp; sourceTree = "<group>"; };
 		17EED57D18AD205B0094A37D /* Ray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ray.h; sourceTree = "<group>"; };
 		17EEEF1618AE6D7000B5A290 /* ImgProc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImgProc.cpp; sourceTree = "<group>"; };
@@ -297,7 +294,6 @@
 			isa = PBXGroup;
 			children = (
 				17658F26189FA645003A8B11 /* shaders */,
-				171A0346189BEC6000A72B91 /* images */,
 				171A0311189BB34000A72B91 /* libs */,
 				171A02FD1899328C00A72B91 /* source */,
 				171A02FE1899328C00A72B91 /* main.cpp */,
@@ -319,6 +315,7 @@
 			isa = PBXGroup;
 			children = (
 				171A0316189BD73900A72B91 /* Framework */,
+				1776532A18C87659004553B6 /* Graphics */,
 				171A031A189BD9F500A72B91 /* OCR Application */,
 				17EED57818ACFA680094A37D /* SWT */,
 				171A031B189BDD1700A72B91 /* Util */,
@@ -398,19 +395,52 @@
 				17658F32189FC7C8003A8B11 /* ContentLoader.h */,
 				17EED2D818A392280094A37D /* DrawableRect.cpp */,
 				17EED2D918A392280094A37D /* DrawableRect.h */,
+				171A0313189BD4B200A72B91 /* Window.cpp */,
+				171A0314189BD4B200A72B91 /* Window.h */,
+			);
+			name = Framework;
+			sourceTree = "<group>";
+		};
+		171A031A189BD9F500A72B91 /* OCR Application */ = {
+			isa = PBXGroup;
+			children = (
+				171A0317189BD85A00A72B91 /* RenderWindow.cpp */,
+				171A0318189BD85A00A72B91 /* RenderWindow.h */,
+			);
+			name = "OCR Application";
+			sourceTree = "<group>";
+		};
+		171A031B189BDD1700A72B91 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				17EEEF1618AE6D7000B5A290 /* ImgProc.cpp */,
+				17EEEF1718AE6D7000B5A290 /* ImgProc.h */,
+				17FD311618B35A740047B633 /* MathHelper.cpp */,
+				17FD311718B35A740047B633 /* MathHelper.h */,
+				171A031C189BDD2600A72B91 /* types.h */,
+			);
+			name = Util;
+			sourceTree = "<group>";
+		};
+		17658F26189FA645003A8B11 /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				17658F27189FA6AC003A8B11 /* SimpleShader.vsh */,
+				17658F28189FA824003A8B11 /* SimpleShader.fsh */,
+			);
+			name = shaders;
+			sourceTree = "<group>";
+		};
+		1776532A18C87659004553B6 /* Graphics */ = {
+			isa = PBXGroup;
+			children = (
 				17658F37189FC8BF003A8B11 /* FragmentShader.cpp */,
 				17658F38189FC8BF003A8B11 /* FragmentShader.h */,
 				17EED2EA18A3C6240094A37D /* GraphicsDevice.cpp */,
 				17EED2EB18A3C6240094A37D /* GraphicsDevice.h */,
-				17658F3A189FCB0B003A8B11 /* Image.cpp */,
-				17658F3B189FCB0B003A8B11 /* Image.h */,
-				17EEEF1618AE6D7000B5A290 /* ImgProc.cpp */,
-				17EEEF1718AE6D7000B5A290 /* ImgProc.h */,
 				17EED2E118A39D820094A37D /* IndexBuffer.cpp */,
 				17EED2E218A39D820094A37D /* IndexBuffer.h */,
 				17658F30189FB955003A8B11 /* IOGLResource.h */,
-				17FD311618B35A740047B633 /* MathHelper.cpp */,
-				17FD311718B35A740047B633 /* MathHelper.h */,
 				17EED2EE18A3C8140094A37D /* PrimitiveType.h */,
 				17658F2D189FB5F4003A8B11 /* Program.cpp */,
 				17658F2E189FB5F4003A8B11 /* Program.h */,
@@ -432,59 +462,24 @@
 				17EED2DF18A398350094A37D /* VertexPositionTexture.h */,
 				17658F34189FC8B2003A8B11 /* VertexShader.cpp */,
 				17658F35189FC8B2003A8B11 /* VertexShader.h */,
-				171A0313189BD4B200A72B91 /* Window.cpp */,
-				171A0314189BD4B200A72B91 /* Window.h */,
 			);
-			name = Framework;
-			sourceTree = "<group>";
-		};
-		171A031A189BD9F500A72B91 /* OCR Application */ = {
-			isa = PBXGroup;
-			children = (
-				171A0317189BD85A00A72B91 /* RenderWindow.cpp */,
-				171A0318189BD85A00A72B91 /* RenderWindow.h */,
-			);
-			name = "OCR Application";
-			sourceTree = "<group>";
-		};
-		171A031B189BDD1700A72B91 /* Util */ = {
-			isa = PBXGroup;
-			children = (
-				171A031C189BDD2600A72B91 /* types.h */,
-			);
-			name = Util;
-			sourceTree = "<group>";
-		};
-		171A0346189BEC6000A72B91 /* images */ = {
-			isa = PBXGroup;
-			children = (
-				17658F23189BED5A003A8B11 /* NEW_YORK_1965-66_LICENSE_PLATE_multiyear_baseplate_-_Flickr_-_woody1778a.jpg */,
-			);
-			name = images;
-			sourceTree = "<group>";
-		};
-		17658F26189FA645003A8B11 /* shaders */ = {
-			isa = PBXGroup;
-			children = (
-				17658F27189FA6AC003A8B11 /* SimpleShader.vsh */,
-				17658F28189FA824003A8B11 /* SimpleShader.fsh */,
-			);
-			name = shaders;
+			name = Graphics;
 			sourceTree = "<group>";
 		};
 		17EED57818ACFA680094A37D /* SWT */ = {
 			isa = PBXGroup;
 			children = (
-				17F3F9DF18BBAE0900C78815 /* Component.cpp */,
-				17F3F9E018BBAE0900C78815 /* Component.h */,
-				17EED57C18AD205B0094A37D /* Ray.cpp */,
-				17EED57D18AD205B0094A37D /* Ray.h */,
-				17EED57918AD16340094A37D /* StrokeWidthTransform.cpp */,
-				17EED57A18AD16340094A37D /* StrokeWidthTransform.h */,
-				1744D95918C0AD12004605D1 /* Pair.cpp */,
-				1744D95A18C0AD12004605D1 /* Pair.h */,
 				1744D95C18C0B193004605D1 /* Chain.cpp */,
 				1744D95D18C0B193004605D1 /* Chain.h */,
+				17F3F9DF18BBAE0900C78815 /* Component.cpp */,
+				17F3F9E018BBAE0900C78815 /* Component.h */,
+				1776532B18C8A13A004553B6 /* ConnectedComponentsHelper.cpp */,
+				1776532C18C8A13A004553B6 /* ConnectedComponentsHelper.h */,
+				17EED57C18AD205B0094A37D /* Ray.cpp */,
+				17EED57D18AD205B0094A37D /* Ray.h */,
+				17EED57918AD16340094A37D /* SWTHelper.cpp */,
+				17EED57A18AD16340094A37D /* SWTHelper.h */,
+				1739564418CDE7DE003BF7D0 /* SWTParameters.h */,
 			);
 			name = SWT;
 			sourceTree = "<group>";
@@ -549,18 +544,17 @@
 				171A02FF1899328C00A72B91 /* main.cpp in Sources */,
 				17658F2F189FB5F4003A8B11 /* Program.cpp in Sources */,
 				17658F25189FA444003A8B11 /* glew.c in Sources */,
-				1744D95B18C0AD12004605D1 /* Pair.cpp in Sources */,
 				17F3F9E118BBAE0900C78815 /* Component.cpp in Sources */,
 				1744D95818C09130004605D1 /* BoundingBox.cpp in Sources */,
 				17658F33189FC7C8003A8B11 /* ContentLoader.cpp in Sources */,
 				17658F3F18A0EF5F003A8B11 /* VertexBuffer.cpp in Sources */,
 				17EED2DA18A392280094A37D /* DrawableRect.cpp in Sources */,
+				1776532D18C8A13A004553B6 /* ConnectedComponentsHelper.cpp in Sources */,
 				17658F29189FA824003A8B11 /* SimpleShader.fsh in Sources */,
-				17EED57B18AD16340094A37D /* StrokeWidthTransform.cpp in Sources */,
+				17EED57B18AD16340094A37D /* SWTHelper.cpp in Sources */,
 				17658F39189FC8BF003A8B11 /* FragmentShader.cpp in Sources */,
 				17658F2C189FA980003A8B11 /* Shader.cpp in Sources */,
 				17EED57E18AD205B0094A37D /* Ray.cpp in Sources */,
-				17658F3C189FCB0B003A8B11 /* Image.cpp in Sources */,
 				17EED57118A505910094A37D /* Uniform.cpp in Sources */,
 				17EED2E918A3B67A0094A37D /* VertexDeclarationElement.cpp in Sources */,
 				17658F36189FC8B2003A8B11 /* VertexShader.cpp in Sources */,

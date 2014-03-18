@@ -27,6 +27,12 @@
 #include <GL/glew.h>
 #include <opencv2/core/core.hpp>
 
+enum class GradientDirection
+{
+    With,
+    Against,
+};
+
 // Typedefs
 using String = std::string;
 using StringStream = std::stringstream;
@@ -36,30 +42,9 @@ using Vector2 = cv::Vec2f;
 using Vector3 = cv::Vec3f;
 using Point = cv::Vec2i;
 
-struct SWTPoint
-{
-    SWTPoint(int x, int y, int swtValue) : Point(x, y), SWTValue(swtValue) { }
-    
-    ::Point Point;
-    float SWTValue;
-};
-
-/*struct Point
-{
-    Point() : X(0), Y(0) { }
-    
-    Point(int x, int y) : X(x), Y(y) { }
-    
-    bool operator==(const Point &other) const
-    {
-        return (X == other.X && Y == other.Y);
-    }
-    
-    int X, Y;
-};*/
-
 template<class T> using Ptr = std::shared_ptr<T>;
 template<class T> using Set = std::set<T>;
+template<class T> using OrderedSet = std::set<T, bool(*)(T, T)>;
 template<class T> using List = std::vector<T>;
 template<class T> using LinkedList = std::list<T>;
 template<class T> using Stack = std::stack<T>;
@@ -71,10 +56,13 @@ template<class T, class U> using Map = std::map<T, U>;
 
 // Forward declarations
 // Framework
+class BoundingBox;
 class DrawableRect;
+class Image;
+class Window;
+// Grahpics
 class FragmentShader;
 class GraphicsDevice;
-class Image;
 class IndexBuffer;
 class Program;
 class Shader;
@@ -85,9 +73,7 @@ class VertexBuffer;
 class VertexDeclaration;
 class VertexDeclarationElement;
 class VertexShader;
-class Window;
 // SWT specific
+class  Chain;
 struct Component;
 struct Ray;
-class  Chain;
-class  Pair;

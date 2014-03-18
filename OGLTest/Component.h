@@ -17,17 +17,34 @@ public:
 
     Component();
     
-    void AddPoint(const SWTPoint &point);
+    void AddPoint(const Point &point);
     
-    const List<SWTPoint>& Points() const;
+    const List<Point>& Points() const;
     
-    const BoundingBox& BoundingBox() /*const*/;
+    const BoundingBox& BoundingBox() const;
     
-    float Mean();
+    float GetMeanStrokeWidth() const;
     
-    float Variance();
+    void SetMeanStrokeWidth(float strokeWidth);
     
-    float MeanColor();
+    void SetMeanStrokeWidthFromImage(const cv::Mat &image);
+    
+    float GetStrokeWidthVariance() const;
+    
+    const cv::Vec3b& GetMeanColor() const;
+    
+    void SetMeanColor(const cv::Vec3b &color);
+    
+    void SetMeanColorFromImage(const cv::Mat &image);
+    
+    float GetOccupancy() const;
+    
+    // Can be used with std::sort to sort components from left-to-right, top-to-bottom
+    static bool HasSmallerPosition(Ptr<Component> c1, Ptr<Component> c2);
+    
+    bool CanLinkWith(const Component &other);
+    
+    bool IsValid() const;
     
 private:
     
@@ -36,43 +53,61 @@ private:
 private:
     
     bool dirty;
-    List<SWTPoint> points;
-    cv::Vec3f meanColor;
+    List<Point> points;
+    cv::Vec3b meanColor;
     ::BoundingBox boundingBox;
-    float mean;
-    float variance;
+    float meanStrokeWidth;
+    float strokeWidthVariance;
 };
 
-inline Component::Component() : dirty(true), variance(0)
+inline Component::Component() : dirty(true)
 {
     
 }
 
-inline void Component::AddPoint(const SWTPoint &point)
+inline void Component::AddPoint(const Point &point)
 {
     dirty = true;
     points.push_back(point);
 }
 
-inline const List<SWTPoint>& Component::Points() const
+inline const List<Point>& Component::Points() const
 {
     return points;
 }
 
-inline const BoundingBox& Component::BoundingBox()// const
+inline const BoundingBox& Component::BoundingBox() const
 {
-    Update();
+    const_cast<Component*>(this)->Update();
     return boundingBox;
 }
 
-inline float Component::Mean()
+inline float Component::GetMeanStrokeWidth() const
 {
-    Update();
-    return mean;
+    return meanStrokeWidth;
 }
 
-inline float Component::Variance()
+inline void Component::SetMeanStrokeWidth(float strokeWidth)
 {
-    Update();
-    return variance;
+    meanStrokeWidth = strokeWidth;
+}
+
+inline float Component::GetStrokeWidthVariance() const
+{
+    return strokeWidthVariance;
+}
+
+inline const cv::Vec3b& Component::GetMeanColor() const
+{
+    return meanColor;
+}
+
+inline void Component::SetMeanColor(const cv::Vec3b &color)
+{
+    meanColor = color;
+}
+
+inline float Component::GetOccupancy() const
+{
+    return (float)points.size() / this->BoundingBox().Area();
 }

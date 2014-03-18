@@ -10,35 +10,32 @@
 
 #include "types.h"
 #include "Component.h"
-#include "Pair.h"
 #include <assert.h>
 
 class Chain
 {
+private:
+    
+    Chain();
+    
 public:
     
-    Chain(const Set<Component*> &components);
+    Chain(const std::initializer_list< Ptr<Component> > &components);
     
-    Chain(const Pair &pair);
-    
-    cv::Vec2f Direction() const;
+    cv::Vec2f Direction(bool normalize = true) const;
     
     float PolarAngle() const;
     
     static Ptr<Chain> Merge(const Chain &chain1, const Chain &chain2);
     
+    ::BoundingBox BoundingBox() const;
+    
 public:
     
-    Set<Component*> Components;
+    OrderedSet< Ptr<Component> > Components;
 };
 
-inline Chain::Chain(const Set<Component*> &components) : Components(components)
+inline Chain::Chain()
 {
-    
-}
-
-inline Chain::Chain(const Pair &pair)
-{
-    Components.insert(pair.Component1);
-    Components.insert(pair.Component2);
+    Components = OrderedSet< Ptr<Component> >(Component::HasSmallerPosition);
 }

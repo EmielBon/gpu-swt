@@ -14,7 +14,7 @@ float Ray::Length() const
         return 0;
     auto &p = Points.front();
     auto &q = Points.back();
-    float x = p[0] - q[0];
-    float y = p[1] - q[1];
+    float x = (p[0] + 0.5f) - (q[0] + 0.5f);
+    float y = (p[1] + 0.5f) - (q[1] + 0.5f);
     return sqrt(x * x + y * y);
 }

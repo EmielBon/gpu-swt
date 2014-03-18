@@ -10,7 +10,6 @@
 #include "Program.h"
 #include "VertexShader.h"
 #include "FragmentShader.h"
-#include "Image.h"
 #include "Texture.h"
 #include <opencv2/highgui/highgui.hpp>
 
@@ -55,12 +54,6 @@ cv::Mat ContentLoader::LoadV(const String &resourceName)
         throw std::runtime_error("Error reading file");
     return image;
 }
-
-/*template<>
-Ptr<Image> ContentLoader::Load(const String &resourceName)
-{
-    return New<Image>( LoadV<cv::Mat>(resourceName) );
-}*/
 
 template<>
 Ptr<Texture> ContentLoader::Load(const String &resourceName)

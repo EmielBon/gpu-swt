@@ -9,6 +9,7 @@
 #pragma once
 
 #include "types.h"
+#include "opencv2/imgproc/imgproc.hpp"
 
 class ImgProc
 {
@@ -18,7 +19,7 @@ public:
     
     static cv::Mat Sharpen(const cv::Mat &image);
     
-    static cv::Mat ConvertToFloat(const cv::Mat &image);
+    static cv::Mat ConvertToFloat(const cv::Mat &image, int type);
     
     // Input has to be CV_8U
     static cv::Mat CalculateEdgeMap(const cv::Mat &image);
@@ -33,6 +34,12 @@ public:
     static cv::Mat NormalizeImage(const cv::Mat &image, float scale);
 
     static cv::Mat NormalizeImage(const cv::Mat &image, float scale, float bgValue, float newBgValue);
+    
+    static cv::Mat ContrastStretch(const cv::Mat &input, int lowerPercentile, int upperPercentile);
+    
+    static cv::Vec3b ConvertColor(const cv::Vec3b &input, int type);
+    
+    static cv::Mat DrawBoundingBoxes(const cv::Mat &input, const List<BoundingBox> &bboxes, const cv::Scalar &color);
     
     static void DrawBresenhamLine(int x0, int y0, int x1, int y1, cv::Mat &input);
     

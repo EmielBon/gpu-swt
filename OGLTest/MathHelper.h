@@ -39,9 +39,12 @@ public:
     template<typename T>
     static T GetRatio(T x, T y)
     {
-        if (x < y)
-            std::swap(x, y);
-        return x / y;
+        return std::max(x / y, y / x);
+    }
+    
+    static float Length(const cv::Vec2f &v)
+    {
+        return sqrt(v[0] * v[0] + v[1] * v[1]);
     }
     
     static float Length(const cv::Vec2i &v)

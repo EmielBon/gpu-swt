@@ -25,6 +25,8 @@ public:
     
     virtual void Draw();
     
+    void ResizeWithRect();
+    
 private:
     
     void RunMainLoop();

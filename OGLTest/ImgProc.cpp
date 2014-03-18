@@ -7,10 +7,10 @@
 //
 
 #include "ImgProc.h"
-#include "opencv2/imgproc/imgproc.hpp"
+#include "Component.h"
+#include "SWTParameters.h"
+#include "MathHelper.h"
 
-static const float LOW_THRESHOLD = 70 /*/ 255.f*/;
-static const float HIGH_THRESHOLD = 120 /*/ 255.f*/;
 static const int KERNEL_SIZE = 3;
 
 void ImgProc::DrawBresenhamLine(int x0, int y0, int x1, int y1, cv::Mat &input)
@@ -45,7 +45,7 @@ void ImgProc::Plot(int x, int y, cv::Mat &input)
 cv::Mat ImgProc::ConvertToGrayscale(const cv::Mat &image)
 {
     cv::Mat luv, grayImage;
-    cv::cvtColor(image, luv, CV_RGB2Luv);
+    cv::cvtColor(image, luv, CV_BGR2Luv);
     cv::extractChannel(luv, grayImage, 0);
     return grayImage;
 }
@@ -58,17 +58,38 @@ cv::Mat ImgProc::Sharpen(const cv::Mat &image)
     return sharper;
 }
 
-cv::Mat ImgProc::ConvertToFloat(const cv::Mat &image)
+cv::Mat ImgProc::ConvertToFloat(const cv::Mat &image, int type)
 {
-    cv::Mat imagef(image.size(), CV_32FC1);
-    image.convertTo(imagef, CV_32FC1, 1.0f / 255.0f);
+    cv::Mat imagef(image.size(), type);
+    image.convertTo(imagef, type, 1.0f / 255.0f);
     return imagef;
 }
 
 cv::Mat ImgProc::CalculateEdgeMap(const cv::Mat &image)
 {
+    /*int meanSum = 0;
+    
+    for(int i = 0; i < image.rows; ++i)
+    for(int j = 0; j < image.cols; ++j)
+    {
+        meanSum += image.at<uchar>(j, i);
+    }
+    
+    int mean = meanSum / (image.rows * image.cols);
+    */
+    
+    List<uchar> values;
+    values.reserve(image.rows * image.cols);
+    for(int i = 0; i < image.cols; ++i)
+    for(int j = 0; j < image.rows; ++j)
+    {
+        values.push_back( image.at<uchar>(j, i) );
+    }
+    
+    uchar mean = MathHelper::Median(values);
+    
     cv::Mat edgeMap;
-    cv::Canny(image, edgeMap, LOW_THRESHOLD, HIGH_THRESHOLD, KERNEL_SIZE, true);
+    cv::Canny(image, edgeMap, 0.66 * mean, 1.33 * mean, KERNEL_SIZE, true);
     return edgeMap;
 }
 
@@ -138,4 +159,64 @@ cv::Mat ImgProc::NormalizeImage(const cv::Mat &image, float scale, float bgValue
                                                         : value / max * scale;
     }
     return normalized;
+}
+
+cv::Mat ImgProc::ContrastStretch(const cv::Mat &input, int lowerPercentile, int upperPercentile)
+{
+    List<int> histogram;
+    histogram.resize(255, 0);
+    
+    for(int i = 0; i < input.cols; ++i)
+    for(int j = 0; j < input.rows; ++j)
+    {
+        histogram[ input.at<uchar>(j, i) ]++;
+    }
+    
+    int min = 0, max = 0;
+    int percentile = 0;
+    int counter = 0;
+    const int totalPixels = input.cols * input.rows;
+    int total = 0;
+    
+    while(percentile <= lowerPercentile)
+    {
+        total += histogram[counter++];
+        percentile = total * 100 / totalPixels;
+    }
+    
+    min = counter;
+    
+    while(percentile <= upperPercentile && counter < 255)
+    {
+        total += histogram[counter++];
+        percentile = total * 100 / totalPixels;
+    }
+    
+    max = counter;
+    
+    cv::Mat output(input.size(), CV_8UC1);
+    
+    for(int i = 0; i < input.cols; ++i)
+    for(int j = 0; j < input.rows; ++j)
+    {
+        output.at<uchar>(j, i) = cv::saturate_cast<uchar>(((int)input.at<uchar>(j, i) - min) * ((255 - 0) / (max - min)) + 0);
+    }
+    
+    return output;
+}
+
+cv::Mat ImgProc::DrawBoundingBoxes(const cv::Mat &input, const List<BoundingBox> &bboxes, const cv::Scalar &color)
+{
+    cv::Mat output = input.clone();
+    for(auto &bbox : bboxes)
+        cv::rectangle(output, bbox.Bounds, color);
+    return output;
+}
+
+cv::Vec3b ImgProc::ConvertColor(const cv::Vec3b &input, int type)
+{
+	cv::Mat mat (cv::Size (1,1), CV_8UC3);
+	mat.at<cv::Vec3b>(0,0) = input;
+	cv::cvtColor(mat, mat, type);
+	return mat.at<cv::Vec3b>(0,0);
 }

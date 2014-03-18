@@ -10,9 +10,9 @@
 
 #include "types.h"
 
-class StrokeWidthTransform
+class SWTHelper
 {
 public:
     
-    StrokeWidthTransform(const cv::Mat &image);
+    static List<BoundingBox> StrokeWidthTransform(const cv::Mat &input);
 };
