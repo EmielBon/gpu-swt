@@ -11,6 +11,7 @@
 #include "types.h"
 #include "VertexDeclarationElement.h"
 #include "VertexArray.h"
+#include <numeric>
 
 class VertexDeclaration
 {
@@ -22,7 +23,7 @@ public:
     
     const List<VertexDeclarationElement>& GetElements() const;
     
-    const VertexArray& GetVertexArray() const;
+    VertexArray& GetVertexArray() const;
     
     GLuint Stride() const;
     
@@ -57,7 +58,7 @@ inline const List<VertexDeclarationElement>& VertexDeclaration::GetElements() co
     return elements;
 }
 
-inline const VertexArray& VertexDeclaration::GetVertexArray() const
+inline VertexArray& VertexDeclaration::GetVertexArray() const
 {
     return *vertexArray;
 }

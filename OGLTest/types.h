@@ -61,6 +61,7 @@ class DrawableRect;
 class Image;
 class Window;
 // Grahpics
+class DepthBuffer;
 class FragmentShader;
 class GraphicsDevice;
 class IndexBuffer;

@@ -9,34 +9,38 @@
 #pragma once
 
 #include "types.h"
-#include "IOGLResource.h"
+#include "OGLBuffer.h"
 
-class IndexBuffer : public IOGLResource
+class IndexBuffer : public OGLBuffer
 {
 public:
     
-    IndexBuffer(const List<GLubyte> &indices);
+    IndexBuffer();
     
-    GLuint GetHandle() const;
+    void Bind();
     
-    void Dispose();
+    void SetData(const List<GLubyte> &indices);
     
     GLsizei Count() const;
     
 private:
     
     GLsizei count;
-    GLuint bufferId;
 };
 
-inline GLuint IndexBuffer::GetHandle() const
+inline IndexBuffer::IndexBuffer() : count(0)
 {
-    return bufferId;
 }
 
-inline void IndexBuffer::Dispose()
+inline void IndexBuffer::Bind()
 {
-    glDeleteBuffers(1, &bufferId);
+    BindTo(GL_ELEMENT_ARRAY_BUFFER);
+}
+
+inline void IndexBuffer::SetData(const List<GLubyte> &indices)
+{
+    count = (GLsizei)indices.size();
+    OGLBuffer::SetData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLubyte), indices.data());
 }
 
 inline GLsizei IndexBuffer::Count() const

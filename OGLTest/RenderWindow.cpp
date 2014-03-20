@@ -6,20 +6,20 @@
 //  Copyright (c) 2014 Emiel Bon. All rights reserved.
 //
 
-#include "RenderWindow.h"
-#include "ContentLoader.h"
-#include "Program.h"
-#include "DrawableRect.h"
-#include "Texture.h"
-#include "SWTHelper.h"
-#include "ImgProc.h"
-#include "BoundingBox.h"
-
-#include "types.h"
-#include <stdio.h>
 #include <assert.h>
+#include <stdio.h>
 
-RenderWindow* RenderWindow::instance = NULL;
+#include "BoundingBox.h"
+#include "ContentLoader.h"
+#include "DrawableRect.h"
+#include "ImgProc.h"
+#include "Program.h"
+#include "RenderWindow.h"
+#include "SWTHelper.h"
+#include "Texture.h"
+#include "types.h"
+
+RenderWindow* RenderWindow::instance = nullptr;
 
 RenderWindow::RenderWindow(int width, int height, const String &title)
     : base(width, height, title), device(GraphicsDevice)
@@ -31,7 +31,7 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     currentTextureIndex = 0;
     
     // Load the input image as a cv::Mat
-    cv::Mat input = ContentLoader::LoadV<cv::Mat>("chep2"); AddTexture(input, "Input image");
+    cv::Mat input = ContentLoader::LoadV<cv::Mat>("chep1"); AddTexture(input, "Input image");
     SetWindowSize(input.size(), {1024, 1024});
 
     // Load the shader program

@@ -19,7 +19,7 @@ public:
     
     Shader(const String &sourceText, GLenum shaderType);
     
-    static Ptr<Shader> createFromFile(const String &filePath, GLenum shaderType);
+    static Ptr<Shader> CreateFromFile(const String &filePath, GLenum shaderType);
     
     GLuint GetHandle() const;
     
@@ -30,13 +30,13 @@ private:
     GLuint shaderId;
 };
 
+inline GLuint Shader::GetHandle() const
+{
+    return shaderId;
+}
+
 inline void Shader::Dispose()
 {
     glDeleteShader(shaderId);
     shaderId = 0;
-}
-
-inline GLuint Shader::GetHandle() const
-{
-    return shaderId;
 }

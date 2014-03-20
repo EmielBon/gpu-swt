@@ -28,5 +28,6 @@ DrawableRect::DrawableRect(float x1, float y1, float x2, float y2)
     
     VertexBuffer = New<::VertexBuffer>();
     VertexBuffer->SetData(vertices);
-    IndexBuffer = New<::IndexBuffer>(indices);
+    IndexBuffer = New<::IndexBuffer>();
+    IndexBuffer->SetData(indices);
 }

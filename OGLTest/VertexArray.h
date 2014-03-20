@@ -20,6 +20,10 @@ public:
     
     GLuint GetHandle() const;
     
+    void Bind();
+    
+    void Unbind();
+    
     void Dispose();
     
 public:
@@ -35,6 +39,16 @@ inline VertexArray::VertexArray()
 inline GLuint VertexArray::GetHandle() const
 {
     return vertexArrayObjectId;
+}
+
+inline void VertexArray::Bind()
+{
+    glBindVertexArray( GetHandle() );
+}
+
+inline void VertexArray::Unbind()
+{
+    glBindVertexArray(0);
 }
 
 inline void VertexArray::Dispose()

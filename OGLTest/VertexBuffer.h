@@ -8,58 +8,41 @@
 
 #pragma once
 
-#include "IOGLResource.h"
+#include "OGLBuffer.h"
 #include "types.h"
 #include "VertexDeclaration.h"
 #include <GL/glew.h>
 
-class VertexBuffer : public IOGLResource
+class VertexBuffer : public OGLBuffer
 {
     friend class GraphicsDevice;
     
 public:
     
-    VertexBuffer();
+    VertexBuffer() = default;
+    
+    void Bind();
     
     template<class T>
     void SetData(const List<T> &data);
-    
-    GLuint GetHandle() const;
-
-    void Dispose();
     
     const VertexDeclaration& GetVertexDeclaration() const;
     
 private:
     
-    GLuint bufferId;
     VertexDeclaration vertexDeclaration;
 };
 
-inline VertexBuffer::VertexBuffer()
+inline void VertexBuffer::Bind()
 {
-    glGenBuffers(1, &bufferId);
+    BindTo(GL_ARRAY_BUFFER);
 }
 
 template<class T>
 inline void VertexBuffer::SetData(const List<T> &data)
 {
-    glBindBuffer(GL_ARRAY_BUFFER, bufferId);
-    glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(T), data.data(), GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
+    OGLBuffer::SetData(GL_ARRAY_BUFFER, data.size() * sizeof(T), data.data());
     vertexDeclaration = T::VertexDeclaration();
-}
-
-inline GLuint VertexBuffer::GetHandle() const
-{
-    return bufferId;
-}
-
-inline void VertexBuffer::Dispose()
-{
-    glDeleteBuffers(1, &bufferId);
-    bufferId = 0;
 }
 
 inline const VertexDeclaration& VertexBuffer::GetVertexDeclaration() const

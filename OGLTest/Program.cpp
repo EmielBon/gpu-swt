@@ -14,8 +14,6 @@
 #include "VertexDeclaration.h"
 #include <GL/glew.h>
 
-using namespace std;
-
 Program::Program(GraphicsDevice *device, const List< Ptr<Shader>> &shaders) : programId(0), device(device)
 {
     programId = CreateFromShaders(shaders);
@@ -28,12 +26,12 @@ Program::Program(GraphicsDevice *device, const List< Ptr<Shader>> &shaders) : pr
 GLuint Program::CreateFromShaders(const List<Ptr<Shader> > &shaders)
 {
     if(shaders.size() == 0)
-        throw runtime_error("No shaders were provided to create the program");
+        throw std::runtime_error("No shaders were provided to create the program");
     
     //create the program object
     GLuint programId = glCreateProgram();
     if(programId == 0)
-        throw runtime_error("glCreateProgram failed");
+        throw std::runtime_error("glCreateProgram failed");
     
     //attach all the shaders
     for(unsigned i = 0; i < shaders.size(); ++i)
@@ -67,7 +65,7 @@ void Program::AssertLinkingSuccess(GLuint programId)
         glDeleteProgram(programId);
         programId = 0;
         
-        throw runtime_error(msg);
+        throw std::runtime_error(msg);
     }
 }
 
@@ -105,7 +103,9 @@ void Program::Apply()
     auto &vertexArray       = vertexDeclaration.GetVertexArray();
     GLuint stride           = vertexDeclaration.Stride();
     
+    //vertexBuffer.Bind();
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.GetHandle());
+    //vertexArray.Bind();
     glBindVertexArray(vertexArray.GetHandle());
     
     auto &vertexDeclarationElements = vertexDeclaration.GetElements();
@@ -121,6 +121,7 @@ void Program::Apply()
         glVertexAttribPointer(location, size, type, GL_FALSE, stride, (const GLvoid*)vertexElement.GetElementOffset());
     }
     
+    //vertexBuffer.Unbind();
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     glUseProgram(programId);

@@ -9,15 +9,25 @@
 #pragma once
 
 #include "types.h"
-#include "IOGLResource.h"
+#include "IOGLBindableResource.h"
 
-class Texture : public IOGLResource
+class Texture : public IOGLBindableResource
 {
+protected:
+    
+    Texture(int width, int height, GLenum filteringType = GL_LINEAR);
+    
 public:
     
     Texture(const cv::Mat &image);
     
+    Texture(int width, int height, GLenum format, GLenum type, GLenum filteringType);
+    
     GLuint GetHandle() const;
+    
+    void Bind();
+    
+    void Unbind();
     
     void Dispose();
     
@@ -42,6 +52,16 @@ private:
 inline GLuint Texture::GetHandle() const
 {
     return textureId;
+}
+
+inline void Texture::Bind()
+{
+    glBindTexture(GL_TEXTURE_2D, textureId);
+}
+
+inline void Texture::Unbind()
+{
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 inline void Texture::Dispose()
@@ -70,5 +90,7 @@ inline void Texture::SetData(const cv::Mat &image, GLenum format, GLenum type)
     List<T> pixelData;
     pixelData.resize(image.cols * image.rows);
     std::copy(image.begin<T>(), image.end<T>(), pixelData.begin());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, type, pixelData.data());
+    Bind();
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, type, pixelData.data());
+    Unbind();
 }

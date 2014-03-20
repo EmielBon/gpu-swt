@@ -73,24 +73,18 @@
 		17658F2C189FA980003A8B11 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F2A189FA980003A8B11 /* Shader.cpp */; };
 		17658F2F189FB5F4003A8B11 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F2D189FB5F4003A8B11 /* Program.cpp */; };
 		17658F33189FC7C8003A8B11 /* ContentLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F31189FC7C8003A8B11 /* ContentLoader.cpp */; };
-		17658F36189FC8B2003A8B11 /* VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F34189FC8B2003A8B11 /* VertexShader.cpp */; };
-		17658F39189FC8BF003A8B11 /* FragmentShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F37189FC8BF003A8B11 /* FragmentShader.cpp */; };
-		17658F3F18A0EF5F003A8B11 /* VertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F3D18A0EF5F003A8B11 /* VertexBuffer.cpp */; };
-		17658F4218A0F96E003A8B11 /* VertexArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F4018A0F96E003A8B11 /* VertexArray.cpp */; };
 		1776532D18C8A13A004553B6 /* ConnectedComponentsHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1776532B18C8A13A004553B6 /* ConnectedComponentsHelper.cpp */; };
 		17EED2DA18A392280094A37D /* DrawableRect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED2D818A392280094A37D /* DrawableRect.cpp */; };
 		17EED2DD18A396E80094A37D /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED2DB18A396E80094A37D /* Texture.cpp */; };
 		17EED2E018A398350094A37D /* VertexPositionTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED2DE18A398350094A37D /* VertexPositionTexture.cpp */; };
-		17EED2E318A39D820094A37D /* IndexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED2E118A39D820094A37D /* IndexBuffer.cpp */; };
-		17EED2E618A3B6480094A37D /* VertexDeclaration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED2E418A3B6480094A37D /* VertexDeclaration.cpp */; };
-		17EED2E918A3B67A0094A37D /* VertexDeclarationElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED2E718A3B67A0094A37D /* VertexDeclarationElement.cpp */; };
 		17EED2EC18A3C6240094A37D /* GraphicsDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED2EA18A3C6240094A37D /* GraphicsDevice.cpp */; };
 		17EED57118A505910094A37D /* Uniform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED56F18A505910094A37D /* Uniform.cpp */; };
 		17EED57B18AD16340094A37D /* SWTHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED57918AD16340094A37D /* SWTHelper.cpp */; };
 		17EED57E18AD205B0094A37D /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EED57C18AD205B0094A37D /* Ray.cpp */; };
 		17EEEF1818AE6D7000B5A290 /* ImgProc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EEEF1618AE6D7000B5A290 /* ImgProc.cpp */; };
 		17F3F9E118BBAE0900C78815 /* Component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F3F9DF18BBAE0900C78815 /* Component.cpp */; };
-		17FD311818B35A740047B633 /* MathHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17FD311618B35A740047B633 /* MathHelper.cpp */; };
+		17F5944718D87DA100B1C3C7 /* FrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F5944518D87DA100B1C3C7 /* FrameBuffer.cpp */; };
+		17F5944A18D8861200B1C3C7 /* DepthBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F5944818D8861200B1C3C7 /* DepthBuffer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -185,13 +179,9 @@
 		17658F30189FB955003A8B11 /* IOGLResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOGLResource.h; sourceTree = "<group>"; };
 		17658F31189FC7C8003A8B11 /* ContentLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ContentLoader.cpp; sourceTree = "<group>"; };
 		17658F32189FC7C8003A8B11 /* ContentLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentLoader.h; sourceTree = "<group>"; };
-		17658F34189FC8B2003A8B11 /* VertexShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexShader.cpp; sourceTree = "<group>"; };
 		17658F35189FC8B2003A8B11 /* VertexShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexShader.h; sourceTree = "<group>"; };
-		17658F37189FC8BF003A8B11 /* FragmentShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FragmentShader.cpp; sourceTree = "<group>"; };
 		17658F38189FC8BF003A8B11 /* FragmentShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FragmentShader.h; sourceTree = "<group>"; };
-		17658F3D18A0EF5F003A8B11 /* VertexBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexBuffer.cpp; sourceTree = "<group>"; };
 		17658F3E18A0EF5F003A8B11 /* VertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexBuffer.h; sourceTree = "<group>"; };
-		17658F4018A0F96E003A8B11 /* VertexArray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexArray.cpp; sourceTree = "<group>"; };
 		17658F4118A0F96E003A8B11 /* VertexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexArray.h; sourceTree = "<group>"; };
 		1776532B18C8A13A004553B6 /* ConnectedComponentsHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConnectedComponentsHelper.cpp; sourceTree = "<group>"; };
 		1776532C18C8A13A004553B6 /* ConnectedComponentsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectedComponentsHelper.h; sourceTree = "<group>"; };
@@ -201,11 +191,8 @@
 		17EED2DC18A396E80094A37D /* Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Texture.h; sourceTree = "<group>"; };
 		17EED2DE18A398350094A37D /* VertexPositionTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexPositionTexture.cpp; sourceTree = "<group>"; };
 		17EED2DF18A398350094A37D /* VertexPositionTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexPositionTexture.h; sourceTree = "<group>"; };
-		17EED2E118A39D820094A37D /* IndexBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IndexBuffer.cpp; sourceTree = "<group>"; };
 		17EED2E218A39D820094A37D /* IndexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndexBuffer.h; sourceTree = "<group>"; };
-		17EED2E418A3B6480094A37D /* VertexDeclaration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexDeclaration.cpp; sourceTree = "<group>"; };
 		17EED2E518A3B6480094A37D /* VertexDeclaration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexDeclaration.h; sourceTree = "<group>"; };
-		17EED2E718A3B67A0094A37D /* VertexDeclarationElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexDeclarationElement.cpp; sourceTree = "<group>"; };
 		17EED2E818A3B67A0094A37D /* VertexDeclarationElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexDeclarationElement.h; sourceTree = "<group>"; };
 		17EED2EA18A3C6240094A37D /* GraphicsDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsDevice.cpp; sourceTree = "<group>"; };
 		17EED2EB18A3C6240094A37D /* GraphicsDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsDevice.h; sourceTree = "<group>"; };
@@ -220,7 +207,12 @@
 		17EEEF1718AE6D7000B5A290 /* ImgProc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImgProc.h; sourceTree = "<group>"; };
 		17F3F9DF18BBAE0900C78815 /* Component.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Component.cpp; sourceTree = "<group>"; };
 		17F3F9E018BBAE0900C78815 /* Component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Component.h; sourceTree = "<group>"; };
-		17FD311618B35A740047B633 /* MathHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MathHelper.cpp; sourceTree = "<group>"; };
+		17F5944518D87DA100B1C3C7 /* FrameBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameBuffer.cpp; sourceTree = "<group>"; };
+		17F5944618D87DA100B1C3C7 /* FrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameBuffer.h; sourceTree = "<group>"; };
+		17F5944818D8861200B1C3C7 /* DepthBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DepthBuffer.cpp; sourceTree = "<group>"; };
+		17F5944918D8861200B1C3C7 /* DepthBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DepthBuffer.h; sourceTree = "<group>"; };
+		17F5944C18D88F9900B1C3C7 /* OGLBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGLBuffer.h; sourceTree = "<group>"; };
+		17F5944F18DB2BF800B1C3C7 /* IOGLBindableResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOGLBindableResource.h; sourceTree = "<group>"; };
 		17FD311718B35A740047B633 /* MathHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathHelper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -415,7 +407,6 @@
 			children = (
 				17EEEF1618AE6D7000B5A290 /* ImgProc.cpp */,
 				17EEEF1718AE6D7000B5A290 /* ImgProc.h */,
-				17FD311618B35A740047B633 /* MathHelper.cpp */,
 				17FD311718B35A740047B633 /* MathHelper.h */,
 				171A031C189BDD2600A72B91 /* types.h */,
 			);
@@ -434,13 +425,17 @@
 		1776532A18C87659004553B6 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
-				17658F37189FC8BF003A8B11 /* FragmentShader.cpp */,
+				17F5944818D8861200B1C3C7 /* DepthBuffer.cpp */,
+				17F5944918D8861200B1C3C7 /* DepthBuffer.h */,
 				17658F38189FC8BF003A8B11 /* FragmentShader.h */,
+				17F5944518D87DA100B1C3C7 /* FrameBuffer.cpp */,
+				17F5944618D87DA100B1C3C7 /* FrameBuffer.h */,
 				17EED2EA18A3C6240094A37D /* GraphicsDevice.cpp */,
 				17EED2EB18A3C6240094A37D /* GraphicsDevice.h */,
-				17EED2E118A39D820094A37D /* IndexBuffer.cpp */,
 				17EED2E218A39D820094A37D /* IndexBuffer.h */,
+				17F5944F18DB2BF800B1C3C7 /* IOGLBindableResource.h */,
 				17658F30189FB955003A8B11 /* IOGLResource.h */,
+				17F5944C18D88F9900B1C3C7 /* OGLBuffer.h */,
 				17EED2EE18A3C8140094A37D /* PrimitiveType.h */,
 				17658F2D189FB5F4003A8B11 /* Program.cpp */,
 				17658F2E189FB5F4003A8B11 /* Program.h */,
@@ -450,17 +445,12 @@
 				17EED2DC18A396E80094A37D /* Texture.h */,
 				17EED56F18A505910094A37D /* Uniform.cpp */,
 				17EED57018A505910094A37D /* Uniform.h */,
-				17658F4018A0F96E003A8B11 /* VertexArray.cpp */,
 				17658F4118A0F96E003A8B11 /* VertexArray.h */,
-				17658F3D18A0EF5F003A8B11 /* VertexBuffer.cpp */,
 				17658F3E18A0EF5F003A8B11 /* VertexBuffer.h */,
-				17EED2E418A3B6480094A37D /* VertexDeclaration.cpp */,
 				17EED2E518A3B6480094A37D /* VertexDeclaration.h */,
-				17EED2E718A3B67A0094A37D /* VertexDeclarationElement.cpp */,
 				17EED2E818A3B67A0094A37D /* VertexDeclarationElement.h */,
 				17EED2DE18A398350094A37D /* VertexPositionTexture.cpp */,
 				17EED2DF18A398350094A37D /* VertexPositionTexture.h */,
-				17658F34189FC8B2003A8B11 /* VertexShader.cpp */,
 				17658F35189FC8B2003A8B11 /* VertexShader.h */,
 			);
 			name = Graphics;
@@ -538,29 +528,23 @@
 				17EED2EC18A3C6240094A37D /* GraphicsDevice.cpp in Sources */,
 				17EED2DD18A396E80094A37D /* Texture.cpp in Sources */,
 				171A0319189BD85A00A72B91 /* RenderWindow.cpp in Sources */,
-				17EED2E618A3B6480094A37D /* VertexDeclaration.cpp in Sources */,
 				1744D95E18C0B193004605D1 /* Chain.cpp in Sources */,
-				17658F4218A0F96E003A8B11 /* VertexArray.cpp in Sources */,
 				171A02FF1899328C00A72B91 /* main.cpp in Sources */,
 				17658F2F189FB5F4003A8B11 /* Program.cpp in Sources */,
 				17658F25189FA444003A8B11 /* glew.c in Sources */,
+				17F5944A18D8861200B1C3C7 /* DepthBuffer.cpp in Sources */,
 				17F3F9E118BBAE0900C78815 /* Component.cpp in Sources */,
 				1744D95818C09130004605D1 /* BoundingBox.cpp in Sources */,
 				17658F33189FC7C8003A8B11 /* ContentLoader.cpp in Sources */,
-				17658F3F18A0EF5F003A8B11 /* VertexBuffer.cpp in Sources */,
 				17EED2DA18A392280094A37D /* DrawableRect.cpp in Sources */,
 				1776532D18C8A13A004553B6 /* ConnectedComponentsHelper.cpp in Sources */,
 				17658F29189FA824003A8B11 /* SimpleShader.fsh in Sources */,
 				17EED57B18AD16340094A37D /* SWTHelper.cpp in Sources */,
-				17658F39189FC8BF003A8B11 /* FragmentShader.cpp in Sources */,
+				17F5944718D87DA100B1C3C7 /* FrameBuffer.cpp in Sources */,
 				17658F2C189FA980003A8B11 /* Shader.cpp in Sources */,
 				17EED57E18AD205B0094A37D /* Ray.cpp in Sources */,
 				17EED57118A505910094A37D /* Uniform.cpp in Sources */,
-				17EED2E918A3B67A0094A37D /* VertexDeclarationElement.cpp in Sources */,
-				17658F36189FC8B2003A8B11 /* VertexShader.cpp in Sources */,
-				17EED2E318A39D820094A37D /* IndexBuffer.cpp in Sources */,
 				17EEEF1818AE6D7000B5A290 /* ImgProc.cpp in Sources */,
-				17FD311818B35A740047B633 /* MathHelper.cpp in Sources */,
 				17EED2E018A398350094A37D /* VertexPositionTexture.cpp in Sources */,
 				171A0315189BD4B200A72B91 /* Window.cpp in Sources */,
 			);
