@@ -18,14 +18,14 @@ FrameBuffer::FrameBuffer(int width, int height, GLenum format, GLenum type, bool
     
     if (hasDepthBuffer)
     {
-        depthBuffer = New<DepthBuffer>(width, height);
-        depthBuffer->Bind();
+        DepthBuffer = New<::DepthBuffer>(width, height);
+        DepthBuffer->Bind();
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, bufferId);
     }
     
-    texture = New<Texture>(width, height, format, type, GL_NEAREST);
+    Texture = New<::Texture>(width, height, format, type, GL_NEAREST);
     
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture->GetHandle(), 0);
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, Texture->GetHandle(), 0);
     
     // OpenGL ES only allows COLOR_ATTACHMENT0!
     GLenum drawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
@@ -34,6 +34,10 @@ FrameBuffer::FrameBuffer(int width, int height, GLenum format, GLenum type, bool
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         throw std::runtime_error("Framebuffer initialization failed");
     
-    depthBuffer->Unbind();
+    if (hasDepthBuffer)
+    {
+        DepthBuffer->Unbind();
+    }
+    
     Unbind();
 }

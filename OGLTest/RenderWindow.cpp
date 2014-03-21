@@ -18,6 +18,8 @@
 #include "SWTHelper.h"
 #include "Texture.h"
 #include "types.h"
+#include "VertexShader.h"
+#include "FragmentShader.h"
 
 RenderWindow* RenderWindow::instance = nullptr;
 
@@ -31,11 +33,20 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     currentTextureIndex = 0;
     
     // Load the input image as a cv::Mat
-    cv::Mat input = ContentLoader::LoadV<cv::Mat>("chep1"); AddTexture(input, "Input image");
+    cv::Mat input = ContentLoader::LoadV<cv::Mat>("chep8"); AddTexture(input, "Input image");
     SetWindowSize(input.size(), {1024, 1024});
 
     // Load the shader program
-    program = ContentLoader::Load<Program>("SimpleShader");
+    //program = ContentLoader::Load<Program>("SimpleShader");
+    List< Ptr<Shader> > shaders;
+    
+    auto vs = ContentLoader::Load<VertexShader>("Trivial");
+    auto fs = ContentLoader::Load<FragmentShader>("Normal");
+    
+    shaders.push_back(std::dynamic_pointer_cast<Shader>(vs));
+    shaders.push_back(std::dynamic_pointer_cast<Shader>(fs));
+    
+    program = New<Program>(&device, shaders);
     
     List<BoundingBox> boundingBoxes = SWTHelper::StrokeWidthTransform(input);
     cv::Mat output = ImgProc::DrawBoundingBoxes(input, boundingBoxes, {0, 255, 255, 255});
@@ -97,6 +108,11 @@ void RenderWindow::Draw()
 
 void RenderWindow::AddTexture(const cv::Mat &mat, const String &descriptor)
 {
-    textures.push_back( New<Texture>(mat) );
+    AddTexture(New<Texture>(mat), descriptor);
+}
+
+void RenderWindow::AddTexture(Ptr<Texture> texture, const String &descriptor)
+{
+    textures.push_back( texture );
     textureDescriptors.push_back(descriptor);
 }

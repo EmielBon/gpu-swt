@@ -20,7 +20,7 @@ Texture::Texture(int width, int height, GLenum filteringType) : width(width), he
     Unbind();
 }
 
-Texture::Texture(const cv::Mat &image) : Texture(image.cols, image.rows, GL_LINEAR)
+Texture::Texture(const cv::Mat &image) : Texture(image.size().width, image.size().height, GL_LINEAR)
 {
     colorChannels = image.channels();
     
@@ -32,7 +32,7 @@ Texture::Texture(const cv::Mat &image) : Texture(image.cols, image.rows, GL_LINE
         case CV_32FC1 : SetData<float    >(image, GL_RED, GL_FLOAT); break;
         case CV_32FC2 : SetData<cv::Vec2f>(image, GL_RG,  GL_FLOAT); break;
         case CV_32FC3 : SetData<cv::Vec3f>(image, GL_BGR, GL_FLOAT); break;
-        default: throw std::runtime_error("Incompatible source format for texture");
+        default: throw std::runtime_error("Incompatible source format for texture"); break;
     }
 }
 
@@ -40,11 +40,11 @@ Texture::Texture(int width, int height, GLenum format, GLenum type, GLenum filte
 {
     switch(format)
     {
-        case GL_RED : colorChannels = 1;
-        case GL_RG  : colorChannels = 2;
-        case GL_BGR : colorChannels = 3;
-        case GL_RGB : colorChannels = 3;
-        default : throw std::runtime_error("Incompatible format");
+        case GL_RED : colorChannels = 1; break;
+        case GL_RG  : colorChannels = 2; break;
+        case GL_BGR : colorChannels = 3; break;
+        case GL_RGB : colorChannels = 3; break;
+        default : throw std::runtime_error("Incompatible format"); break;
     }
     
     Bind();

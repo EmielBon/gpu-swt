@@ -16,6 +16,13 @@
 #include "ConnectedComponentsHelper.h"
 #include "RenderWindow.h"
 #include "SWTParameters.h"
+#include "FrameBuffer.h"
+#include "VertexShader.h"
+#include "FragmentShader.h"
+#include "ContentLoader.h"
+#include "Program.h"
+#include "Texture.h"
+#include "DrawableRect.h"
 
 List<Ray> CastRays(const cv::Mat &edgeMap, const cv::Mat &gradients, GradientDirection direction);
 LinkedList< Ptr<Chain> > MakePairs(List<Ptr<Component>> &components);
@@ -31,10 +38,37 @@ void FilterNonWords(LinkedList< Ptr<Chain> > &chains);
 inline void Draw(const cv::Mat &image, const String &description);
 void DrawBoundingBoxes(const cv::Mat &input, const List< Ptr<Component> > &components, const String &description);
 void DrawChains(const cv::Mat &input, const LinkedList< Ptr<Chain> > &components, const String &description);
+Ptr<Program> LoadScreenSpaceProgram(const String &name);
 
 List<BoundingBox> SWTHelper::StrokeWidthTransform(const cv::Mat &input)
 {
-    cv::Mat grayImage = ImgProc::ConvertToGrayscale(input); Draw(grayImage, "Grayscale");
+    // Get the graphics device
+    auto &device = RenderWindow::Instance().GraphicsDevice;
+    // Create a texture from the input
+    Texture texture(input);
+    // Load the shaders
+    auto grayscale = LoadScreenSpaceProgram("Grayscale");
+    // Load the full-screen rect
+    DrawableRect rect(-1, -1, 1, 1);
+    // Load the framebuffer
+    FrameBuffer frameBuffer(input.size().width, input.size().height, GL_RGB, GL_UNSIGNED_BYTE);
+    // Bind the framebuffer
+    frameBuffer.Bind();
+    
+    device.VertexBuffer = rect.VertexBuffer;
+    device.IndexBuffer  = rect.IndexBuffer;
+    
+    grayscale->Apply();
+    grayscale->Uniforms["Texture"].SetValue(texture);
+    grayscale->Uniforms["Channels"].SetValue(texture.GetColorChannels());
+    
+    device.DrawPrimitives(PrimitiveType::TriangleList);
+    
+    frameBuffer.Unbind();
+    
+    RenderWindow::Instance().AddTexture(frameBuffer.Texture);
+    
+    /*cv::Mat grayImage = ImgProc::ConvertToGrayscale(input); Draw(grayImage, "Grayscale");
 #ifdef EQUALIZE_HISTOGRAM
     cv::Mat grayImage2 = grayImage.clone();
     grayImage = ImgProc::ContrastStretch(grayImage2, 0, 100);
@@ -61,7 +95,7 @@ List<BoundingBox> SWTHelper::StrokeWidthTransform(const cv::Mat &input)
     cv::Mat componentMap2 = ConnectedComponentsHelper::FindComponents(swtImage2, components, FLT_MAX);
     Draw(componentMap2, "Stroke Widths 'against the gradient'");
     
-    FilterInvalidComponents(components, input.rows * input.cols);
+    FilterInvalidComponents(components, input.size().width * input.size().height);
     DrawBoundingBoxes(input, components, "Valid components (letter candidates)");
     
     edges.release();
@@ -82,13 +116,28 @@ List<BoundingBox> SWTHelper::StrokeWidthTransform(const cv::Mat &input)
     
     FilterNonWords(chains);
     DrawChains(input, chains, "Chains with length >= 3 (words)");
-    
+    */
     List<BoundingBox> boundingBoxes;
     
-    for(auto chain : chains)
-        boundingBoxes.push_back(chain->BoundingBox());
+    //for(auto chain : chains)
+    //    boundingBoxes.push_back(chain->BoundingBox());
     
     return boundingBoxes;
+}
+
+Ptr<Program> LoadScreenSpaceProgram(const String &name)
+{
+    auto &device = RenderWindow::Instance().GraphicsDevice;
+    
+    List< Ptr<Shader> > shaders;
+    
+    auto vs = ContentLoader::Load<VertexShader>("Trivial");
+    auto fs = ContentLoader::Load<FragmentShader>(name);
+    
+    shaders.push_back(std::dynamic_pointer_cast<Shader>(vs));
+    shaders.push_back(std::dynamic_pointer_cast<Shader>(fs));
+    
+    return New<Program>(&device, shaders);
 }
 
 inline bool IsEdgePixel(const cv::Mat &edgeMap, int x, int y)
@@ -98,13 +147,13 @@ inline bool IsEdgePixel(const cv::Mat &edgeMap, int x, int y)
 
 inline bool InRange(const cv::Mat &image, int x, int y)
 {
-    return (x >= 0 && x < image.cols && y >= 0 && y < image.rows);
+    return (x >= 0 && x < image.size().width && y >= 0 && y < image.size().height);
 }
 
 void SubtractEdges(cv::Mat &input, const cv::Mat &edges)
 {
-    for(int i = 0; i < edges.cols; ++i)
-    for(int j = 0; j < edges.rows; ++j)
+    for(int i = 0; i < edges.size().width;  ++i)
+    for(int j = 0; j < edges.size().height; ++j)
     {
         if (IsEdgePixel(edges, i, j))
             input.at<float>(j, i) = FLT_MAX;
@@ -113,7 +162,7 @@ void SubtractEdges(cv::Mat &input, const cv::Mat &edges)
 
 void Draw(const cv::Mat &image, const String &description)
 {
-    RenderWindow::Instance().AddTexture(image, description);
+    //RenderWindow::Instance().AddTexture(image, description);
 }
 
 void FilterOnOverlappingBoundingBoxes(List<Ptr<Component>> &components)
@@ -245,8 +294,8 @@ List<Ray> CastRays(const cv::Mat &edgeMap, const cv::Mat &gradients, GradientDir
     
     int counter = 0;
     
-    for(int i = 0; i < edgeMap.cols; ++i)
-    for(int j = 0; j < edgeMap.rows; ++j)
+    for(int i = 0; i < edgeMap.size().width;  ++i)
+    for(int j = 0; j < edgeMap.size().height; ++j)
     {
         if (edgeMap.at<uchar>(j, i) == 0)
             continue;

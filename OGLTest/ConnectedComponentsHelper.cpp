@@ -100,8 +100,8 @@ bool IsNeighbour(const Point &p1, const Point &p2, const cv::Mat &input, const c
     int x1 = p1[0], y1 = p1[1];
     int x2 = p2[0], y2 = p2[1];
     
-    if (x2 < 0 || x2 >= input.cols) return false; // out of bounds
-    if (y2 < 0 || y2 >= input.rows) return false; // out of bounds
+    if (x2 < 0 || x2 >= input.size().width) return false; // out of bounds
+    if (y2 < 0 || y2 >= input.size().height) return false; // out of bounds
     
     float swt1 = input.at<float>(y1, x1);
     float swt2 = input.at<float>(y2, x2);

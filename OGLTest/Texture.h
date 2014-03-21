@@ -88,7 +88,7 @@ template<typename T>
 inline void Texture::SetData(const cv::Mat &image, GLenum format, GLenum type)
 {
     List<T> pixelData;
-    pixelData.resize(image.cols * image.rows);
+    pixelData.resize(width * height);
     std::copy(image.begin<T>(), image.end<T>(), pixelData.begin());
     Bind();
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, type, pixelData.data());

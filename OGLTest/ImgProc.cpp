@@ -67,24 +67,23 @@ cv::Mat ImgProc::ConvertToFloat(const cv::Mat &image, int type)
 
 cv::Mat ImgProc::CalculateEdgeMap(const cv::Mat &image)
 {
+    int width  = image.size().width;
+    int height = image.size().height;
+    
     /*int meanSum = 0;
     
-    for(int i = 0; i < image.rows; ++i)
-    for(int j = 0; j < image.cols; ++j)
-    {
+    for(int i = 0; i < width; ++i)
+    for(int j = 0; j < height; ++j)
         meanSum += image.at<uchar>(j, i);
-    }
     
-    int mean = meanSum / (image.rows * image.cols);
+    int mean = meanSum / (width * height);
     */
     
     List<uchar> values;
-    values.reserve(image.rows * image.cols);
-    for(int i = 0; i < image.cols; ++i)
-    for(int j = 0; j < image.rows; ++j)
-    {
+    values.reserve(width * height);
+    for(int i = 0; i < width;  ++i)
+    for(int j = 0; j < height; ++j)
         values.push_back( image.at<uchar>(j, i) );
-    }
     
     uchar mean = MathHelper::Median(values);
     
@@ -118,8 +117,8 @@ cv::Mat ImgProc::CalculateGradients(const cv::Mat &image, bool normalize)
     
     if (normalize)
     {
-        for(int i = 0; i < image.cols; ++i)
-        for(int j = 0; j < image.rows; ++j)
+        for(int i = 0; i < image.size().width;  ++i)
+        for(int j = 0; j < image.size().height; ++j)
         {
             cv::Vec2f &gradient = gradients.at<cv::Vec2f>(j, i);
             cv::Vec2f normalized = cv::normalize(gradient);
@@ -166,8 +165,11 @@ cv::Mat ImgProc::ContrastStretch(const cv::Mat &input, int lowerPercentile, int 
     List<int> histogram;
     histogram.resize(255, 0);
     
-    for(int i = 0; i < input.cols; ++i)
-    for(int j = 0; j < input.rows; ++j)
+    int width  = input.size().width;
+    int height = input.size().height;
+    
+    for(int i = 0; i < width;  ++i)
+    for(int j = 0; j < height; ++j)
     {
         histogram[ input.at<uchar>(j, i) ]++;
     }
@@ -175,7 +177,7 @@ cv::Mat ImgProc::ContrastStretch(const cv::Mat &input, int lowerPercentile, int 
     int min = 0, max = 0;
     int percentile = 0;
     int counter = 0;
-    const int totalPixels = input.cols * input.rows;
+    const int totalPixels = width * height;
     int total = 0;
     
     while(percentile <= lowerPercentile)
@@ -196,8 +198,8 @@ cv::Mat ImgProc::ContrastStretch(const cv::Mat &input, int lowerPercentile, int 
     
     cv::Mat output(input.size(), CV_8UC1);
     
-    for(int i = 0; i < input.cols; ++i)
-    for(int j = 0; j < input.rows; ++j)
+    for(int i = 0; i < width;  ++i)
+    for(int j = 0; j < height; ++j)
     {
         output.at<uchar>(j, i) = cv::saturate_cast<uchar>(((int)input.at<uchar>(j, i) - min) * ((255 - 0) / (max - min)) + 0);
     }

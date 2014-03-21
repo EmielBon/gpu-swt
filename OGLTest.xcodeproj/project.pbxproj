@@ -69,7 +69,7 @@
 		1744D95818C09130004605D1 /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1744D95618C09130004605D1 /* BoundingBox.cpp */; };
 		1744D95E18C0B193004605D1 /* Chain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1744D95C18C0B193004605D1 /* Chain.cpp */; };
 		17658F25189FA444003A8B11 /* glew.c in Sources */ = {isa = PBXBuildFile; fileRef = 17658F24189FA443003A8B11 /* glew.c */; };
-		17658F29189FA824003A8B11 /* SimpleShader.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 17658F28189FA824003A8B11 /* SimpleShader.fsh */; };
+		17658F29189FA824003A8B11 /* Normal.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 17658F28189FA824003A8B11 /* Normal.fsh */; };
 		17658F2C189FA980003A8B11 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F2A189FA980003A8B11 /* Shader.cpp */; };
 		17658F2F189FB5F4003A8B11 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F2D189FB5F4003A8B11 /* Program.cpp */; };
 		17658F33189FC7C8003A8B11 /* ContentLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F31189FC7C8003A8B11 /* ContentLoader.cpp */; };
@@ -85,6 +85,7 @@
 		17F3F9E118BBAE0900C78815 /* Component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F3F9DF18BBAE0900C78815 /* Component.cpp */; };
 		17F5944718D87DA100B1C3C7 /* FrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F5944518D87DA100B1C3C7 /* FrameBuffer.cpp */; };
 		17F5944A18D8861200B1C3C7 /* DepthBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F5944818D8861200B1C3C7 /* DepthBuffer.cpp */; };
+		17F5945218DB3CB800B1C3C7 /* Grayscale.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945118DB3CB800B1C3C7 /* Grayscale.fsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -170,8 +171,8 @@
 		1744D95C18C0B193004605D1 /* Chain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Chain.cpp; sourceTree = "<group>"; };
 		1744D95D18C0B193004605D1 /* Chain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chain.h; sourceTree = "<group>"; };
 		17658F24189FA443003A8B11 /* glew.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glew.c; path = OGLTest/glew.c; sourceTree = "<group>"; };
-		17658F27189FA6AC003A8B11 /* SimpleShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SimpleShader.vsh; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
-		17658F28189FA824003A8B11 /* SimpleShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SimpleShader.fsh; sourceTree = "<group>"; };
+		17658F27189FA6AC003A8B11 /* Trivial.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Trivial.vsh; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
+		17658F28189FA824003A8B11 /* Normal.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Normal.fsh; sourceTree = "<group>"; };
 		17658F2A189FA980003A8B11 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
 		17658F2B189FA980003A8B11 /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
 		17658F2D189FB5F4003A8B11 /* Program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Program.cpp; sourceTree = "<group>"; };
@@ -213,6 +214,7 @@
 		17F5944918D8861200B1C3C7 /* DepthBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DepthBuffer.h; sourceTree = "<group>"; };
 		17F5944C18D88F9900B1C3C7 /* OGLBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGLBuffer.h; sourceTree = "<group>"; };
 		17F5944F18DB2BF800B1C3C7 /* IOGLBindableResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOGLBindableResource.h; sourceTree = "<group>"; };
+		17F5945118DB3CB800B1C3C7 /* Grayscale.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Grayscale.fsh; sourceTree = "<group>"; };
 		17FD311718B35A740047B633 /* MathHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathHelper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -416,8 +418,9 @@
 		17658F26189FA645003A8B11 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
-				17658F27189FA6AC003A8B11 /* SimpleShader.vsh */,
-				17658F28189FA824003A8B11 /* SimpleShader.fsh */,
+				17658F27189FA6AC003A8B11 /* Trivial.vsh */,
+				17658F28189FA824003A8B11 /* Normal.fsh */,
+				17F5945118DB3CB800B1C3C7 /* Grayscale.fsh */,
 			);
 			name = shaders;
 			sourceTree = "<group>";
@@ -538,7 +541,8 @@
 				17658F33189FC7C8003A8B11 /* ContentLoader.cpp in Sources */,
 				17EED2DA18A392280094A37D /* DrawableRect.cpp in Sources */,
 				1776532D18C8A13A004553B6 /* ConnectedComponentsHelper.cpp in Sources */,
-				17658F29189FA824003A8B11 /* SimpleShader.fsh in Sources */,
+				17658F29189FA824003A8B11 /* Normal.fsh in Sources */,
+				17F5945218DB3CB800B1C3C7 /* Grayscale.fsh in Sources */,
 				17EED57B18AD16340094A37D /* SWTHelper.cpp in Sources */,
 				17F5944718D87DA100B1C3C7 /* FrameBuffer.cpp in Sources */,
 				17658F2C189FA980003A8B11 /* Shader.cpp in Sources */,

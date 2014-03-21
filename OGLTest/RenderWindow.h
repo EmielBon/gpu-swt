@@ -29,6 +29,8 @@ public:
  
     void AddTexture(const cv::Mat &mat, const String &descriptor = "");
     
+    void AddTexture(Ptr<Texture> texture, const String &descriptor = "");
+    
 private:
     
     void SetWindowSize(const cv::Size &size, const cv::Size &max);

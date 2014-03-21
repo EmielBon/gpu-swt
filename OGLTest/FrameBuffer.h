@@ -15,7 +15,7 @@ class FrameBuffer : public IOGLBindableResource
 {
 public:
     
-    FrameBuffer(int width, int height, GLenum format, GLenum type, bool hasDepthBuffer);
+    FrameBuffer(int width, int height, GLenum format, GLenum type, bool hasDepthBuffer = false);
     
     GLuint GetHandle() const;
     
@@ -28,8 +28,8 @@ public:
 public:
     
     GLuint bufferId;
-    Ptr<Texture> texture;
-    Ptr<DepthBuffer> depthBuffer;
+    Ptr<::Texture> Texture;
+    Ptr<::DepthBuffer> DepthBuffer;
 };
 
 inline GLuint FrameBuffer::GetHandle() const
