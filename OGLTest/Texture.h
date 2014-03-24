@@ -47,6 +47,11 @@ private:
     GLuint textureId;
     int width, height;
     int colorChannels;
+
+public:
+    
+    GLenum Format;
+    GLenum Type;
 };
 
 inline GLuint Texture::GetHandle() const
@@ -87,6 +92,9 @@ inline int Texture::GetColorChannels() const
 template<typename T>
 inline void Texture::SetData(const cv::Mat &image, GLenum format, GLenum type)
 {
+    Format = format;
+    Type   = type;
+    
     List<T> pixelData;
     pixelData.resize(width * height);
     std::copy(image.begin<T>(), image.end<T>(), pixelData.begin());

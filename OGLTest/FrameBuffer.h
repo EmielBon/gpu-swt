@@ -18,12 +18,24 @@ public:
     FrameBuffer(int width, int height, GLenum format, GLenum type, bool hasDepthBuffer = false);
     
     GLuint GetHandle() const;
-    
+
     void Bind();
-    
+
     void Unbind();
-    
+
     void Dispose();
+
+    void SetColorAttachment0(Ptr<::Texture> texture);
+
+    bool IsFrameBufferComplete() const;
+
+    void CreateNewColorAttachment0();
+    
+private:
+
+    void CreateNewColorAttachment0(int width, int height, GLenum format, GLenum type);
+    
+    void AssertFrameBufferComplete() const;
     
 public:
     
@@ -51,4 +63,15 @@ inline void FrameBuffer::Dispose()
 {
     glDeleteFramebuffers(1, &bufferId);
     bufferId = 0;
+}
+
+inline bool FrameBuffer::IsFrameBufferComplete() const
+{
+    return (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+}
+
+inline void FrameBuffer::AssertFrameBufferComplete() const
+{
+    if (!IsFrameBufferComplete())
+        throw std::runtime_error("Framebuffer initialization failed");
 }

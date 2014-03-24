@@ -42,57 +42,84 @@ Ptr<Program> LoadScreenSpaceProgram(const String &name);
 
 List<BoundingBox> SWTHelper::StrokeWidthTransform(const cv::Mat &input)
 {
+    int width  = input.size().width;
+    int height = input.size().height;
+    Vector2 size(width, height);
+    
     //glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
     
     // Get the graphics device
     auto &device = RenderWindow::Instance().GraphicsDevice;
     // Load the full-screen rect
     DrawableRect rect1(-1, -1, 1, 1, 1, 1);
-    DrawableRect rect2(-1, -1, 1, 1, input.size().width, input.size().height);
+    DrawableRect rect2(-1, -1, 1, 1, width, height);
     
     device.VertexBuffer = rect1.VertexBuffer;
     device.IndexBuffer  = rect1.IndexBuffer;
     
     // Load the framebuffers
-    FrameBuffer frameBuffer1(input.size().width, input.size().height, GL_RGB, GL_UNSIGNED_BYTE);
-    FrameBuffer frameBuffer2(input.size().width, input.size().height, GL_RGB, GL_FLOAT);
-    FrameBuffer frameBuffer3(input.size().width, input.size().height, GL_RGB, GL_FLOAT);
+    FrameBuffer frameBuffer1(width, height, GL_RGB, GL_UNSIGNED_BYTE);
+    FrameBuffer frameBuffer2(width, height, GL_RGB, GL_FLOAT);
+    
+    // Create references to the render target textures
+    Ptr<Texture> gray, gradientH, gradientV;
     
     // Load the shaders
     auto grayscale = LoadScreenSpaceProgram("Grayscale");
     auto sobelHor1 = LoadScreenSpaceProgram("SobelHor1");
     auto sobelHor2 = LoadScreenSpaceProgram("SobelHor2");
+    auto sobelVer1 = LoadScreenSpaceProgram("SobelVer1");
+    auto sobelVer2 = LoadScreenSpaceProgram("SobelVer2");
     
-    // Render InputTexture->FrameBuffer1 with Grayscale
+    // Create a Texture from the input
     Texture texture(input);
+    
+    // Render InputTexture -> FrameBuffer1 with Grayscale to gray texture
     frameBuffer1.Bind();
-        grayscale->Use();
-        grayscale->Uniforms["Texture"].SetValue(texture);
-        device.DrawPrimitives(PrimitiveType::TriangleList);
-    frameBuffer1.Unbind();
+    grayscale->Use();
+    grayscale->Uniforms["Texture"].SetValue(texture);
+    device.DrawPrimitives(PrimitiveType::TriangleList);
+    gray = frameBuffer1.Texture;
+    //frameBuffer1.CreateNewColorAttachment0();
     
     device.VertexBuffer = rect2.VertexBuffer;
     device.IndexBuffer  = rect2.IndexBuffer;
     
-    // Render FrameBuffer1.Texture (Grayscale)-> FrameBuffer2 with SobelHor1
+    // Render gray texture -> FrameBuffer2 with SobelHor1 to gradientH texture
     frameBuffer2.Bind();
-        sobelHor1->Use();
-        sobelHor1->Uniforms["Texture"].SetValue(*frameBuffer1.Texture);
-        sobelHor1->Uniforms["TextureSize"].SetValue(Vector2(input.size().width, input.size().height));
-        device.DrawPrimitives(PrimitiveType::TriangleList);
-    frameBuffer2.Unbind();
+    sobelHor1->Use();
+    sobelHor1->Uniforms["Texture"].SetValue(*gray);
+    sobelHor1->Uniforms["TextureSize"].SetValue(size);
+    device.DrawPrimitives(PrimitiveType::TriangleList);
+    gradientH = frameBuffer2.Texture;
+    frameBuffer2.CreateNewColorAttachment0();
+    // Render gradientH texture -> FrameBuffer2 with SobelHor2 to gradientH texture
+    sobelHor2->Use();
+    sobelHor2->Uniforms["Texture"].SetValue(*gradientH);
+    sobelHor2->Uniforms["TextureSize"].SetValue(size);
+    device.DrawPrimitives(PrimitiveType::TriangleList);
+    gradientH = frameBuffer2.Texture;
+    frameBuffer2.CreateNewColorAttachment0();
     
+    sobelVer1->Use();
+    sobelVer1->Uniforms["Texture"].SetValue(*gray);
+    sobelVer1->Uniforms["TextureSize"].SetValue(size);
+    device.DrawPrimitives(PrimitiveType::TriangleList);
+    gradientV = frameBuffer2.Texture;
+    frameBuffer2.CreateNewColorAttachment0();
     // Render FrameBuffer2.Texture (SobelHor1) -> FrameBuffer1 with SobelHor2
-    frameBuffer3.Bind();
-        sobelHor2->Use();
-        sobelHor2->Uniforms["Texture"].SetValue(*frameBuffer2.Texture);
-        sobelHor2->Uniforms["TextureSize"].SetValue(Vector2(input.size().width, input.size().height));
-        device.DrawPrimitives(PrimitiveType::TriangleList);
-    frameBuffer3.Unbind();
+    sobelVer2->Use();
+    sobelVer2->Uniforms["Texture"].SetValue(*gradientV);
+    sobelVer2->Uniforms["TextureSize"].SetValue(size);
+    device.DrawPrimitives(PrimitiveType::TriangleList);
+    gradientV = frameBuffer2.Texture;
+    frameBuffer2.CreateNewColorAttachment0();
     
-    RenderWindow::Instance().AddTexture(frameBuffer3.Texture, "SobelHor (shader)");
+    RenderWindow::Instance().AddTexture(gray, "Grayscale");
+    RenderWindow::Instance().AddTexture(gradientH, "Horizontal gradients (Sobel/Scharr)");
+    RenderWindow::Instance().AddTexture(gradientV, "Vertical gradients (Sobel/Scharr)");
     
-    //RenderWindow::Instance().AddTexture(ImgProc::CalculateGradientX(ImgProc::ConvertToGrayscale(input)), "SobelHor (OpenCV)");
+    RenderWindow::Instance().AddTexture(ImgProc::CalculateGradientX(ImgProc::ConvertToGrayscale(input)), "SobelHor (OpenCV)");
     
 /*    cv::Mat grayImage = ImgProc::ConvertToGrayscale(input); Draw(grayImage, "Grayscale (OpenCV)");
 #ifdef EQUALIZE_HISTOGRAM

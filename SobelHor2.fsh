@@ -6,6 +6,8 @@ uniform vec2 TextureSize = vec2(1, 1);
 in  vec2 FragTexCoord;
 out vec4 FinalColor;
 
+const vec2 weights = vec2(-1,/*0,*/1);
+
 vec4 screenTex(vec2 xy)
 {
     return texture(Texture, xy / TextureSize);
@@ -13,11 +15,15 @@ vec4 screenTex(vec2 xy)
 
 void main()
 {
-    float result = 0;
+    vec2 result;
+    float v = 0;
 
-    // Voor optimalisatie, misschien met dot doen
-    result += -1 * screenTex(FragTexCoord + vec2(-1, 0)).r;
-    result +=  1 * screenTex(FragTexCoord + vec2( 1, 0)).r;
+    result = vec2(
+        screenTex(FragTexCoord + vec2(-1, 0)).r,
+      //screenTex(FragTexCoord + vec2( 0, 0)).r,
+        screenTex(FragTexCoord + vec2( 1, 0)).r
+    );
     
-    FinalColor = vec4(result, result, result, 1);
+    v = dot(result, weights);
+    FinalColor = vec4(v, v, v, 1);
 }

@@ -19,9 +19,9 @@ void main()
     float v = 0;
     
     result = vec3(
-        screenTex(FragTexCoord + vec2(0,-1)).r,
-        screenTex(FragTexCoord + vec2(0, 0)).r,
-        screenTex(FragTexCoord + vec2(0, 1)).r
+        screenTex(FragTexCoord + vec2(-1, 0)).r,
+        screenTex(FragTexCoord + vec2( 0, 0)).r,
+        screenTex(FragTexCoord + vec2( 1, 0)).r
     );
     
     v = dot(result, weights);

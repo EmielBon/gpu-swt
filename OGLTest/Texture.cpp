@@ -38,6 +38,9 @@ Texture::Texture(const cv::Mat &image) : Texture(image.size().width, image.size(
 
 Texture::Texture(int width, int height, GLenum format, GLenum type, GLenum filteringType) : Texture(width, height, filteringType)
 {
+    Format = format;
+    Type = type;
+    
     switch(format)
     {
         case GL_RED : colorChannels = 1; break;
