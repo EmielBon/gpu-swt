@@ -29,13 +29,14 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     instance = this;
     
     ContentLoader::SetContentPath("/Users/emiel/Desktop/OGLTest/OGLTest/");
-    rect1 = New<DrawableRect>(-1.0f, -1.0f, 1.0f, 1.0f);
     currentTextureIndex = 0;
     
     // Load the input image as a cv::Mat
     cv::Mat input = ContentLoader::LoadV<cv::Mat>("chep8"); AddTexture(input, "Input image");
     SetWindowSize(input.size(), {1024, 1024});
 
+    rect1 = New<DrawableRect>(-1, 1, 1, -1, 1, 1);
+    
     // Load the shader program
     //program = ContentLoader::Load<Program>("SimpleShader");
     List< Ptr<Shader> > shaders;
@@ -50,7 +51,7 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     
     List<BoundingBox> boundingBoxes = SWTHelper::StrokeWidthTransform(input);
     cv::Mat output = ImgProc::DrawBoundingBoxes(input, boundingBoxes, {0, 255, 255, 255});
-    AddTexture(output, "Detected text regions");
+    //AddTexture(output, "Detected text regions");
 }
 
 void RenderWindow::SetWindowSize(const cv::Size &size, const cv::Size &max)
@@ -69,7 +70,7 @@ void RenderWindow::DrawRect(const DrawableRect &rect)
     
     auto &texture = *textures[currentTextureIndex];
     
-    program->Apply();
+    program->Use();
     program->Uniforms["Texture"].SetValue(texture);
     program->Uniforms["Channels"].SetValue(texture.GetColorChannels());
     

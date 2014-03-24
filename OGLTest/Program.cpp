@@ -96,7 +96,7 @@ GLint Program::GetAttributeLocation(const String &name) const
     return attrib;
 }
 
-void Program::Apply()
+void Program::Use()
 {
     auto &vertexBuffer      = *device->VertexBuffer;
     auto &vertexDeclaration = vertexBuffer.GetVertexDeclaration();

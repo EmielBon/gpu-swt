@@ -42,33 +42,59 @@ Ptr<Program> LoadScreenSpaceProgram(const String &name);
 
 List<BoundingBox> SWTHelper::StrokeWidthTransform(const cv::Mat &input)
 {
+    //glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
+    
     // Get the graphics device
     auto &device = RenderWindow::Instance().GraphicsDevice;
-    // Create a texture from the input
-    Texture texture(input);
+    // Load the full-screen rect
+    DrawableRect rect1(-1, -1, 1, 1, 1, 1);
+    DrawableRect rect2(-1, -1, 1, 1, input.size().width, input.size().height);
+    
+    device.VertexBuffer = rect1.VertexBuffer;
+    device.IndexBuffer  = rect1.IndexBuffer;
+    
+    // Load the framebuffers
+    FrameBuffer frameBuffer1(input.size().width, input.size().height, GL_RGB, GL_UNSIGNED_BYTE);
+    FrameBuffer frameBuffer2(input.size().width, input.size().height, GL_RGB, GL_FLOAT);
+    FrameBuffer frameBuffer3(input.size().width, input.size().height, GL_RGB, GL_FLOAT);
+    
     // Load the shaders
     auto grayscale = LoadScreenSpaceProgram("Grayscale");
-    // Load the full-screen rect
-    DrawableRect rect(-1, -1, 1, 1);
-    // Load the framebuffer
-    FrameBuffer frameBuffer(input.size().width, input.size().height, GL_RGB, GL_UNSIGNED_BYTE);
-    // Bind the framebuffer
-    frameBuffer.Bind();
+    auto sobelHor1 = LoadScreenSpaceProgram("SobelHor1");
+    auto sobelHor2 = LoadScreenSpaceProgram("SobelHor2");
     
-    device.VertexBuffer = rect.VertexBuffer;
-    device.IndexBuffer  = rect.IndexBuffer;
+    // Render InputTexture->FrameBuffer1 with Grayscale
+    Texture texture(input);
+    frameBuffer1.Bind();
+        grayscale->Use();
+        grayscale->Uniforms["Texture"].SetValue(texture);
+        device.DrawPrimitives(PrimitiveType::TriangleList);
+    frameBuffer1.Unbind();
     
-    grayscale->Apply();
-    grayscale->Uniforms["Texture"].SetValue(texture);
-    grayscale->Uniforms["Channels"].SetValue(texture.GetColorChannels());
+    device.VertexBuffer = rect2.VertexBuffer;
+    device.IndexBuffer  = rect2.IndexBuffer;
     
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    // Render FrameBuffer1.Texture (Grayscale)-> FrameBuffer2 with SobelHor1
+    frameBuffer2.Bind();
+        sobelHor1->Use();
+        sobelHor1->Uniforms["Texture"].SetValue(*frameBuffer1.Texture);
+        sobelHor1->Uniforms["TextureSize"].SetValue(Vector2(input.size().width, input.size().height));
+        device.DrawPrimitives(PrimitiveType::TriangleList);
+    frameBuffer2.Unbind();
     
-    frameBuffer.Unbind();
+    // Render FrameBuffer2.Texture (SobelHor1) -> FrameBuffer1 with SobelHor2
+    frameBuffer3.Bind();
+        sobelHor2->Use();
+        sobelHor2->Uniforms["Texture"].SetValue(*frameBuffer2.Texture);
+        sobelHor2->Uniforms["TextureSize"].SetValue(Vector2(input.size().width, input.size().height));
+        device.DrawPrimitives(PrimitiveType::TriangleList);
+    frameBuffer3.Unbind();
     
-    RenderWindow::Instance().AddTexture(frameBuffer.Texture);
+    RenderWindow::Instance().AddTexture(frameBuffer3.Texture, "SobelHor (shader)");
     
-    /*cv::Mat grayImage = ImgProc::ConvertToGrayscale(input); Draw(grayImage, "Grayscale");
+    //RenderWindow::Instance().AddTexture(ImgProc::CalculateGradientX(ImgProc::ConvertToGrayscale(input)), "SobelHor (OpenCV)");
+    
+/*    cv::Mat grayImage = ImgProc::ConvertToGrayscale(input); Draw(grayImage, "Grayscale (OpenCV)");
 #ifdef EQUALIZE_HISTOGRAM
     cv::Mat grayImage2 = grayImage.clone();
     grayImage = ImgProc::ContrastStretch(grayImage2, 0, 100);
@@ -162,7 +188,7 @@ void SubtractEdges(cv::Mat &input, const cv::Mat &edges)
 
 void Draw(const cv::Mat &image, const String &description)
 {
-    //RenderWindow::Instance().AddTexture(image, description);
+    RenderWindow::Instance().AddTexture(image, description);
 }
 
 void FilterOnOverlappingBoundingBoxes(List<Ptr<Component>> &components)

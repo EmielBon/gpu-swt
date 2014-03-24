@@ -86,6 +86,8 @@
 		17F5944718D87DA100B1C3C7 /* FrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F5944518D87DA100B1C3C7 /* FrameBuffer.cpp */; };
 		17F5944A18D8861200B1C3C7 /* DepthBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F5944818D8861200B1C3C7 /* DepthBuffer.cpp */; };
 		17F5945218DB3CB800B1C3C7 /* Grayscale.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945118DB3CB800B1C3C7 /* Grayscale.fsh */; };
+		17F5945518DC61E500B1C3C7 /* SobelHor2.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945418DC61E500B1C3C7 /* SobelHor2.fsh */; };
+		17F5945718DC6CAA00B1C3C7 /* SobelHor.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945618DC6CAA00B1C3C7 /* SobelHor.fsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -215,6 +217,9 @@
 		17F5944C18D88F9900B1C3C7 /* OGLBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGLBuffer.h; sourceTree = "<group>"; };
 		17F5944F18DB2BF800B1C3C7 /* IOGLBindableResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOGLBindableResource.h; sourceTree = "<group>"; };
 		17F5945118DB3CB800B1C3C7 /* Grayscale.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Grayscale.fsh; sourceTree = "<group>"; };
+		17F5945318DC5DEB00B1C3C7 /* SobelHor1.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SobelHor1.fsh; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
+		17F5945418DC61E500B1C3C7 /* SobelHor2.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SobelHor2.fsh; sourceTree = "<group>"; };
+		17F5945618DC6CAA00B1C3C7 /* SobelHor.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SobelHor.fsh; sourceTree = "<group>"; };
 		17FD311718B35A740047B633 /* MathHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathHelper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -418,9 +423,12 @@
 		17658F26189FA645003A8B11 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
-				17658F27189FA6AC003A8B11 /* Trivial.vsh */,
-				17658F28189FA824003A8B11 /* Normal.fsh */,
 				17F5945118DB3CB800B1C3C7 /* Grayscale.fsh */,
+				17658F28189FA824003A8B11 /* Normal.fsh */,
+				17F5945618DC6CAA00B1C3C7 /* SobelHor.fsh */,
+				17F5945318DC5DEB00B1C3C7 /* SobelHor1.fsh */,
+				17F5945418DC61E500B1C3C7 /* SobelHor2.fsh */,
+				17658F27189FA6AC003A8B11 /* Trivial.vsh */,
 			);
 			name = shaders;
 			sourceTree = "<group>";
@@ -540,6 +548,7 @@
 				1744D95818C09130004605D1 /* BoundingBox.cpp in Sources */,
 				17658F33189FC7C8003A8B11 /* ContentLoader.cpp in Sources */,
 				17EED2DA18A392280094A37D /* DrawableRect.cpp in Sources */,
+				17F5945518DC61E500B1C3C7 /* SobelHor2.fsh in Sources */,
 				1776532D18C8A13A004553B6 /* ConnectedComponentsHelper.cpp in Sources */,
 				17658F29189FA824003A8B11 /* Normal.fsh in Sources */,
 				17F5945218DB3CB800B1C3C7 /* Grayscale.fsh in Sources */,
@@ -549,6 +558,7 @@
 				17EED57E18AD205B0094A37D /* Ray.cpp in Sources */,
 				17EED57118A505910094A37D /* Uniform.cpp in Sources */,
 				17EEEF1818AE6D7000B5A290 /* ImgProc.cpp in Sources */,
+				17F5945718DC6CAA00B1C3C7 /* SobelHor.fsh in Sources */,
 				17EED2E018A398350094A37D /* VertexPositionTexture.cpp in Sources */,
 				171A0315189BD4B200A72B91 /* Window.cpp in Sources */,
 			);

@@ -25,7 +25,7 @@ public:
     
     GLint GetAttributeLocation(const String &name) const;
     
-    void Apply();
+    void Use();
     
 private:
     

@@ -63,6 +63,7 @@ class Window;
 // Grahpics
 class DepthBuffer;
 class FragmentShader;
+class FrameBuffer;
 class GraphicsDevice;
 class IndexBuffer;
 class Program;
