@@ -72,6 +72,8 @@ void Program::AssertLinkingSuccess(GLuint programId)
 void Program::IndexUniforms()
 {
     int total = -1;
+    int textureIndex = 0;
+    
     glGetProgramiv( programId, GL_ACTIVE_UNIFORMS, &total );
     for(int i = 0; i < total; ++i)  {
         int nameLength = -1, size = -1;
@@ -82,7 +84,7 @@ void Program::IndexUniforms()
         name[nameLength] = 0;
         GLuint location = glGetUniformLocation( programId, name );
         
-        Uniforms[name] = Uniform( name, location, type );
+        Uniforms[name] = Uniform( name, location, type, (type == GL_SAMPLER_2D) ? textureIndex++ : 0);
     }
 }
 

@@ -16,7 +16,7 @@ public:
     
     Uniform();
     
-    Uniform(const String& name, GLint location, GLenum type);
+    Uniform(const String& name, GLint location, GLenum type, int index = 0);
     
     void SetValue(GLint value);
     
@@ -33,14 +33,15 @@ private:
     String name;
     GLint  location;
     GLenum type;
+    int index; // Only used for texture/sampler indexing
 };
 
-inline Uniform::Uniform() : location(-1), type(GL_ZERO)
+inline Uniform::Uniform() : Uniform("", -1, GL_ZERO)
 {
     
 }
 
-inline Uniform::Uniform(const String& name, GLint location, GLenum type) : name(name),location(location), type(type)
+inline Uniform::Uniform(const String& name, GLint location, GLenum type, int index) : name(name),location(location), type(type), index(index)
 {
     
 }

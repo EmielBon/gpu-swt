@@ -62,7 +62,7 @@ List<BoundingBox> SWTHelper::StrokeWidthTransform(const cv::Mat &input)
     FrameBuffer frameBuffer2(width, height, GL_RGB, GL_FLOAT);
     
     // Create references to the render target textures
-    Ptr<Texture> gray, gradientH, gradientV;
+    Ptr<Texture> gray, gradientH, gradientV, gradients;
     
     // Load the shaders
     auto grayscale = LoadScreenSpaceProgram("Grayscale");
@@ -70,6 +70,7 @@ List<BoundingBox> SWTHelper::StrokeWidthTransform(const cv::Mat &input)
     auto sobelHor2 = LoadScreenSpaceProgram("SobelHor2");
     auto sobelVer1 = LoadScreenSpaceProgram("SobelVer1");
     auto sobelVer2 = LoadScreenSpaceProgram("SobelVer2");
+    auto gradientsFromSobel = LoadScreenSpaceProgram("GradientsFromSobel");
     
     // Create a Texture from the input
     Texture texture(input);
@@ -115,27 +116,36 @@ List<BoundingBox> SWTHelper::StrokeWidthTransform(const cv::Mat &input)
     gradientV = frameBuffer2.Texture;
     frameBuffer2.CreateNewColorAttachment0();
     
+    device.VertexBuffer = rect1.VertexBuffer;
+    device.IndexBuffer  = rect1.IndexBuffer;
+    
+    gradientsFromSobel->Use();
+    gradientsFromSobel->Uniforms["SobelHor"].SetValue(*gradientH);
+    gradientsFromSobel->Uniforms["SobelVer"].SetValue(*gradientV);
+    device.DrawPrimitives(PrimitiveType::TriangleList);
+    gradients = frameBuffer2.Texture;
+    frameBuffer2.CreateNewColorAttachment0();
+    
     RenderWindow::Instance().AddTexture(gray, "Grayscale");
+    cv::Mat grayImage = ImgProc::ConvertToGrayscale(input); Draw(grayImage, "Grayscale (OpenCV)");
     RenderWindow::Instance().AddTexture(gradientH, "Horizontal gradients (Sobel/Scharr)");
     RenderWindow::Instance().AddTexture(gradientV, "Vertical gradients (Sobel/Scharr)");
+    RenderWindow::Instance().AddTexture(gradients, "Gradients");
     
-    RenderWindow::Instance().AddTexture(ImgProc::CalculateGradientX(ImgProc::ConvertToGrayscale(input)), "SobelHor (OpenCV)");
-    
-/*    cv::Mat grayImage = ImgProc::ConvertToGrayscale(input); Draw(grayImage, "Grayscale (OpenCV)");
-#ifdef EQUALIZE_HISTOGRAM
+/*#ifdef EQUALIZE_HISTOGRAM
     cv::Mat grayImage2 = grayImage.clone();
     grayImage = ImgProc::ContrastStretch(grayImage2, 0, 100);
     //cv::equalizeHist(grayImage2, grayImage);
-    Draw(grayImage, "Equalized grayscale");
+    Draw(grayImage, "Equalized grayscale (OpenCV)");
 #endif
 #ifdef SHARPEN_INPUT
-    grayImage = ImgProc::Sharpen(grayImage); Draw(grayImage, "Sharpened");
+    grayImage = ImgProc::Sharpen(grayImage); Draw(grayImage, "Sharpened (OpenCV)");
 #endif
-    cv::Mat edges     = ImgProc::CalculateEdgeMap(grayImage); Draw(edges, "Edge map (Canny edge detector)");
-    cv::Mat gradients = ImgProc::CalculateGradients(grayImage, true); Draw(gradients, "Gradients");
+    cv::Mat edges     = ImgProc::CalculateEdgeMap(grayImage); Draw(edges, "Edge map (Canny edge detector)");*/
+    cv::Mat cvgradients = ImgProc::CalculateGradients(grayImage, true); Draw(cvgradients, "Gradients (OpenCV)");
     
     grayImage.release();
-    
+    /*
     List< Ptr<Component> > components;
     
     cv::Mat swtImage1 = CalculateStrokeWidths(edges, gradients, GradientDirection::With); Draw(ImgProc::NormalizeImage(swtImage1, 1.0f, FLT_MAX, 1.0f), "SWT 1");

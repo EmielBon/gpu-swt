@@ -11,8 +11,8 @@
 
 void Uniform::SetValue(const Texture &texture)
 {
-    // todo: couple GL_TEXTURE[n] and SetValue(n)
-    glActiveTexture(GL_TEXTURE0);
+    // resolved: couple GL_TEXTURE[n] and SetValue(n)
+    glActiveTexture(GL_TEXTURE0 + index);
     glBindTexture(GL_TEXTURE_2D, texture.GetHandle());
-    SetValue(0);
+    SetValue(index);
 }
