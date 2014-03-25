@@ -16,6 +16,7 @@
 #include "Program.h"
 #include "RenderWindow.h"
 #include "SWTHelper.h"
+#include "SWTHelperGPU.h"
 #include "Texture.h"
 #include "types.h"
 #include "VertexShader.h"
@@ -49,9 +50,9 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     
     program = New<Program>(&device, shaders);
     
-    List<BoundingBox> boundingBoxes = SWTHelper::StrokeWidthTransform(input);
+    List<BoundingBox> boundingBoxes = SWTHelperGPU::StrokeWidthTransform(input);
     cv::Mat output = ImgProc::DrawBoundingBoxes(input, boundingBoxes, {0, 255, 255, 255});
-    //AddTexture(output, "Detected text regions");
+    AddTexture(output, "Detected text regions");
 }
 
 void RenderWindow::SetWindowSize(const cv::Size &size, const cv::Size &max)
@@ -79,7 +80,7 @@ void RenderWindow::DrawRect(const DrawableRect &rect)
 
 void RenderWindow::Draw()
 {
-    static bool keyPressed = false;
+    static bool keyPressed = false; // to make it draw the first time
     
     if (glfwGetKey(window, GLFW_KEY_RIGHT) && !keyPressed)
     {
@@ -95,15 +96,17 @@ void RenderWindow::Draw()
         keyPressed = true;
         glfwSetWindowTitle(window, textureDescriptors[currentTextureIndex].c_str());
     }
+    if (keyPressed)
+    {
+        glClearColor(0, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        DrawRect(*rect1);
+    }
     if (!glfwGetKey(window, GLFW_KEY_RIGHT) && !glfwGetKey(window, GLFW_KEY_LEFT))
     {
         keyPressed = false;
     }
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    
-    DrawRect(*rect1);
     
     base::Draw();
 }
@@ -115,6 +118,6 @@ void RenderWindow::AddTexture(const cv::Mat &mat, const String &descriptor)
 
 void RenderWindow::AddTexture(Ptr<Texture> texture, const String &descriptor)
 {
-    textures.push_back( texture );
+    textures.push_back(texture);
     textureDescriptors.push_back(descriptor);
 }

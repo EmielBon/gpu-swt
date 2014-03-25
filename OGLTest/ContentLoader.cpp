@@ -21,14 +21,14 @@ GraphicsDevice* ContentLoader::device = nullptr;
 template<>
 Ptr<VertexShader> ContentLoader::Load(const String &resourceName)
 {
-    String sourceText = FileReadAll(contentPath + resourceName + ".vsh");
+    String sourceText = FileReadAll(contentPath + resourceName + ".vs");
     return New<VertexShader>(sourceText);
 }
 
 template<>
 Ptr<FragmentShader> ContentLoader::Load(const String &resourceName)
 {
-    String sourceText = FileReadAll(contentPath + resourceName + ".fsh");
+    String sourceText = FileReadAll(contentPath + resourceName + ".fs");
     return New<FragmentShader>(sourceText);
 }
 

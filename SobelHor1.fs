@@ -3,11 +3,11 @@
 uniform sampler2D Texture;
 uniform vec2 TextureSize = vec2(1, 1);
 
-in  vec2 FragTexCoord;
-out vec4 FinalColor;
-
 const vec3 weights = vec3(3, 10, 3);
 
+out vec4 FragColor;
+
+// todo: assess speed of texture rectangle, which does not need this conversion
 vec4 screenTex(vec2 xy)
 {
     return texture(Texture, xy / TextureSize);
@@ -19,11 +19,11 @@ void main()
     float v = 0;
     
     result = vec3(
-        screenTex(FragTexCoord + vec2(-1, 0)).r,
-        screenTex(FragTexCoord + vec2( 0, 0)).r,
-        screenTex(FragTexCoord + vec2( 1, 0)).r
+        screenTex(gl_FragCoord.xy + vec2(0,-1)).r,
+        screenTex(gl_FragCoord.xy + vec2(0, 0)).r,
+        screenTex(gl_FragCoord.xy + vec2(0, 1)).r
     );
     
     v = dot(result, weights);
-    FinalColor = vec4(v, v, v, 1);
+    FragColor = vec4(v, v, v, 1);
 }

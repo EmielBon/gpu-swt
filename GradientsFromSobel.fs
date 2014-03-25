@@ -4,7 +4,7 @@ uniform sampler2D SobelHor;
 uniform sampler2D SobelVer;
 
 in  vec2 FragTexCoord;
-out vec4 FinalColor;
+out vec4 FragColor;
 
 void main()
 {
@@ -15,5 +15,5 @@ void main()
     
     gradient = normalize(gradient);
     
-    FinalColor = vec4(gradient.x, gradient.y, 0, 1);
+    FragColor = vec4(gradient.x, gradient.y, 0, 1);
 }

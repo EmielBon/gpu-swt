@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1700DFC918E03C81004112B6 /* SobelVer2.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFC818E03C81004112B6 /* SobelVer2.fsh */; };
-		1700DFCB18E063AC004112B6 /* GradientsFromSobel.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFCA18E063AC004112B6 /* GradientsFromSobel.fsh */; };
+		1700DFC918E03C81004112B6 /* SobelVer2.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFC818E03C81004112B6 /* SobelVer2.fs */; };
+		1700DFCB18E063AC004112B6 /* GradientsFromSobel.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */; };
+		1700DFCE18E1B2B3004112B6 /* GaussianBlurV.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFCD18E1B2B3004112B6 /* GaussianBlurV.fs */; };
+		1700DFD218E1B37F004112B6 /* SWTHelperGPU.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFD018E1B37F004112B6 /* SWTHelperGPU.cpp */; };
 		1710979618BF476200E54738 /* libopencv_calib3d.2.4.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1710975E18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */; };
 		1710979718BF476200E54738 /* libopencv_calib3d.2.4.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1710975F18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */; };
 		1710979818BF476200E54738 /* libopencv_calib3d.2.4.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1710976018BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */; };
@@ -71,7 +73,7 @@
 		1744D95818C09130004605D1 /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1744D95618C09130004605D1 /* BoundingBox.cpp */; };
 		1744D95E18C0B193004605D1 /* Chain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1744D95C18C0B193004605D1 /* Chain.cpp */; };
 		17658F25189FA444003A8B11 /* glew.c in Sources */ = {isa = PBXBuildFile; fileRef = 17658F24189FA443003A8B11 /* glew.c */; };
-		17658F29189FA824003A8B11 /* Normal.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 17658F28189FA824003A8B11 /* Normal.fsh */; };
+		17658F29189FA824003A8B11 /* Normal.fs in Sources */ = {isa = PBXBuildFile; fileRef = 17658F28189FA824003A8B11 /* Normal.fs */; };
 		17658F2C189FA980003A8B11 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F2A189FA980003A8B11 /* Shader.cpp */; };
 		17658F2F189FB5F4003A8B11 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F2D189FB5F4003A8B11 /* Program.cpp */; };
 		17658F33189FC7C8003A8B11 /* ContentLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17658F31189FC7C8003A8B11 /* ContentLoader.cpp */; };
@@ -87,9 +89,9 @@
 		17F3F9E118BBAE0900C78815 /* Component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F3F9DF18BBAE0900C78815 /* Component.cpp */; };
 		17F5944718D87DA100B1C3C7 /* FrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F5944518D87DA100B1C3C7 /* FrameBuffer.cpp */; };
 		17F5944A18D8861200B1C3C7 /* DepthBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F5944818D8861200B1C3C7 /* DepthBuffer.cpp */; };
-		17F5945218DB3CB800B1C3C7 /* Grayscale.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945118DB3CB800B1C3C7 /* Grayscale.fsh */; };
-		17F5945518DC61E500B1C3C7 /* SobelHor2.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945418DC61E500B1C3C7 /* SobelHor2.fsh */; };
-		17F5945718DC6CAA00B1C3C7 /* SobelHor.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945618DC6CAA00B1C3C7 /* SobelHor.fsh */; };
+		17F5945218DB3CB800B1C3C7 /* Grayscale.fs in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945118DB3CB800B1C3C7 /* Grayscale.fs */; };
+		17F5945518DC61E500B1C3C7 /* SobelHor2.fs in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945418DC61E500B1C3C7 /* SobelHor2.fs */; };
+		17F5945718DC6CAA00B1C3C7 /* SobelHor.fs in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945618DC6CAA00B1C3C7 /* SobelHor.fs */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -106,9 +108,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1700DFC718E03B8D004112B6 /* SobelVer1.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer1.fsh; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
-		1700DFC818E03C81004112B6 /* SobelVer2.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer2.fsh; sourceTree = "<group>"; };
-		1700DFCA18E063AC004112B6 /* GradientsFromSobel.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = GradientsFromSobel.fsh; sourceTree = "<group>"; };
+		1700DFC718E03B8D004112B6 /* SobelVer1.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer1.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
+		1700DFC818E03C81004112B6 /* SobelVer2.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer2.fs; sourceTree = "<group>"; };
+		1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = GradientsFromSobel.fs; sourceTree = "<group>"; };
+		1700DFCC18E1AB31004112B6 /* GaussianBlurH.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = GaussianBlurH.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
+		1700DFCD18E1B2B3004112B6 /* GaussianBlurV.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = GaussianBlurV.fs; sourceTree = "<group>"; };
+		1700DFD018E1B37F004112B6 /* SWTHelperGPU.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SWTHelperGPU.cpp; sourceTree = "<group>"; };
+		1700DFD118E1B37F004112B6 /* SWTHelperGPU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTHelperGPU.h; sourceTree = "<group>"; };
 		1710975E18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_calib3d.2.4.8.dylib; sourceTree = "<group>"; };
 		1710975F18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_calib3d.2.4.8.dylib; sourceTree = "<group>"; };
 		1710976018BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_calib3d.2.4.8.dylib; sourceTree = "<group>"; };
@@ -178,8 +184,8 @@
 		1744D95C18C0B193004605D1 /* Chain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Chain.cpp; sourceTree = "<group>"; };
 		1744D95D18C0B193004605D1 /* Chain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chain.h; sourceTree = "<group>"; };
 		17658F24189FA443003A8B11 /* glew.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glew.c; path = OGLTest/glew.c; sourceTree = "<group>"; };
-		17658F27189FA6AC003A8B11 /* Trivial.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Trivial.vsh; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
-		17658F28189FA824003A8B11 /* Normal.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Normal.fsh; sourceTree = "<group>"; };
+		17658F27189FA6AC003A8B11 /* Trivial.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Trivial.vs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
+		17658F28189FA824003A8B11 /* Normal.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Normal.fs; sourceTree = "<group>"; };
 		17658F2A189FA980003A8B11 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
 		17658F2B189FA980003A8B11 /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
 		17658F2D189FB5F4003A8B11 /* Program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Program.cpp; sourceTree = "<group>"; };
@@ -221,10 +227,10 @@
 		17F5944918D8861200B1C3C7 /* DepthBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DepthBuffer.h; sourceTree = "<group>"; };
 		17F5944C18D88F9900B1C3C7 /* OGLBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGLBuffer.h; sourceTree = "<group>"; };
 		17F5944F18DB2BF800B1C3C7 /* IOGLBindableResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOGLBindableResource.h; sourceTree = "<group>"; };
-		17F5945118DB3CB800B1C3C7 /* Grayscale.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Grayscale.fsh; sourceTree = "<group>"; };
-		17F5945318DC5DEB00B1C3C7 /* SobelHor1.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelHor1.fsh; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
-		17F5945418DC61E500B1C3C7 /* SobelHor2.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelHor2.fsh; sourceTree = "<group>"; };
-		17F5945618DC6CAA00B1C3C7 /* SobelHor.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelHor.fsh; sourceTree = "<group>"; };
+		17F5945118DB3CB800B1C3C7 /* Grayscale.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Grayscale.fs; sourceTree = "<group>"; };
+		17F5945318DC5DEB00B1C3C7 /* SobelHor1.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelHor1.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
+		17F5945418DC61E500B1C3C7 /* SobelHor2.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelHor2.fs; sourceTree = "<group>"; };
+		17F5945618DC6CAA00B1C3C7 /* SobelHor.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelHor.fs; sourceTree = "<group>"; };
 		17FD311718B35A740047B633 /* MathHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathHelper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -297,11 +303,11 @@
 		1700DFC618E03B74004112B6 /* Sobel */ = {
 			isa = PBXGroup;
 			children = (
-				17F5945618DC6CAA00B1C3C7 /* SobelHor.fsh */,
-				17F5945318DC5DEB00B1C3C7 /* SobelHor1.fsh */,
-				17F5945418DC61E500B1C3C7 /* SobelHor2.fsh */,
-				1700DFC718E03B8D004112B6 /* SobelVer1.fsh */,
-				1700DFC818E03C81004112B6 /* SobelVer2.fsh */,
+				17F5945618DC6CAA00B1C3C7 /* SobelHor.fs */,
+				17F5945318DC5DEB00B1C3C7 /* SobelHor1.fs */,
+				17F5945418DC61E500B1C3C7 /* SobelHor2.fs */,
+				1700DFC718E03B8D004112B6 /* SobelVer1.fs */,
+				1700DFC818E03C81004112B6 /* SobelVer2.fs */,
 			);
 			name = Sobel;
 			sourceTree = "<group>";
@@ -440,11 +446,13 @@
 		17658F26189FA645003A8B11 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				1700DFCC18E1AB31004112B6 /* GaussianBlurH.fs */,
+				1700DFCD18E1B2B3004112B6 /* GaussianBlurV.fs */,
+				1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */,
+				17F5945118DB3CB800B1C3C7 /* Grayscale.fs */,
+				17658F28189FA824003A8B11 /* Normal.fs */,
 				1700DFC618E03B74004112B6 /* Sobel */,
-				17F5945118DB3CB800B1C3C7 /* Grayscale.fsh */,
-				17658F28189FA824003A8B11 /* Normal.fsh */,
-				17658F27189FA6AC003A8B11 /* Trivial.vsh */,
-				1700DFCA18E063AC004112B6 /* GradientsFromSobel.fsh */,
+				17658F27189FA6AC003A8B11 /* Trivial.vs */,
 			);
 			name = shaders;
 			sourceTree = "<group>";
@@ -496,6 +504,8 @@
 				17EED57D18AD205B0094A37D /* Ray.h */,
 				17EED57918AD16340094A37D /* SWTHelper.cpp */,
 				17EED57A18AD16340094A37D /* SWTHelper.h */,
+				1700DFD018E1B37F004112B6 /* SWTHelperGPU.cpp */,
+				1700DFD118E1B37F004112B6 /* SWTHelperGPU.h */,
 				1739564418CDE7DE003BF7D0 /* SWTParameters.h */,
 			);
 			name = SWT;
@@ -558,25 +568,27 @@
 				1744D95E18C0B193004605D1 /* Chain.cpp in Sources */,
 				171A02FF1899328C00A72B91 /* main.cpp in Sources */,
 				17658F2F189FB5F4003A8B11 /* Program.cpp in Sources */,
+				1700DFCE18E1B2B3004112B6 /* GaussianBlurV.fs in Sources */,
 				17658F25189FA444003A8B11 /* glew.c in Sources */,
 				17F5944A18D8861200B1C3C7 /* DepthBuffer.cpp in Sources */,
 				17F3F9E118BBAE0900C78815 /* Component.cpp in Sources */,
 				1744D95818C09130004605D1 /* BoundingBox.cpp in Sources */,
+				1700DFD218E1B37F004112B6 /* SWTHelperGPU.cpp in Sources */,
 				17658F33189FC7C8003A8B11 /* ContentLoader.cpp in Sources */,
 				17EED2DA18A392280094A37D /* DrawableRect.cpp in Sources */,
-				17F5945518DC61E500B1C3C7 /* SobelHor2.fsh in Sources */,
+				17F5945518DC61E500B1C3C7 /* SobelHor2.fs in Sources */,
 				1776532D18C8A13A004553B6 /* ConnectedComponentsHelper.cpp in Sources */,
-				17658F29189FA824003A8B11 /* Normal.fsh in Sources */,
-				17F5945218DB3CB800B1C3C7 /* Grayscale.fsh in Sources */,
+				17658F29189FA824003A8B11 /* Normal.fs in Sources */,
+				17F5945218DB3CB800B1C3C7 /* Grayscale.fs in Sources */,
 				17EED57B18AD16340094A37D /* SWTHelper.cpp in Sources */,
 				17F5944718D87DA100B1C3C7 /* FrameBuffer.cpp in Sources */,
-				1700DFC918E03C81004112B6 /* SobelVer2.fsh in Sources */,
+				1700DFC918E03C81004112B6 /* SobelVer2.fs in Sources */,
 				17658F2C189FA980003A8B11 /* Shader.cpp in Sources */,
 				17EED57E18AD205B0094A37D /* Ray.cpp in Sources */,
-				1700DFCB18E063AC004112B6 /* GradientsFromSobel.fsh in Sources */,
+				1700DFCB18E063AC004112B6 /* GradientsFromSobel.fs in Sources */,
 				17EED57118A505910094A37D /* Uniform.cpp in Sources */,
 				17EEEF1818AE6D7000B5A290 /* ImgProc.cpp in Sources */,
-				17F5945718DC6CAA00B1C3C7 /* SobelHor.fsh in Sources */,
+				17F5945718DC6CAA00B1C3C7 /* SobelHor.fs in Sources */,
 				17EED2E018A398350094A37D /* VertexPositionTexture.cpp in Sources */,
 				171A0315189BD4B200A72B91 /* Window.cpp in Sources */,
 			);

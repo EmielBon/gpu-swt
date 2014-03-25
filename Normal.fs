@@ -4,7 +4,7 @@ uniform sampler2D Texture;
 uniform int Channels = 3;
 
 in  vec2 FragTexCoord;
-out vec4 FinalColor;
+out vec4 FragColor;
 
 void main()
 {
@@ -13,5 +13,5 @@ void main()
     if (Channels == 1)
         color.gb = color.rr;
     
-    FinalColor = color;
+    FragColor = color;
 }

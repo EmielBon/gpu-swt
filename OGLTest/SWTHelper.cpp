@@ -16,13 +16,6 @@
 #include "ConnectedComponentsHelper.h"
 #include "RenderWindow.h"
 #include "SWTParameters.h"
-#include "FrameBuffer.h"
-#include "VertexShader.h"
-#include "FragmentShader.h"
-#include "ContentLoader.h"
-#include "Program.h"
-#include "Texture.h"
-#include "DrawableRect.h"
 
 List<Ray> CastRays(const cv::Mat &edgeMap, const cv::Mat &gradients, GradientDirection direction);
 LinkedList< Ptr<Chain> > MakePairs(List<Ptr<Component>> &components);
@@ -38,101 +31,12 @@ void FilterNonWords(LinkedList< Ptr<Chain> > &chains);
 inline void Draw(const cv::Mat &image, const String &description);
 void DrawBoundingBoxes(const cv::Mat &input, const List< Ptr<Component> > &components, const String &description);
 void DrawChains(const cv::Mat &input, const LinkedList< Ptr<Chain> > &components, const String &description);
-Ptr<Program> LoadScreenSpaceProgram(const String &name);
 
 List<BoundingBox> SWTHelper::StrokeWidthTransform(const cv::Mat &input)
 {
-    int width  = input.size().width;
-    int height = input.size().height;
-    Vector2 size(width, height);
-    
-    //glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
-    
-    // Get the graphics device
-    auto &device = RenderWindow::Instance().GraphicsDevice;
-    // Load the full-screen rect
-    DrawableRect rect1(-1, -1, 1, 1, 1, 1);
-    DrawableRect rect2(-1, -1, 1, 1, width, height);
-    
-    device.VertexBuffer = rect1.VertexBuffer;
-    device.IndexBuffer  = rect1.IndexBuffer;
-    
-    // Load the framebuffers
-    FrameBuffer frameBuffer1(width, height, GL_RGB, GL_UNSIGNED_BYTE);
-    FrameBuffer frameBuffer2(width, height, GL_RGB, GL_FLOAT);
-    
-    // Create references to the render target textures
-    Ptr<Texture> gray, gradientH, gradientV, gradients;
-    
-    // Load the shaders
-    auto grayscale = LoadScreenSpaceProgram("Grayscale");
-    auto sobelHor1 = LoadScreenSpaceProgram("SobelHor1");
-    auto sobelHor2 = LoadScreenSpaceProgram("SobelHor2");
-    auto sobelVer1 = LoadScreenSpaceProgram("SobelVer1");
-    auto sobelVer2 = LoadScreenSpaceProgram("SobelVer2");
-    auto gradientsFromSobel = LoadScreenSpaceProgram("GradientsFromSobel");
-    
-    // Create a Texture from the input
-    Texture texture(input);
-    
-    // Render InputTexture -> FrameBuffer1 with Grayscale to gray texture
-    frameBuffer1.Bind();
-    grayscale->Use();
-    grayscale->Uniforms["Texture"].SetValue(texture);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
-    gray = frameBuffer1.Texture;
-    //frameBuffer1.CreateNewColorAttachment0();
-    
-    device.VertexBuffer = rect2.VertexBuffer;
-    device.IndexBuffer  = rect2.IndexBuffer;
-    
-    // Render gray texture -> FrameBuffer2 with SobelHor1 to gradientH texture
-    frameBuffer2.Bind();
-    sobelHor1->Use();
-    sobelHor1->Uniforms["Texture"].SetValue(*gray);
-    sobelHor1->Uniforms["TextureSize"].SetValue(size);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
-    gradientH = frameBuffer2.Texture;
-    frameBuffer2.CreateNewColorAttachment0();
-    // Render gradientH texture -> FrameBuffer2 with SobelHor2 to gradientH texture
-    sobelHor2->Use();
-    sobelHor2->Uniforms["Texture"].SetValue(*gradientH);
-    sobelHor2->Uniforms["TextureSize"].SetValue(size);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
-    gradientH = frameBuffer2.Texture;
-    frameBuffer2.CreateNewColorAttachment0();
-    
-    sobelVer1->Use();
-    sobelVer1->Uniforms["Texture"].SetValue(*gray);
-    sobelVer1->Uniforms["TextureSize"].SetValue(size);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
-    gradientV = frameBuffer2.Texture;
-    frameBuffer2.CreateNewColorAttachment0();
-    // Render FrameBuffer2.Texture (SobelHor1) -> FrameBuffer1 with SobelHor2
-    sobelVer2->Use();
-    sobelVer2->Uniforms["Texture"].SetValue(*gradientV);
-    sobelVer2->Uniforms["TextureSize"].SetValue(size);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
-    gradientV = frameBuffer2.Texture;
-    frameBuffer2.CreateNewColorAttachment0();
-    
-    device.VertexBuffer = rect1.VertexBuffer;
-    device.IndexBuffer  = rect1.IndexBuffer;
-    
-    gradientsFromSobel->Use();
-    gradientsFromSobel->Uniforms["SobelHor"].SetValue(*gradientH);
-    gradientsFromSobel->Uniforms["SobelVer"].SetValue(*gradientV);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
-    gradients = frameBuffer2.Texture;
-    frameBuffer2.CreateNewColorAttachment0();
-    
-    RenderWindow::Instance().AddTexture(gray, "Grayscale");
     cv::Mat grayImage = ImgProc::ConvertToGrayscale(input); Draw(grayImage, "Grayscale (OpenCV)");
-    RenderWindow::Instance().AddTexture(gradientH, "Horizontal gradients (Sobel/Scharr)");
-    RenderWindow::Instance().AddTexture(gradientV, "Vertical gradients (Sobel/Scharr)");
-    RenderWindow::Instance().AddTexture(gradients, "Gradients");
     
-/*#ifdef EQUALIZE_HISTOGRAM
+#ifdef EQUALIZE_HISTOGRAM
     cv::Mat grayImage2 = grayImage.clone();
     grayImage = ImgProc::ContrastStretch(grayImage2, 0, 100);
     //cv::equalizeHist(grayImage2, grayImage);
@@ -141,11 +45,11 @@ List<BoundingBox> SWTHelper::StrokeWidthTransform(const cv::Mat &input)
 #ifdef SHARPEN_INPUT
     grayImage = ImgProc::Sharpen(grayImage); Draw(grayImage, "Sharpened (OpenCV)");
 #endif
-    cv::Mat edges     = ImgProc::CalculateEdgeMap(grayImage); Draw(edges, "Edge map (Canny edge detector)");*/
-    cv::Mat cvgradients = ImgProc::CalculateGradients(grayImage, true); Draw(cvgradients, "Gradients (OpenCV)");
+    cv::Mat edges     = ImgProc::CalculateEdgeMap(grayImage); Draw(edges, "Edge map (Canny edge detector)");
+    cv::Mat gradients = ImgProc::CalculateGradients(grayImage, true); Draw(gradients, "Gradients (OpenCV)");
     
     grayImage.release();
-    /*
+    
     List< Ptr<Component> > components;
     
     cv::Mat swtImage1 = CalculateStrokeWidths(edges, gradients, GradientDirection::With); Draw(ImgProc::NormalizeImage(swtImage1, 1.0f, FLT_MAX, 1.0f), "SWT 1");
@@ -179,28 +83,13 @@ List<BoundingBox> SWTHelper::StrokeWidthTransform(const cv::Mat &input)
     
     FilterNonWords(chains);
     DrawChains(input, chains, "Chains with length >= 3 (words)");
-    */
+    
     List<BoundingBox> boundingBoxes;
     
-    //for(auto chain : chains)
-    //    boundingBoxes.push_back(chain->BoundingBox());
+    for(auto chain : chains)
+        boundingBoxes.push_back(chain->BoundingBox());
     
     return boundingBoxes;
-}
-
-Ptr<Program> LoadScreenSpaceProgram(const String &name)
-{
-    auto &device = RenderWindow::Instance().GraphicsDevice;
-    
-    List< Ptr<Shader> > shaders;
-    
-    auto vs = ContentLoader::Load<VertexShader>("Trivial");
-    auto fs = ContentLoader::Load<FragmentShader>(name);
-    
-    shaders.push_back(std::dynamic_pointer_cast<Shader>(vs));
-    shaders.push_back(std::dynamic_pointer_cast<Shader>(fs));
-    
-    return New<Program>(&device, shaders);
 }
 
 inline bool IsEdgePixel(const cv::Mat &edgeMap, int x, int y)
