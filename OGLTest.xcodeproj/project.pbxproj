@@ -11,6 +11,8 @@
 		1700DFCB18E063AC004112B6 /* GradientsFromSobel.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */; };
 		1700DFCE18E1B2B3004112B6 /* GaussianBlurV.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFCD18E1B2B3004112B6 /* GaussianBlurV.fs */; };
 		1700DFD218E1B37F004112B6 /* SWTHelperGPU.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFD018E1B37F004112B6 /* SWTHelperGPU.cpp */; };
+		1700DFD518E1CA23004112B6 /* Sobel1.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFD418E1CA23004112B6 /* Sobel1.fs */; };
+		1700DFD718E1CE9F004112B6 /* Sobel2.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFD618E1CE9F004112B6 /* Sobel2.fs */; };
 		1710979618BF476200E54738 /* libopencv_calib3d.2.4.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1710975E18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */; };
 		1710979718BF476200E54738 /* libopencv_calib3d.2.4.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1710975F18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */; };
 		1710979818BF476200E54738 /* libopencv_calib3d.2.4.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1710976018BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */; };
@@ -115,6 +117,8 @@
 		1700DFCD18E1B2B3004112B6 /* GaussianBlurV.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = GaussianBlurV.fs; sourceTree = "<group>"; };
 		1700DFD018E1B37F004112B6 /* SWTHelperGPU.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SWTHelperGPU.cpp; sourceTree = "<group>"; };
 		1700DFD118E1B37F004112B6 /* SWTHelperGPU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTHelperGPU.h; sourceTree = "<group>"; };
+		1700DFD418E1CA23004112B6 /* Sobel1.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Sobel1.fs; sourceTree = "<group>"; };
+		1700DFD618E1CE9F004112B6 /* Sobel2.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Sobel2.fs; sourceTree = "<group>"; };
 		1710975E18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_calib3d.2.4.8.dylib; sourceTree = "<group>"; };
 		1710975F18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_calib3d.2.4.8.dylib; sourceTree = "<group>"; };
 		1710976018BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_calib3d.2.4.8.dylib; sourceTree = "<group>"; };
@@ -199,6 +203,7 @@
 		17658F4118A0F96E003A8B11 /* VertexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexArray.h; sourceTree = "<group>"; };
 		1776532B18C8A13A004553B6 /* ConnectedComponentsHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConnectedComponentsHelper.cpp; sourceTree = "<group>"; };
 		1776532C18C8A13A004553B6 /* ConnectedComponentsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectedComponentsHelper.h; sourceTree = "<group>"; };
+		17B473A618E444FD0012148E /* RoundAngles.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = RoundAngles.fs; sourceTree = "<group>"; };
 		17EED2D818A392280094A37D /* DrawableRect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DrawableRect.cpp; sourceTree = "<group>"; };
 		17EED2D918A392280094A37D /* DrawableRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawableRect.h; sourceTree = "<group>"; };
 		17EED2DB18A396E80094A37D /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture.cpp; sourceTree = "<group>"; };
@@ -303,6 +308,9 @@
 		1700DFC618E03B74004112B6 /* Sobel */ = {
 			isa = PBXGroup;
 			children = (
+				1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */,
+				1700DFD418E1CA23004112B6 /* Sobel1.fs */,
+				1700DFD618E1CE9F004112B6 /* Sobel2.fs */,
 				17F5945618DC6CAA00B1C3C7 /* SobelHor.fs */,
 				17F5945318DC5DEB00B1C3C7 /* SobelHor1.fs */,
 				17F5945418DC61E500B1C3C7 /* SobelHor2.fs */,
@@ -310,6 +318,15 @@
 				1700DFC818E03C81004112B6 /* SobelVer2.fs */,
 			);
 			name = Sobel;
+			sourceTree = "<group>";
+		};
+		1700DFD318E1C403004112B6 /* Gaussian Blur */ = {
+			isa = PBXGroup;
+			children = (
+				1700DFCC18E1AB31004112B6 /* GaussianBlurH.fs */,
+				1700DFCD18E1B2B3004112B6 /* GaussianBlurV.fs */,
+			);
+			name = "Gaussian Blur";
 			sourceTree = "<group>";
 		};
 		171A02F21899328C00A72B91 = {
@@ -446,9 +463,8 @@
 		17658F26189FA645003A8B11 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
-				1700DFCC18E1AB31004112B6 /* GaussianBlurH.fs */,
-				1700DFCD18E1B2B3004112B6 /* GaussianBlurV.fs */,
-				1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */,
+				17B473A718E445020012148E /* Canny */,
+				1700DFD318E1C403004112B6 /* Gaussian Blur */,
 				17F5945118DB3CB800B1C3C7 /* Grayscale.fs */,
 				17658F28189FA824003A8B11 /* Normal.fs */,
 				1700DFC618E03B74004112B6 /* Sobel */,
@@ -489,6 +505,14 @@
 				17658F35189FC8B2003A8B11 /* VertexShader.h */,
 			);
 			name = Graphics;
+			sourceTree = "<group>";
+		};
+		17B473A718E445020012148E /* Canny */ = {
+			isa = PBXGroup;
+			children = (
+				17B473A618E444FD0012148E /* RoundAngles.fs */,
+			);
+			name = Canny;
 			sourceTree = "<group>";
 		};
 		17EED57818ACFA680094A37D /* SWT */ = {
@@ -563,6 +587,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				17EED2EC18A3C6240094A37D /* GraphicsDevice.cpp in Sources */,
+				1700DFD718E1CE9F004112B6 /* Sobel2.fs in Sources */,
 				17EED2DD18A396E80094A37D /* Texture.cpp in Sources */,
 				171A0319189BD85A00A72B91 /* RenderWindow.cpp in Sources */,
 				1744D95E18C0B193004605D1 /* Chain.cpp in Sources */,
@@ -570,6 +595,7 @@
 				17658F2F189FB5F4003A8B11 /* Program.cpp in Sources */,
 				1700DFCE18E1B2B3004112B6 /* GaussianBlurV.fs in Sources */,
 				17658F25189FA444003A8B11 /* glew.c in Sources */,
+				1700DFD518E1CA23004112B6 /* Sobel1.fs in Sources */,
 				17F5944A18D8861200B1C3C7 /* DepthBuffer.cpp in Sources */,
 				17F3F9E118BBAE0900C78815 /* Component.cpp in Sources */,
 				1744D95818C09130004605D1 /* BoundingBox.cpp in Sources */,
