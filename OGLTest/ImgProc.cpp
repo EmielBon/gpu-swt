@@ -67,6 +67,9 @@ cv::Mat ImgProc::ConvertToFloat(const cv::Mat &image, int type)
 
 cv::Mat ImgProc::CalculateEdgeMap(const cv::Mat &image)
 {
+    cv::Mat blurred;
+    cv::GaussianBlur(image, blurred, cv::Size(3, 3), 5);
+    
     int width  = image.size().width;
     int height = image.size().height;
     
@@ -83,12 +86,12 @@ cv::Mat ImgProc::CalculateEdgeMap(const cv::Mat &image)
     values.reserve(width * height);
     for(int i = 0; i < width;  ++i)
     for(int j = 0; j < height; ++j)
-        values.push_back( image.at<uchar>(j, i) );
+        values.push_back( blurred.at<uchar>(j, i) );
     
     uchar mean = MathHelper::Median(values);
     
     cv::Mat edgeMap;
-    cv::Canny(image, edgeMap, 0.66 * mean, 1.33 * mean, KERNEL_SIZE, true);
+    cv::Canny(blurred, edgeMap, 0.66 * mean, 1.33 * mean, KERNEL_SIZE, true);
     return edgeMap;
 }
 

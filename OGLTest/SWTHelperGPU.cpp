@@ -17,6 +17,7 @@
 #include "DrawableRect.h"
 #include "RenderWindow.h"
 #include "BoundingBox.h"
+#include "ImgProc.h"
 
 Ptr<Texture> Grayscale(const Texture &texture, FrameBuffer &frameBuffer);
 // Old version, retained for performance evaluation later. Small shaders, but 5 passes and (3 + 2) * 2 + 2 = 12 texel fetches per pixel
@@ -56,7 +57,7 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     RenderWindow::Instance().AddTexture(gradients, "Gradients (Sobel/Scharr)");
     RenderWindow::Instance().AddTexture(blurred, "Blurred (Gaussian)");
     RenderWindow::Instance().AddTexture(canny, "Edges (Canny)");
-    
+    RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)));
     return List<BoundingBox>();
 }
 
@@ -225,7 +226,7 @@ Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer)
     auto blurred = GaussianBlur(texture, frameBuffer);
     auto gradients = Sobel2(texture, frameBuffer);
     
-    auto roundAngles = LoadScreenSpaceProgram("RoundAngles");
+    auto roundAngles = LoadScreenSpaceProgram("Canny");
     
     Ptr<Texture> canny;
     

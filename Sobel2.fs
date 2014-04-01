@@ -27,8 +27,5 @@ void main()
     float vHor = dot(hResult, weights);
     float vVer = dot(vResult, weights);
     
-    //vec2 gradient = vec2(vHor, vVer);
-    //gradient = normalize(gradient);
-    //FragColor = vec4(gradient, 0, 1);
     FragColor = vec4(vHor, vVer, 0, 1);
 }

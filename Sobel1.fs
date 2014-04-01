@@ -21,6 +21,7 @@ void main()
     hResult[0] = screenTex(gl_FragCoord.xy - offset.xy).r;
     vResult[0] = screenTex(gl_FragCoord.xy - offset.yx).r;
     
+    // Can probably prefetch this one if not using normal FragTexCoord, not gl_FragCoord + conversion
     hResult[1] = vResult[1] = screenTex(gl_FragCoord.xy).r;
     
     hResult[2] = screenTex(gl_FragCoord.xy + offset.xy).r;
