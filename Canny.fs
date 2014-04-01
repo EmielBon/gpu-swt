@@ -37,12 +37,10 @@ void main()
     // range [-pi, pi]
     float angle = max(atan2(gradient), atan2(-gradient));
     
-    float binned = 0;
-    
     vec4 a = vec4(PiOver8, 3 * PiOver4, 5 * PiOver8, 7 * PiOver8);
     vec4 b = vec4(angle);
     vec4 r = step(a, b);
-    binned = dot(r, vec4(PiOver4));
+    float binned = dot(r, vec4(PiOver4));
     
     /*if (angle < PiOver8)
         binned = 0;
@@ -59,25 +57,22 @@ void main()
     vec2 forwardNeighbourGradient  = getGradient(gl_FragCoord.xy + dir);
     vec2 backwardNeighbourGradient = getGradient(gl_FragCoord.xy - dir);
 
-    FragColor = vec4(0, 0, 0, 1);
-    
-    if (G < length(forwardNeighbourGradient) || G < length(backwardNeighbourGradient))
-        FragColor = vec4(0, 0, 0, 1);
-    else if (G > UpperThreshold)
-        FragColor = vec4(1, 1, 1, 1);
-    else if (G >= LowerThreshold)
+    float sum = 0;
+    // todo: seprarable convolution (averaging) operation
+    for (int i = -1; i <= 1; ++i)
+    for (int j = -1; j <= 1; ++j)
     {
-        float sum = 0;
-        // todo: seprarable convolution (averaging) operation
-        for (int i = -1; i <= 1; ++i)
-        for (int j = -1; j <= 1; ++j)
-        {
-            if (i == 0 && j == 0)
-                continue;
-            sum += smoothstep(LowerThreshold, UpperThreshold, length(getGradient(gl_FragCoord.xy + vec2(i, j))));
-        }
-        
-        if (sum >= 2)
-            FragColor = vec4(1, 1, 1, 1);
+        if (i == 0 && j == 0)
+            continue;
+        sum += smoothstep(LowerThreshold, UpperThreshold, length(getGradient(gl_FragCoord.xy + vec2(i, j))));
     }
+    
+    bool localMaximum = G > length(forwardNeighbourGradient) && G > length(backwardNeighbourGradient);
+    bool strongEdge = G > UpperThreshold;
+    bool weakEdge = G >= LowerThreshold;
+    bool acceptedWeakEdge = weakEdge && sum >= 2;
+    bool isEdgePixel = localMaximum && (strongEdge || acceptedWeakEdge);
+    vec2 constants = vec2(1.0, isEdgePixel);
+    
+    FragColor = constants.xxxx * constants.yyyx;
 }
