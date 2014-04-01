@@ -1,7 +1,6 @@
 #version 150
 
 uniform sampler2D Texture;
-uniform vec2 TextureSize = vec2(1, 1);
 
 const vec3 weights = vec3(3, 10, 3);
 
@@ -10,7 +9,7 @@ out vec4 FragColor;
 // todo: assess speed of texture rectangle, which does not need this conversion
 vec4 screenTex(vec2 xy)
 {
-    return texture(Texture, xy / TextureSize);
+    return texture(Texture, xy / textureSize(Texture));
 }
 
 void main()

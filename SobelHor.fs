@@ -1,13 +1,12 @@
 #version 150
 
 uniform sampler2D Texture;
-uniform vec2 TextureSize = vec2(1, 1);
 
 out vec4 FragColor;
 
 vec4 screenTex(vec2 xy)
 {
-    return texture(Texture, xy / TextureSize);
+    return texture(Texture, xy / textureSize(Texture));
 }
 
 void main()

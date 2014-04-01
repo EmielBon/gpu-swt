@@ -26,6 +26,8 @@ Ptr<Texture> Sobel(const Texture &texture, FrameBuffer &frameBuffer);
 Ptr<Texture> Sobel2(const Texture &texture, FrameBuffer &frameBuffer);
 // Optimized version with linear sampling, only 3 * 3 = 9 texel fetches per pixel for a 5x5 convolution kernel, instead of 25
 Ptr<Texture> GaussianBlur(const Texture &texture, FrameBuffer &frameBuffer);
+// Outputs gradient direction and magnitude instead of vector
+Ptr<Texture> CannySobel(const Texture &texture, FrameBuffer &frameBuffer);
 Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer);
 Ptr<Program> LoadScreenSpaceProgram(const String &name);
 
@@ -58,6 +60,7 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     RenderWindow::Instance().AddTexture(blurred, "Blurred (Gaussian)");
     RenderWindow::Instance().AddTexture(canny, "Edges (Canny)");
     RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)));
+    
     return List<BoundingBox>();
 }
 
@@ -84,10 +87,6 @@ Ptr<Texture> Sobel(const Texture &texture, FrameBuffer &frameBuffer)
     // Get the graphics device
     auto &device = RenderWindow::Instance().GraphicsDevice;
     
-    int width  = texture.GetWidth();
-    int height = texture.GetHeight();
-    Vector2 size(width, height);
-    
     // Load the shaders
     auto sobelHor1 = LoadScreenSpaceProgram("SobelHor1");
     auto sobelHor2 = LoadScreenSpaceProgram("SobelHor2");
@@ -102,7 +101,6 @@ Ptr<Texture> Sobel(const Texture &texture, FrameBuffer &frameBuffer)
     // Render gray texture -> FrameBuffer2 with SobelHor1 to gradientH texture
     sobelHor1->Use();
     sobelHor1->Uniforms["Texture"].SetValue(texture);
-    sobelHor1->Uniforms["TextureSize"].SetValue(size);
     device.DrawPrimitives(PrimitiveType::TriangleList);
     gradientH = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
@@ -110,21 +108,18 @@ Ptr<Texture> Sobel(const Texture &texture, FrameBuffer &frameBuffer)
     // Render gradientH texture -> FrameBuffer2 with SobelHor2 to gradientH texture
     sobelHor2->Use();
     sobelHor2->Uniforms["Texture"].SetValue(*gradientH);
-    sobelHor2->Uniforms["TextureSize"].SetValue(size);
     device.DrawPrimitives(PrimitiveType::TriangleList);
     gradientH = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
     sobelVer1->Use();
     sobelVer1->Uniforms["Texture"].SetValue(texture);
-    sobelVer1->Uniforms["TextureSize"].SetValue(size);
     device.DrawPrimitives(PrimitiveType::TriangleList);
     gradientV = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
     sobelVer2->Use();
     sobelVer2->Uniforms["Texture"].SetValue(*gradientV);
-    sobelVer2->Uniforms["TextureSize"].SetValue(size);
     device.DrawPrimitives(PrimitiveType::TriangleList);
     gradientV = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
@@ -146,13 +141,45 @@ Ptr<Texture> Sobel2(const Texture &texture, FrameBuffer &frameBuffer)
     // Get the graphics device
     auto &device = RenderWindow::Instance().GraphicsDevice;
     
+    // Load the shaders
+    auto sobel1 = LoadScreenSpaceProgram("Sobel1");
+    auto sobel2 = LoadScreenSpaceProgram("Sobel2");
+    
+    // Create references to the render target textures
+    Ptr<Texture> scharrAveraging, gradients;
+    
+    frameBuffer.Bind();
+    // Render gray texture -> FrameBuffer2 with SobelHor1 to gradientH texture
+    sobel1->Use();
+    sobel1->Uniforms["Texture"].SetValue(texture);
+    device.DrawPrimitives(PrimitiveType::TriangleList);
+    scharrAveraging = frameBuffer.Texture;
+    frameBuffer.CreateNewColorAttachment0();
+    
+    // Render gradientH texture -> FrameBuffer2 with SobelHor2 to gradientH texture
+    sobel2->Use();
+    sobel2->Uniforms["Texture"].SetValue(*scharrAveraging);
+    device.DrawPrimitives(PrimitiveType::TriangleList);
+    gradients = frameBuffer.Texture;
+    frameBuffer.CreateNewColorAttachment0();
+    
+    frameBuffer.Unbind();
+    
+    return gradients;
+}
+
+Ptr<Texture> CannySobel(const Texture &texture, FrameBuffer &frameBuffer)
+{
+    // Get the graphics device
+    auto &device = RenderWindow::Instance().GraphicsDevice;
+    
     int width  = texture.GetWidth();
     int height = texture.GetHeight();
     Vector2 size(width, height);
     
     // Load the shaders
     auto sobel1 = LoadScreenSpaceProgram("Sobel1");
-    auto sobel2 = LoadScreenSpaceProgram("Sobel2");
+    auto sobel2 = LoadScreenSpaceProgram("CannySobel2");
     
     // Create references to the render target textures
     Ptr<Texture> scharrAveraging, gradients;
@@ -184,10 +211,6 @@ Ptr<Texture> GaussianBlur(const Texture &texture, FrameBuffer &frameBuffer)
     // Get the graphics device
     auto &device = RenderWindow::Instance().GraphicsDevice;
     
-    int width  = texture.GetWidth();
-    int height = texture.GetHeight();
-    Vector2 size(width, height);
-    
     auto gaussianH = LoadScreenSpaceProgram("GaussianBlurH");
     auto gaussianV = LoadScreenSpaceProgram("GaussianBlurV");
     
@@ -197,14 +220,12 @@ Ptr<Texture> GaussianBlur(const Texture &texture, FrameBuffer &frameBuffer)
     
     gaussianH->Use();
     gaussianH->Uniforms["Texture"].SetValue(texture);
-    gaussianH->Uniforms["TextureSize"].SetValue(size);
     device.DrawPrimitives(PrimitiveType::TriangleList);
     gaussian1 = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
     gaussianV->Use();
     gaussianV->Uniforms["Texture"].SetValue(*gaussian1);
-    gaussianV->Uniforms["TextureSize"].SetValue(size);
     device.DrawPrimitives(PrimitiveType::TriangleList);
     gaussian2 = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
@@ -219,29 +240,24 @@ Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer)
     // Get the graphics device
     auto &device = RenderWindow::Instance().GraphicsDevice;
     
-    int width  = texture.GetWidth();
-    int height = texture.GetHeight();
-    Vector2 size(width, height);
-    
     auto blurred = GaussianBlur(texture, frameBuffer);
-    auto gradients = Sobel2(texture, frameBuffer);
+    auto gradients = CannySobel(*blurred, frameBuffer);
     
-    auto roundAngles = LoadScreenSpaceProgram("Canny");
+    auto canny = LoadScreenSpaceProgram("Canny");
     
-    Ptr<Texture> canny;
+    Ptr<Texture> edges;
     
     frameBuffer.Bind();
     
-    roundAngles->Use();
-    roundAngles->Uniforms["Texture"].SetValue(*gradients);
-    roundAngles->Uniforms["TextureSize"].SetValue(size);
+    canny->Use();
+    canny->Uniforms["Texture"].SetValue(*gradients);
     device.DrawPrimitives(PrimitiveType::TriangleList);
-    canny = frameBuffer.Texture;
+    edges = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
     frameBuffer.Unbind();
     
-    return canny;
+    return edges;
 }
 
 Ptr<Program> LoadScreenSpaceProgram(const String &name)
