@@ -15,7 +15,7 @@ class FrameBuffer : public IOGLBindableResource
 {
 public:
     
-    FrameBuffer(int width, int height, GLenum format, GLenum type, bool hasDepthBuffer = false);
+    FrameBuffer(int width, int height, GLenum format, GLenum type, GLenum attachmentType = GL_NONE);
     
     GLuint GetHandle() const;
 

@@ -29,6 +29,7 @@ Ptr<Texture> GaussianBlur(const Texture &texture, FrameBuffer &frameBuffer);
 // Outputs gradient direction and magnitude instead of vector
 Ptr<Texture> CannySobel(const Texture &texture, FrameBuffer &frameBuffer);
 Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer);
+Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients, FrameBuffer &frameBuffer);
 Ptr<Program> LoadScreenSpaceProgram(const String &name);
 
 List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
@@ -53,13 +54,27 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     auto gray = Grayscale(input, frameBuffer1);
     auto gradients = Sobel2(*gray, frameBuffer2);
     auto blurred = GaussianBlur(*gray, frameBuffer2);
-    auto canny = Canny(*gray, frameBuffer2);
+    auto edges = Canny(*blurred, frameBuffer2);
+    auto strokeWidths = ::StrokeWidthTransform(*edges, *gradients, frameBuffer2);
     
-    RenderWindow::Instance().AddTexture(gray, "Grayscale");
-    RenderWindow::Instance().AddTexture(gradients, "Gradients (Sobel/Scharr)");
-    RenderWindow::Instance().AddTexture(blurred, "Blurred (Gaussian)");
-    RenderWindow::Instance().AddTexture(canny, "Edges (Canny)");
-    RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)));
+    glEnable (GL_STENCIL_TEST);
+    
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    glStencilFunc(GL_ALWAYS, 2, ~0);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    
+    //quad - > Draw ();
+    
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glStencilFunc(GL_EQUAL, 2, ~0);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    
+    //RenderWindow::Instance().AddTexture(gray, "Grayscale");
+    //RenderWindow::Instance().AddTexture(gradients, "Gradients (Sobel/Scharr)");
+    //RenderWindow::Instance().AddTexture(blurred, "Blurred (Gaussian)");
+    RenderWindow::Instance().AddTexture(edges, "Edges (Canny)");
+    //RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)), "Edges (OpenCV Canny)");
+    RenderWindow::Instance().AddTexture(strokeWidths, "Stroke Widths");
     
     return List<BoundingBox>();
 }
@@ -240,8 +255,7 @@ Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer)
     // Get the graphics device
     auto &device = RenderWindow::Instance().GraphicsDevice;
     
-    auto blurred = GaussianBlur(texture, frameBuffer);
-    auto gradients = CannySobel(*blurred, frameBuffer);
+    auto gradients = CannySobel(texture, frameBuffer);
     
     auto canny = LoadScreenSpaceProgram("Canny");
     
@@ -250,7 +264,7 @@ Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer)
     frameBuffer.Bind();
     
     canny->Use();
-    canny->Uniforms["Texture"].SetValue(*gradients);
+    canny->Uniforms["Gradients"].SetValue(*gradients);
     device.DrawPrimitives(PrimitiveType::TriangleList);
     edges = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
@@ -258,6 +272,29 @@ Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer)
     frameBuffer.Unbind();
     
     return edges;
+}
+
+Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients, FrameBuffer &frameBuffer)
+{
+    // Get the graphics device
+    auto &device = RenderWindow::Instance().GraphicsDevice;
+    
+    auto strokeWidthTransform = LoadScreenSpaceProgram("StrokeWidthTransform1");
+    
+    Ptr<Texture> strokeWidths;
+    
+    frameBuffer.Bind();
+    
+    strokeWidthTransform->Use();
+    strokeWidthTransform->Uniforms["Edges"].SetValue(edges);
+    strokeWidthTransform->Uniforms["Gradients"].SetValue(gradients);
+    device.DrawPrimitives(PrimitiveType::TriangleList);
+    strokeWidths = frameBuffer.Texture;
+    frameBuffer.CreateNewColorAttachment0();
+    
+    frameBuffer.Unbind();
+    
+    return strokeWidths;
 }
 
 Ptr<Program> LoadScreenSpaceProgram(const String &name)

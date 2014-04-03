@@ -41,7 +41,7 @@ inline Uniform::Uniform() : Uniform("", -1, GL_ZERO)
     
 }
 
-inline Uniform::Uniform(const String& name, GLint location, GLenum type, int index) : name(name),location(location), type(type), index(index)
+inline Uniform::Uniform(const String& name, GLint location, GLenum type, int index) : name(name), location(location), type(type), index(index)
 {
     
 }

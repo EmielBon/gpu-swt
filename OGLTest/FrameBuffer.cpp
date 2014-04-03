@@ -10,13 +10,13 @@
 #include "DepthBuffer.h"
 #include "Texture.h"
 
-FrameBuffer::FrameBuffer(int width, int height, GLenum format, GLenum type, bool hasDepthBuffer)
+FrameBuffer::FrameBuffer(int width, int height, GLenum format, GLenum type, GLenum attachmentType)
 {
     glGenFramebuffers(1, &bufferId);
     
     Bind();
     
-    if (hasDepthBuffer)
+    if (attachmentType == GL_DEPTH_ATTACHMENT)
     {
         DepthBuffer = New<::DepthBuffer>(width, height);
         DepthBuffer->Bind();
@@ -30,7 +30,7 @@ FrameBuffer::FrameBuffer(int width, int height, GLenum format, GLenum type, bool
     CreateNewColorAttachment0(width, height, format, type);
     AssertFrameBufferComplete();
     
-    if (hasDepthBuffer)
+    if (attachmentType == GL_DEPTH_ATTACHMENT)
     {
         DepthBuffer->Unbind();
     }

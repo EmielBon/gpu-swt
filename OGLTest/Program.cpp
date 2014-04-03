@@ -17,9 +17,7 @@
 Program::Program(GraphicsDevice *device, const List< Ptr<Shader>> &shaders) : programId(0), device(device)
 {
     programId = CreateFromShaders(shaders);
-    
     AssertLinkingSuccess(programId);
-    
     IndexUniforms();
 }
 

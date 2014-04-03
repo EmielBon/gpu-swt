@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1700060218ED8C3100B1D45C /* StencilBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1700060018ED8C3100B1D45C /* StencilBuffer.cpp */; };
 		1700DFC918E03C81004112B6 /* SobelVer2.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFC818E03C81004112B6 /* SobelVer2.fs */; };
 		1700DFCB18E063AC004112B6 /* GradientsFromSobel.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */; };
 		1700DFCE18E1B2B3004112B6 /* GaussianBlurV.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFCD18E1B2B3004112B6 /* GaussianBlurV.fs */; };
@@ -110,6 +111,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		170005FF18ED869800B1D45C /* AlphaTest.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = AlphaTest.fs; sourceTree = "<group>"; };
+		1700060018ED8C3100B1D45C /* StencilBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StencilBuffer.cpp; sourceTree = "<group>"; };
+		1700060118ED8C3100B1D45C /* StencilBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StencilBuffer.h; sourceTree = "<group>"; };
 		1700DFC718E03B8D004112B6 /* SobelVer1.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer1.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		1700DFC818E03C81004112B6 /* SobelVer2.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer2.fs; sourceTree = "<group>"; };
 		1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = GradientsFromSobel.fs; sourceTree = "<group>"; };
@@ -208,7 +212,7 @@
 		17B473AA18EACA5B0012148E /* NonMaximumSuppression.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = NonMaximumSuppression.fs; sourceTree = "<group>"; };
 		17B473AB18EACDBA0012148E /* NeighbourSum1.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = NeighbourSum1.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		17B473AC18EAD8610012148E /* NeighbourSum2.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = NeighbourSum2.fs; sourceTree = "<group>"; };
-		17B473AE18EAD9DC0012148E /* StrokeWidthTransform.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StrokeWidthTransform.fs; sourceTree = "<group>"; };
+		17B473AE18EAD9DC0012148E /* StrokeWidthTransform1.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StrokeWidthTransform1.fs; sourceTree = "<group>"; };
 		17B473AF18EAEE250012148E /* ScreenSpaceUtil.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ScreenSpaceUtil.fs; sourceTree = "<group>"; };
 		17EED2D818A392280094A37D /* DrawableRect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DrawableRect.cpp; sourceTree = "<group>"; };
 		17EED2D918A392280094A37D /* DrawableRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawableRect.h; sourceTree = "<group>"; };
@@ -477,6 +481,7 @@
 				1700DFC618E03B74004112B6 /* Sobel */,
 				17658F27189FA6AC003A8B11 /* Trivial.vs */,
 				17B473AF18EAEE250012148E /* ScreenSpaceUtil.fs */,
+				170005FF18ED869800B1D45C /* AlphaTest.fs */,
 			);
 			name = shaders;
 			sourceTree = "<group>";
@@ -500,6 +505,8 @@
 				17658F2E189FB5F4003A8B11 /* Program.h */,
 				17658F2A189FA980003A8B11 /* Shader.cpp */,
 				17658F2B189FA980003A8B11 /* Shader.h */,
+				1700060018ED8C3100B1D45C /* StencilBuffer.cpp */,
+				1700060118ED8C3100B1D45C /* StencilBuffer.h */,
 				17EED2DB18A396E80094A37D /* Texture.cpp */,
 				17EED2DC18A396E80094A37D /* Texture.h */,
 				17EED56F18A505910094A37D /* Uniform.cpp */,
@@ -530,7 +537,7 @@
 		17B473AD18EAD9C70012148E /* Stroke Width Transform */ = {
 			isa = PBXGroup;
 			children = (
-				17B473AE18EAD9DC0012148E /* StrokeWidthTransform.fs */,
+				17B473AE18EAD9DC0012148E /* StrokeWidthTransform1.fs */,
 			);
 			name = "Stroke Width Transform";
 			sourceTree = "<group>";
@@ -620,6 +627,7 @@
 				17F3F9E118BBAE0900C78815 /* Component.cpp in Sources */,
 				1744D95818C09130004605D1 /* BoundingBox.cpp in Sources */,
 				1700DFD218E1B37F004112B6 /* SWTHelperGPU.cpp in Sources */,
+				1700060218ED8C3100B1D45C /* StencilBuffer.cpp in Sources */,
 				17658F33189FC7C8003A8B11 /* ContentLoader.cpp in Sources */,
 				17EED2DA18A392280094A37D /* DrawableRect.cpp in Sources */,
 				17F5945518DC61E500B1C3C7 /* SobelHor2.fs in Sources */,
