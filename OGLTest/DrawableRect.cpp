@@ -24,7 +24,7 @@ DrawableRect::DrawableRect(float x1, float y1, float x2, float y2, float width, 
     vertices[3].Position = Vector3(x2, y2, 0);
     vertices[3].TexCoord = Vector2(width, height);
     
-    List<GLubyte> indices = { 0, 1, 2, 1, 2, 3 };
+    List<GLushort> indices = { 0, 1, 2, 1, 2, 3 };
     
     VertexBuffer = New<::VertexBuffer>();
     VertexBuffer->SetData(vertices);

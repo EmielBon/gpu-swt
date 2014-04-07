@@ -7,20 +7,18 @@
 //
 
 #include "FrameBuffer.h"
-#include "DepthBuffer.h"
 #include "Texture.h"
 
-FrameBuffer::FrameBuffer(int width, int height, GLenum format, GLenum type, GLenum attachmentType)
+FrameBuffer::FrameBuffer(int width, int height, GLenum format, GLenum type, RenderBuffer::Type attachment)
 {
     glGenFramebuffers(1, &bufferId);
     
     Bind();
     
-    if (attachmentType == GL_DEPTH_ATTACHMENT)
+    if (attachment != RenderBuffer::Type::None)
     {
-        DepthBuffer = New<::DepthBuffer>(width, height);
-        DepthBuffer->Bind();
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, bufferId);
+        Attachment = New<::RenderBuffer>(attachment, width, height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, (GLenum)attachment, GL_RENDERBUFFER, Attachment->GetHandle());
     }
     
     // OpenGL ES only allows COLOR_ATTACHMENT0!
@@ -29,11 +27,6 @@ FrameBuffer::FrameBuffer(int width, int height, GLenum format, GLenum type, GLen
     
     CreateNewColorAttachment0(width, height, format, type);
     AssertFrameBufferComplete();
-    
-    if (attachmentType == GL_DEPTH_ATTACHMENT)
-    {
-        DepthBuffer->Unbind();
-    }
     
     Unbind();
 }

@@ -13,4 +13,5 @@
 enum PrimitiveType
 {
     TriangleList = GL_TRIANGLES,
+    LineList = GL_LINES,
 };

@@ -19,7 +19,7 @@ public:
     
     void Bind();
     
-    void SetData(const List<GLubyte> &indices);
+    void SetData(const List<GLushort> &indices);
     
     GLsizei Count() const;
     
@@ -37,10 +37,10 @@ inline void IndexBuffer::Bind()
     BindTo(GL_ELEMENT_ARRAY_BUFFER);
 }
 
-inline void IndexBuffer::SetData(const List<GLubyte> &indices)
+inline void IndexBuffer::SetData(const List<GLushort> &indices)
 {
     count = (GLsizei)indices.size();
-    OGLBuffer::SetData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLubyte), indices.data());
+    OGLBuffer::SetData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLushort), indices.data());
 }
 
 inline GLsizei IndexBuffer::Count() const

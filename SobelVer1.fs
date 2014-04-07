@@ -6,9 +6,9 @@ const vec3 weights = vec3(3, 10, 3);
 
 out vec4 FragColor;
 
-vec4 screenTex(vec2 xy)
+vec4 fetch(sampler2D sampler, vec2 xy)
 {
-    return texture(Texture, xy / textureSize(Texture));
+    return texelFetch(sampler, ivec2(xy), 0);
 }
 
 void main()
@@ -17,9 +17,9 @@ void main()
     float v = 0;
     
     result = vec3(
-        screenTex(gl_FragCoord.xy + vec2(-1, 0)).r,
-        screenTex(gl_FragCoord.xy + vec2( 0, 0)).r,
-        screenTex(gl_FragCoord.xy + vec2( 1, 0)).r
+        fetch(Texture, gl_FragCoord.xy + vec2(-1, 0)).r,
+        fetch(Texture, gl_FragCoord.xy + vec2( 0, 0)).r,
+        fetch(Texture, gl_FragCoord.xy + vec2( 1, 0)).r
     );
     
     v = dot(result, weights);

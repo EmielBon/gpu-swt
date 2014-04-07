@@ -49,5 +49,5 @@ void main()
     bool isEdgePixel = localMaximum && (strongEdge || acceptedWeakEdge);
     vec2 constants = vec2(1.0, isEdgePixel);
     
-    FragColor = vec4( float(isEdgePixel) ); //constants.xxxx * constants.yyyx;
+    FragColor = /*vec4( float(isEdgePixel) );*/ constants.xxxx * constants.yyyx;
 }

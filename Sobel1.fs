@@ -20,7 +20,8 @@ void main()
     vResult[0] = fetch(Texture, gl_FragCoord.xy - offset.yx).r;
     
     // Can probably prefetch this one if not using normal FragTexCoord, not gl_FragCoord + conversion
-    hResult[1] = vResult[1] = fetch(Texture, gl_FragCoord.xy).r;
+    hResult[1] = fetch(Texture, gl_FragCoord.xy).r;
+    vResult[1] = fetch(Texture, gl_FragCoord.xy).r;
     
     hResult[2] = fetch(Texture, gl_FragCoord.xy + offset.xy).r;
     vResult[2] = fetch(Texture, gl_FragCoord.xy + offset.yx).r;

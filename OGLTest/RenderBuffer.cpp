@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Emiel Bon. All rights reserved.
 //
 
-#include "DepthBuffer.h"
+#include "RenderBuffer.h"
 
-DepthBuffer::DepthBuffer(int width, int height)
+RenderBuffer::RenderBuffer(Type type, int width, int height)
 {
     glGenRenderbuffers(1, &bufferId);
     
     Bind();
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+        glRenderbufferStorage(GL_RENDERBUFFER, (GLenum)type, width, height);
     Unbind();
 }

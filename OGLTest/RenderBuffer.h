@@ -11,11 +11,21 @@
 #include "IOGLBindableResource.h"
 #include "types.h"
 
-class DepthBuffer : public IOGLBindableResource
+class RenderBuffer : public IOGLBindableResource
 {
 public:
     
-    DepthBuffer(int width, int height);
+    enum class Type : GLenum
+    {
+        None = GL_NONE,
+        Depth = GL_DEPTH_ATTACHMENT,
+        Stencil = GL_STENCIL_ATTACHMENT,
+        DepthStencil = GL_DEPTH24_STENCIL8,
+    };
+    
+public:
+    
+    RenderBuffer(Type type, int width, int height);
     
     GLuint GetHandle() const;
     
@@ -30,22 +40,22 @@ public:
     GLuint bufferId;
 };
 
-inline GLuint DepthBuffer::GetHandle() const
+inline GLuint RenderBuffer::GetHandle() const
 {
     return bufferId;
 }
 
-inline void DepthBuffer::Bind()
+inline void RenderBuffer::Bind()
 {
     glBindRenderbuffer(GL_RENDERBUFFER, bufferId);
 }
 
-inline void DepthBuffer::Unbind()
+inline void RenderBuffer::Unbind()
 {
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
-inline void DepthBuffer::Dispose()
+inline void RenderBuffer::Dispose()
 {
     glDeleteRenderbuffers(1, &bufferId);
     bufferId = 0;

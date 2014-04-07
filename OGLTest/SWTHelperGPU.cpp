@@ -18,6 +18,8 @@
 #include "RenderWindow.h"
 #include "BoundingBox.h"
 #include "ImgProc.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 Ptr<Texture> Grayscale(const Texture &texture, FrameBuffer &frameBuffer);
 // Old version, retained for performance evaluation later. Small shaders, but 5 passes and (3 + 2) * 2 + 2 = 12 texel fetches per pixel
@@ -42,6 +44,7 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     // Load the framebuffers
     FrameBuffer frameBuffer1(width, height, GL_RGB, GL_UNSIGNED_BYTE);
     FrameBuffer frameBuffer2(width, height, GL_RGB, GL_FLOAT);
+    FrameBuffer frameBuffer3(width, height, GL_RGB, GL_FLOAT, RenderBuffer::Type::DepthStencil);
     
     // Load the full-screen rect
     DrawableRect rect(-1, -1, 1, 1, 1, 1);
@@ -55,25 +58,13 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     auto gradients = Sobel2(*gray, frameBuffer2);
     auto blurred = GaussianBlur(*gray, frameBuffer2);
     auto edges = Canny(*blurred, frameBuffer2);
-    auto strokeWidths = ::StrokeWidthTransform(*edges, *gradients, frameBuffer2);
+    auto strokeWidths = ::StrokeWidthTransform(*edges, *gradients, frameBuffer3);
     
-    glEnable (GL_STENCIL_TEST);
-    
-    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-    glStencilFunc(GL_ALWAYS, 2, ~0);
-    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-    
-    //quad - > Draw ();
-    
-    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    glStencilFunc(GL_EQUAL, 2, ~0);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-    
-    //RenderWindow::Instance().AddTexture(gray, "Grayscale");
-    //RenderWindow::Instance().AddTexture(gradients, "Gradients (Sobel/Scharr)");
-    //RenderWindow::Instance().AddTexture(blurred, "Blurred (Gaussian)");
+    RenderWindow::Instance().AddTexture(gray, "Grayscale");
+    RenderWindow::Instance().AddTexture(gradients, "Gradients (Sobel/Scharr)");
+    RenderWindow::Instance().AddTexture(blurred, "Blurred (Gaussian)");
     RenderWindow::Instance().AddTexture(edges, "Edges (Canny)");
-    //RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)), "Edges (OpenCV Canny)");
+    RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)), "Edges (OpenCV Canny)");
     RenderWindow::Instance().AddTexture(strokeWidths, "Stroke Widths");
     
     return List<BoundingBox>();
@@ -279,16 +270,69 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     // Get the graphics device
     auto &device = RenderWindow::Instance().GraphicsDevice;
     
-    auto strokeWidthTransform = LoadScreenSpaceProgram("StrokeWidthTransform1");
+    auto alphaTest = LoadScreenSpaceProgram("AlphaTest");
+    auto strokeWidthTransform1 = LoadScreenSpaceProgram("StrokeWidthTransform1");
+    auto strokeWidthTransform2 = ContentLoader::Load<Program>("StrokeWidthTransform2");
     
     Ptr<Texture> strokeWidths;
     
     frameBuffer.Bind();
     
-    strokeWidthTransform->Use();
-    strokeWidthTransform->Uniforms["Edges"].SetValue(edges);
-    strokeWidthTransform->Uniforms["Gradients"].SetValue(gradients);
+    /*glClearStencil(0);
+    glClearColor(1, 1, 1, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilFunc(GL_ALWAYS, 2, 0xFF);
+    
+    alphaTest->Use();
+    alphaTest->Uniforms["Texture"].SetValue(edges);
     device.DrawPrimitives(PrimitiveType::TriangleList);
+    
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glStencilFunc(GL_EQUAL, 2, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);*/
+    
+    strokeWidthTransform1->Use();
+    strokeWidthTransform1->Uniforms["Edges"].SetValue(edges);
+    strokeWidthTransform1->Uniforms["Gradients"].SetValue(gradients);
+    device.DrawPrimitives(PrimitiveType::TriangleList);
+    strokeWidths = frameBuffer.Texture;
+    GLfloat buffer[edges.GetWidth() * edges.GetHeight()];
+    glReadPixels(0, 0, edges.GetWidth(), edges.GetHeight(), GL_RED, GL_FLOAT, buffer);
+    frameBuffer.CreateNewColorAttachment0();
+    
+    glDisable(GL_STENCIL_TEST);
+    
+    List<VertexPositionTexture> vertices;
+    
+    for(int i = 0; i < edges.GetWidth(); ++i)
+    for(int j = 0; j < edges.GetHeight(); ++j)
+    {
+        VertexPositionTexture v1, v2;
+        v1.Position = Vector3(i, j, 0); // z == 0 = Use directly
+        v2.Position = Vector3(i, j, 1); // z == 1 = Scatter position to end point
+        vertices.push_back(v1);
+        vertices.push_back(v2);
+    }
+    
+    // todo: skip index buffer for line drawing
+    List<GLushort> indices( vertices.size() );
+    GLushort counter = 0;
+    for(auto& index : indices)
+        index = counter++;
+    
+    device.VertexBuffer = New<::VertexBuffer>();
+    device.VertexBuffer->SetData(vertices);
+    device.IndexBuffer = New<::IndexBuffer>();
+    device.IndexBuffer->SetData(indices);
+    
+    strokeWidthTransform2->Use();
+    strokeWidthTransform2->Uniforms["Gradients"].SetValue(gradients);
+    strokeWidthTransform2->Uniforms["StrokeWidths"].SetValue(*strokeWidths);
+    device.DrawPrimitives(PrimitiveType::LineList);
     strokeWidths = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     

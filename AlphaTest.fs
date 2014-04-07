@@ -9,7 +9,7 @@ void main()
 {
     vec4 color = texture(Texture, FragTexCoord);
     
-    if (color.a == 0.0)
+    if (color.r < 0.5)
         discard;
     
     FragColor = color;

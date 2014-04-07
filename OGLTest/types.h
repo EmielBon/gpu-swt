@@ -60,7 +60,7 @@ class BoundingBox;
 class DrawableRect;
 class Image;
 class Window;
-// Grahpics
+// Graphics
 class DepthBuffer;
 class FragmentShader;
 class FrameBuffer;
@@ -68,6 +68,7 @@ class GraphicsDevice;
 class IndexBuffer;
 class Program;
 class Shader;
+class StencilBuffer;
 class Texture;
 class Uniform;
 class VertexArray;

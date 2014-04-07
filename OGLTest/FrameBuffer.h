@@ -9,13 +9,15 @@
 #pragma once
 
 #include "IOGLBindableResource.h"
+#include "FrameBufferAttachment.h"
+#include "RenderBuffer.h"
 #include "types.h"
 
 class FrameBuffer : public IOGLBindableResource
 {
 public:
     
-    FrameBuffer(int width, int height, GLenum format, GLenum type, GLenum attachmentType = GL_NONE);
+    FrameBuffer(int width, int height, GLenum format, GLenum type, RenderBuffer::Type attachment = RenderBuffer::Type::None);
     
     GLuint GetHandle() const;
 
@@ -41,7 +43,7 @@ public:
     
     GLuint bufferId;
     Ptr<::Texture> Texture;
-    Ptr<::DepthBuffer> DepthBuffer;
+    Ptr<RenderBuffer> Attachment;
 };
 
 inline GLuint FrameBuffer::GetHandle() const

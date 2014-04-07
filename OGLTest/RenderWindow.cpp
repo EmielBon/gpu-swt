@@ -33,7 +33,7 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     currentTextureIndex = 0;
     
     // Load the input image as a cv::Mat
-    cv::Mat input = ContentLoader::LoadV<cv::Mat>("chep9"); AddTexture(input, "Input image");
+    cv::Mat input = ContentLoader::LoadV<cv::Mat>("chep3"); AddTexture(input, "Input image");
     SetWindowSize(input.size(), {1024, 1024});
 
     rect1 = New<DrawableRect>(-1, 1, 1, -1);
@@ -98,9 +98,9 @@ void RenderWindow::Draw()
     }
     if (keyPressed)
     {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         DrawRect(*rect1);
     }
     if (!glfwGetKey(window, GLFW_KEY_RIGHT) && !glfwGetKey(window, GLFW_KEY_LEFT))
