@@ -35,7 +35,7 @@ void main()
     
     float  forwardNeighbourGradient = fetch(Gradients, gl_FragCoord.xy + dir).g;
     float backwardNeighbourGradient = fetch(Gradients, gl_FragCoord.xy - dir).g;
-
+    
     float sum = 0;
     // todo: seprarable convolution (averaging) operation
     for (int i = -1; i <= 1; ++i)
@@ -47,7 +47,10 @@ void main()
     bool weakEdge = magnitude >= LowerThreshold;
     bool acceptedWeakEdge = weakEdge && sum / 9 >= UpperThreshold;
     bool isEdgePixel = localMaximum && (strongEdge || acceptedWeakEdge);
-    vec2 constants = vec2(1.0, isEdgePixel);
+    //vec2 constants = vec2(1.0, isEdgePixel);
     
-    FragColor = /*vec4( float(isEdgePixel) );*/ constants.xxxx * constants.yyyx;
+    if (!isEdgePixel)
+        discard;
+    else
+        FragColor = vec4( vec3(isEdgePixel ? 1 : 0), 0 );// constants.xxxx * constants.yyyx;
 }

@@ -19,7 +19,7 @@ vec4 fetch(sampler2D sampler, vec2 xy)
     return texelFetch(sampler, ivec2(xy), 0);
 }
 
-bool inRange(sampler2D sampler, vec2 xy)
+bool inRange(sampler2D sampler, ivec2 xy)
 {
     ivec2 size = textureSize(sampler, 0);
     return clamp(xy, ivec2(0), size) == xy;
@@ -27,7 +27,7 @@ bool inRange(sampler2D sampler, vec2 xy)
 
 bool isEdgePixel(vec2 xy)
 {
-    return (fetch(Edges, xy).r > 0.5);
+    return fetch(Edges, xy).r == 1.0;
 }
 
 void main()
@@ -35,16 +35,20 @@ void main()
     if (!isEdgePixel(gl_FragCoord.xy))
         ditch;
     
-    vec2 dp = normalize( fetch(Gradients, gl_FragCoord.xy).xy );
+    vec2 gradient = fetch(Gradients, gl_FragCoord.xy).xy;
+    vec2 dp = normalize(gradient) * prec;
     
     vec2 realPosition = gl_FragCoord.xy + vec2(0.5);
     ivec2 position = ivec2(realPosition);
     
-    for (int i = 0; i <= MaxIterations + 1; ++i)
+    for (int i = 0; i <= MaxIterations; ++i)
     {
-        realPosition += dp * prec;
-        position = ivec2(realPosition);
-        if (!inRange(Edges, position) || i > MaxIterations)
+        realPosition += dp;
+        ivec2 newPos = ivec2(realPosition);
+        if (newPos == position)
+            continue;
+        position = newPos;
+        if (!inRange(Edges, position) || i == MaxIterations)
             ditch;
         if (isEdgePixel(position))
             break;

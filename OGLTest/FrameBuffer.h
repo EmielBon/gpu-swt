@@ -9,7 +9,6 @@
 #pragma once
 
 #include "IOGLBindableResource.h"
-#include "FrameBufferAttachment.h"
 #include "RenderBuffer.h"
 #include "types.h"
 

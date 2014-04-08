@@ -9,13 +9,11 @@
 #include "GraphicsDevice.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
-#include <GL/glew.h>
 
 void GraphicsDevice::DrawPrimitives(PrimitiveType type)
 {
     // bind the index buffer
     IndexBuffer->Bind();
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuffer->GetHandle());
     // draw the VAO
-    glDrawElements(type, IndexBuffer->Count(), GL_UNSIGNED_SHORT, (GLvoid*)NULL);
+    glDrawElements((GLenum)type, IndexBuffer->Count(), GL_UNSIGNED_SHORT, (GLvoid*)NULL);
 }

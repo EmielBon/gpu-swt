@@ -10,8 +10,9 @@
 
 #include "types.h"
 
-enum PrimitiveType
+enum class PrimitiveType : GLenum
 {
-    TriangleList = GL_TRIANGLES,
-    LineList = GL_LINES,
+    Points = GL_POINTS,
+    Lines = GL_LINES,
+    Triangles = GL_TRIANGLES,
 };

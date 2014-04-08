@@ -36,6 +36,10 @@ Ptr<Program> LoadScreenSpaceProgram(const String &name);
 
 List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
 {
+    glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
+    glClampColor(GL_CLAMP_VERTEX_COLOR, GL_FALSE);
+    glClampColor(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
+    
     auto &device = RenderWindow::Instance().GraphicsDevice;
     
     int width  = input.size().width;
@@ -57,15 +61,15 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     auto gray = Grayscale(input, frameBuffer1);
     auto gradients = Sobel2(*gray, frameBuffer2);
     auto blurred = GaussianBlur(*gray, frameBuffer2);
-    auto edges = Canny(*blurred, frameBuffer2);
+    auto edges = Canny(*blurred, frameBuffer3);
     auto strokeWidths = ::StrokeWidthTransform(*edges, *gradients, frameBuffer3);
     
     RenderWindow::Instance().AddTexture(gray, "Grayscale");
     RenderWindow::Instance().AddTexture(gradients, "Gradients (Sobel/Scharr)");
     RenderWindow::Instance().AddTexture(blurred, "Blurred (Gaussian)");
     RenderWindow::Instance().AddTexture(edges, "Edges (Canny)");
-    RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)), "Edges (OpenCV Canny)");
-    RenderWindow::Instance().AddTexture(strokeWidths, "Stroke Widths");
+    //RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)), "Edges (OpenCV Canny)");
+    RenderWindow::Instance().AddTexture(strokeWidths, "Stroke Width Transform");
     
     return List<BoundingBox>();
 }
@@ -79,7 +83,7 @@ Ptr<Texture> Grayscale(const Texture &texture, FrameBuffer &frameBuffer)
     
     grayscale->Use();
     grayscale->Uniforms["Texture"].SetValue(texture);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     auto result = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
@@ -107,33 +111,33 @@ Ptr<Texture> Sobel(const Texture &texture, FrameBuffer &frameBuffer)
     // Render gray texture -> FrameBuffer2 with SobelHor1 to gradientH texture
     sobelHor1->Use();
     sobelHor1->Uniforms["Texture"].SetValue(texture);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     gradientH = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
     // Render gradientH texture -> FrameBuffer2 with SobelHor2 to gradientH texture
     sobelHor2->Use();
     sobelHor2->Uniforms["Texture"].SetValue(*gradientH);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     gradientH = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
     sobelVer1->Use();
     sobelVer1->Uniforms["Texture"].SetValue(texture);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     gradientV = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
     sobelVer2->Use();
     sobelVer2->Uniforms["Texture"].SetValue(*gradientV);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     gradientV = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
     gradientsFromSobel->Use();
     gradientsFromSobel->Uniforms["SobelHor"].SetValue(*gradientH);
     gradientsFromSobel->Uniforms["SobelVer"].SetValue(*gradientV);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     gradients = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
@@ -158,14 +162,14 @@ Ptr<Texture> Sobel2(const Texture &texture, FrameBuffer &frameBuffer)
     // Render gray texture -> FrameBuffer2 with SobelHor1 to gradientH texture
     sobel1->Use();
     sobel1->Uniforms["Texture"].SetValue(texture);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     scharrAveraging = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
     // Render gradientH texture -> FrameBuffer2 with SobelHor2 to gradientH texture
     sobel2->Use();
     sobel2->Uniforms["Texture"].SetValue(*scharrAveraging);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     gradients = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
@@ -195,7 +199,7 @@ Ptr<Texture> CannySobel(const Texture &texture, FrameBuffer &frameBuffer)
     sobel1->Use();
     sobel1->Uniforms["Texture"].SetValue(texture);
     sobel1->Uniforms["TextureSize"].SetValue(size);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     scharrAveraging = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
@@ -203,7 +207,7 @@ Ptr<Texture> CannySobel(const Texture &texture, FrameBuffer &frameBuffer)
     sobel2->Use();
     sobel2->Uniforms["Texture"].SetValue(*scharrAveraging);
     sobel2->Uniforms["TextureSize"].SetValue(size);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     gradients = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
@@ -214,9 +218,7 @@ Ptr<Texture> CannySobel(const Texture &texture, FrameBuffer &frameBuffer)
 
 Ptr<Texture> GaussianBlur(const Texture &texture, FrameBuffer &frameBuffer)
 {
-    // Get the graphics device
     auto &device = RenderWindow::Instance().GraphicsDevice;
-    
     auto gaussianH = LoadScreenSpaceProgram("GaussianBlurH");
     auto gaussianV = LoadScreenSpaceProgram("GaussianBlurV");
     
@@ -226,13 +228,13 @@ Ptr<Texture> GaussianBlur(const Texture &texture, FrameBuffer &frameBuffer)
     
     gaussianH->Use();
     gaussianH->Uniforms["Texture"].SetValue(texture);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     gaussian1 = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
     gaussianV->Use();
     gaussianV->Uniforms["Texture"].SetValue(*gaussian1);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     gaussian2 = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
@@ -243,22 +245,37 @@ Ptr<Texture> GaussianBlur(const Texture &texture, FrameBuffer &frameBuffer)
 
 Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer)
 {
-    // Get the graphics device
     auto &device = RenderWindow::Instance().GraphicsDevice;
-    
-    auto gradients = CannySobel(texture, frameBuffer);
-    
     auto canny = LoadScreenSpaceProgram("Canny");
+    auto gradients = CannySobel(texture, frameBuffer);
     
     Ptr<Texture> edges;
     
     frameBuffer.Bind();
     
+    glClearStencil(0);
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    //glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilFunc(GL_ALWAYS, 2, 0xFF);
+    
     canny->Use();
     canny->Uniforms["Gradients"].SetValue(*gradients);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     edges = frameBuffer.Texture;
+    
+    /*GLubyte stencils[texture.GetWidth() * texture.GetHeight()];
+    glReadPixels(0, 0, texture.GetWidth(), texture.GetHeight(), GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, stencils);
+    
+    for(auto stencil : stencils)
+        printf("%i ", stencil);
+    */
     frameBuffer.CreateNewColorAttachment0();
+    
+    glDisable(GL_STENCIL_TEST);
     
     frameBuffer.Unbind();
     
@@ -274,12 +291,12 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     auto strokeWidthTransform1 = LoadScreenSpaceProgram("StrokeWidthTransform1");
     auto strokeWidthTransform2 = ContentLoader::Load<Program>("StrokeWidthTransform2");
     
-    Ptr<Texture> strokeWidths;
+    Ptr<Texture> strokeWidths, result;
     
     frameBuffer.Bind();
     
     /*glClearStencil(0);
-    glClearColor(1, 1, 1, 1);
+    glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
     
@@ -289,33 +306,42 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     
     alphaTest->Use();
     alphaTest->Uniforms["Texture"].SetValue(edges);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
+    */
     
-    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    glStencilFunc(GL_EQUAL, 2, 0xFF);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);*/
+    glEnable(GL_STENCIL_TEST);
+    //glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glStencilFunc(GL_EQUAL, 0, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
     
     strokeWidthTransform1->Use();
     strokeWidthTransform1->Uniforms["Edges"].SetValue(edges);
     strokeWidthTransform1->Uniforms["Gradients"].SetValue(gradients);
-    device.DrawPrimitives(PrimitiveType::TriangleList);
+    device.DrawPrimitives(PrimitiveType::Triangles);
     strokeWidths = frameBuffer.Texture;
     GLfloat buffer[edges.GetWidth() * edges.GetHeight()];
     glReadPixels(0, 0, edges.GetWidth(), edges.GetHeight(), GL_RED, GL_FLOAT, buffer);
     frameBuffer.CreateNewColorAttachment0();
     
+    RenderWindow::Instance().AddTexture(strokeWidths, "Stroke Widths");
+    
     glDisable(GL_STENCIL_TEST);
+    
+    glClear(GL_COLOR_BUFFER_BIT);
     
     List<VertexPositionTexture> vertices;
     
     for(int i = 0; i < edges.GetWidth(); ++i)
     for(int j = 0; j < edges.GetHeight(); ++j)
     {
-        VertexPositionTexture v1, v2;
-        v1.Position = Vector3(i, j, 0); // z == 0 = Use directly
-        v2.Position = Vector3(i, j, 1); // z == 1 = Scatter position to end point
-        vertices.push_back(v1);
-        vertices.push_back(v2);
+        if (buffer[i + j * edges.GetWidth()] != 0.0f)
+        {
+            VertexPositionTexture v1, v2;
+            v1.Position = Vector3(i, j, 0); // z == 0 = Use directly
+            v2.Position = Vector3(i, j, 1); // z == 1 = Scatter position to end point
+            vertices.push_back(v1);
+            vertices.push_back(v2);
+        }
     }
     
     // todo: skip index buffer for line drawing
@@ -332,13 +358,13 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     strokeWidthTransform2->Use();
     strokeWidthTransform2->Uniforms["Gradients"].SetValue(gradients);
     strokeWidthTransform2->Uniforms["StrokeWidths"].SetValue(*strokeWidths);
-    device.DrawPrimitives(PrimitiveType::LineList);
-    strokeWidths = frameBuffer.Texture;
+    device.DrawPrimitives(PrimitiveType::Lines);
+    result = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
     frameBuffer.Unbind();
     
-    return strokeWidths;
+    return result;
 }
 
 Ptr<Program> LoadScreenSpaceProgram(const String &name)
