@@ -20,7 +20,7 @@ public:
         None = GL_NONE,
         Depth = GL_DEPTH_ATTACHMENT,
         Stencil = GL_STENCIL_ATTACHMENT,
-        DepthStencil = GL_DEPTH24_STENCIL8,
+        DepthStencil = GL_DEPTH_STENCIL_ATTACHMENT,
     };
     
 public:

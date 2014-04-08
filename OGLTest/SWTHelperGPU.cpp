@@ -31,7 +31,7 @@ Ptr<Texture> GaussianBlur(const Texture &texture, FrameBuffer &frameBuffer);
 // Outputs gradient direction and magnitude instead of vector
 Ptr<Texture> CannySobel(const Texture &texture, FrameBuffer &frameBuffer);
 Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer);
-Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients, FrameBuffer &frameBuffer);
+Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients, GradientDirection direction, FrameBuffer &frameBuffer);
 Ptr<Program> LoadScreenSpaceProgram(const String &name);
 
 List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
@@ -62,14 +62,16 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     auto gradients = Sobel2(*gray, frameBuffer2);
     auto blurred = GaussianBlur(*gray, frameBuffer2);
     auto edges = Canny(*blurred, frameBuffer3);
-    auto strokeWidths = ::StrokeWidthTransform(*edges, *gradients, frameBuffer3);
+    auto strokeWidths1 = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::With, frameBuffer3);
+    auto strokeWidths2 = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::Against, frameBuffer3);
     
     RenderWindow::Instance().AddTexture(gray, "Grayscale");
     RenderWindow::Instance().AddTexture(gradients, "Gradients (Sobel/Scharr)");
     RenderWindow::Instance().AddTexture(blurred, "Blurred (Gaussian)");
     RenderWindow::Instance().AddTexture(edges, "Edges (Canny)");
     //RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)), "Edges (OpenCV Canny)");
-    RenderWindow::Instance().AddTexture(strokeWidths, "Stroke Width Transform");
+    RenderWindow::Instance().AddTexture(strokeWidths1, "Stroke Width Transform (with the gradient)");
+    RenderWindow::Instance().AddTexture(strokeWidths2, "Stroke Width Transform (against the gradient)");
     
     return List<BoundingBox>();
 }
@@ -254,9 +256,8 @@ Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer)
     frameBuffer.Bind();
     
     glClearStencil(0);
-    glClearColor(0, 0, 0, 0);
+    glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    //glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
     
     glEnable(GL_STENCIL_TEST);
     glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
@@ -267,12 +268,6 @@ Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer)
     device.DrawPrimitives(PrimitiveType::Triangles);
     edges = frameBuffer.Texture;
     
-    /*GLubyte stencils[texture.GetWidth() * texture.GetHeight()];
-    glReadPixels(0, 0, texture.GetWidth(), texture.GetHeight(), GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, stencils);
-    
-    for(auto stencil : stencils)
-        printf("%i ", stencil);
-    */
     frameBuffer.CreateNewColorAttachment0();
     
     glDisable(GL_STENCIL_TEST);
@@ -282,7 +277,7 @@ Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer)
     return edges;
 }
 
-Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients, FrameBuffer &frameBuffer)
+Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients, GradientDirection direction, FrameBuffer &frameBuffer)
 {
     // Get the graphics device
     auto &device = RenderWindow::Instance().GraphicsDevice;
@@ -290,33 +285,30 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     auto alphaTest = LoadScreenSpaceProgram("AlphaTest");
     auto strokeWidthTransform1 = LoadScreenSpaceProgram("StrokeWidthTransform1");
     auto strokeWidthTransform2 = ContentLoader::Load<Program>("StrokeWidthTransform2");
+    auto strokeWidthTransform3 = LoadScreenSpaceProgram("StrokeWidthTransform3");
     
-    Ptr<Texture> strokeWidths, result;
+    auto quadVertexBuffer = device.VertexBuffer;
+    auto quadIndexBuffer = device.IndexBuffer;
+    
+    auto linesVertexBuffer = New<::VertexBuffer>();
+    auto linesIndexBuffer = New<::IndexBuffer>();
+    
+    Ptr<Texture> strokeWidths, avgStrokeWidths, result, result2;
     
     frameBuffer.Bind();
     
-    /*glClearStencil(0);
-    glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    glClearStencil(0);
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
     
     glEnable(GL_STENCIL_TEST);
-    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-    glStencilFunc(GL_ALWAYS, 2, 0xFF);
-    
-    alphaTest->Use();
-    alphaTest->Uniforms["Texture"].SetValue(edges);
-    device.DrawPrimitives(PrimitiveType::Triangles);
-    */
-    
-    glEnable(GL_STENCIL_TEST);
-    //glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    glStencilFunc(GL_EQUAL, 0, 0xFF);
+    glStencilFunc(GL_EQUAL, 2, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
     
     strokeWidthTransform1->Use();
     strokeWidthTransform1->Uniforms["Edges"].SetValue(edges);
     strokeWidthTransform1->Uniforms["Gradients"].SetValue(gradients);
+    strokeWidthTransform1->Uniforms["DarkOnLight"].SetValue(direction == GradientDirection::With);
     device.DrawPrimitives(PrimitiveType::Triangles);
     strokeWidths = frameBuffer.Texture;
     GLfloat buffer[edges.GetWidth() * edges.GetHeight()];
@@ -327,7 +319,12 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     
     glDisable(GL_STENCIL_TEST);
     
-    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LESS);
+    glDepthRange(0.0f, 1.0f);
+    glClearDepth(1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     List<VertexPositionTexture> vertices;
     
@@ -350,21 +347,67 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     for(auto& index : indices)
         index = counter++;
     
-    device.VertexBuffer = New<::VertexBuffer>();
-    device.VertexBuffer->SetData(vertices);
-    device.IndexBuffer = New<::IndexBuffer>();
-    device.IndexBuffer->SetData(indices);
+    linesVertexBuffer->SetData(vertices);
+    linesIndexBuffer->SetData(indices);
+    
+    device.VertexBuffer = linesVertexBuffer;
+    device.IndexBuffer = linesIndexBuffer;
     
     strokeWidthTransform2->Use();
     strokeWidthTransform2->Uniforms["Gradients"].SetValue(gradients);
     strokeWidthTransform2->Uniforms["StrokeWidths"].SetValue(*strokeWidths);
+    strokeWidthTransform2->Uniforms["DarkOnLight"].SetValue(direction == GradientDirection::With);
     device.DrawPrimitives(PrimitiveType::Lines);
     result = frameBuffer.Texture;
     frameBuffer.CreateNewColorAttachment0();
     
+    device.VertexBuffer = quadVertexBuffer;
+    device.IndexBuffer = quadIndexBuffer;
+    
+    glDisable(GL_DEPTH_TEST);
+    
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 2, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    
+    strokeWidthTransform3->Use();
+    strokeWidthTransform3->Uniforms["Gradients"].SetValue(gradients);
+    strokeWidthTransform3->Uniforms["StrokeWidths"].SetValue(*result);
+    strokeWidthTransform3->Uniforms["DarkOnLight"].SetValue(direction == GradientDirection::With);
+    device.DrawPrimitives(PrimitiveType::Triangles);
+    avgStrokeWidths = frameBuffer.Texture;
+    frameBuffer.CreateNewColorAttachment0();
+    
+    RenderWindow::Instance().AddTexture(avgStrokeWidths, "Average Stroke Widths");
+    
+    glDisable(GL_STENCIL_TEST);
+    
+    glEnable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    device.VertexBuffer = linesVertexBuffer;
+    device.IndexBuffer = linesIndexBuffer;
+    
+    strokeWidthTransform2->Use();
+    strokeWidthTransform2->Uniforms["Gradients"].SetValue(gradients);
+    // todo: do'h, need to pass strokeWidths for position calculation, and avgStrokeWidths for value
+    strokeWidthTransform2->Uniforms["StrokeWidths"].SetValue(*avgStrokeWidths);
+    strokeWidthTransform2->Uniforms["DarkOnLight"].SetValue(direction == GradientDirection::With);
+    device.DrawPrimitives(PrimitiveType::Lines);
+    result2 = frameBuffer.Texture;
+    frameBuffer.CreateNewColorAttachment0();
+
+    glDisable(GL_DEPTH_TEST);
+    
     frameBuffer.Unbind();
     
-    return result;
+    device.VertexBuffer = quadVertexBuffer;
+    device.IndexBuffer = quadIndexBuffer;
+    
+    return result2;
 }
 
 Ptr<Program> LoadScreenSpaceProgram(const String &name)

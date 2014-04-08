@@ -115,6 +115,7 @@
 		1700060718EEEF1400B1D45C /* StrokeWidthTransform2.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StrokeWidthTransform2.vs; sourceTree = "<group>"; };
 		1700060818F297B400B1D45C /* RenderBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderBuffer.cpp; sourceTree = "<group>"; };
 		1700060918F297B400B1D45C /* RenderBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderBuffer.h; sourceTree = "<group>"; };
+		1700060B18F4399B00B1D45C /* StrokeWidthTransform3.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StrokeWidthTransform3.fs; sourceTree = "<group>"; };
 		1700DFC718E03B8D004112B6 /* SobelVer1.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer1.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		1700DFC818E03C81004112B6 /* SobelVer2.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer2.fs; sourceTree = "<group>"; };
 		1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = GradientsFromSobel.fs; sourceTree = "<group>"; };
@@ -537,6 +538,7 @@
 				17B473AE18EAD9DC0012148E /* StrokeWidthTransform1.fs */,
 				1700060418EEEE8800B1D45C /* StrokeWidthTransform2.fs */,
 				1700060718EEEF1400B1D45C /* StrokeWidthTransform2.vs */,
+				1700060B18F4399B00B1D45C /* StrokeWidthTransform3.fs */,
 			);
 			name = "Stroke Width Transform";
 			sourceTree = "<group>";

@@ -18,9 +18,11 @@ public:
     
     Uniform(const String& name, GLint location, GLenum type, int index = 0);
     
-    void SetValue(GLint value);
+    void SetValue(bool value);
     
-    void SetValue(GLfloat value);
+    void SetValue(int value);
+    
+    void SetValue(float value);
     
     void SetValue(const cv::Vec2i &value);
     
@@ -46,12 +48,17 @@ inline Uniform::Uniform(const String& name, GLint location, GLenum type, int ind
     
 }
 
-inline void Uniform::SetValue(GLint value)
+inline void Uniform::SetValue(bool value)
 {
     glUniform1i(location, value);
 }
 
-inline void Uniform::SetValue(GLfloat value)
+inline void Uniform::SetValue(int value)
+{
+    glUniform1i(location, value);
+}
+
+inline void Uniform::SetValue(float value)
 {
     glUniform1f(location, value);
 }
