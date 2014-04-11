@@ -7,6 +7,7 @@
 //
 
 #include "Shader.h"
+#include "ContentLoader.h"
 
 using namespace std;
 
@@ -17,8 +18,24 @@ Shader::Shader(const String &sourceText, GLenum shaderType) : shaderId(0)
     if(shaderId == 0)
         throw runtime_error("glCreateShader failed");
     
+    String fullSource = sourceText;
+    
+    String includeDirective = "#pragma include ";
+    size_t found = fullSource.find(includeDirective);
+    while (found != String::npos)
+    {
+        size_t startPos = found + includeDirective.length();
+        size_t   endPos = fullSource.find("\n", startPos);
+        String fileName = fullSource.substr(startPos, endPos - startPos);
+        String includedFileText = ContentLoader::FileReadAll(ContentLoader::ContentPath + fileName);
+        fullSource.replace(found, endPos - found, includedFileText);
+        found = fullSource.find(includeDirective);
+        printf("%s", fullSource.c_str());
+    }
+    
     //set the source code
-    const char* code = sourceText.c_str();
+    const char* code = fullSource.c_str();
+    
     glShaderSource(shaderId, 1, (const GLchar**)&code, NULL);
     
     //compile

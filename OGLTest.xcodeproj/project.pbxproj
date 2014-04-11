@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1700060A18F297B400B1D45C /* RenderBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1700060818F297B400B1D45C /* RenderBuffer.cpp */; };
+		1700061018F69BF300B1D45C /* StrokeWidthTransformProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1700060E18F69BF300B1D45C /* StrokeWidthTransformProgram.cpp */; };
 		1700DFC918E03C81004112B6 /* SobelVer2.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFC818E03C81004112B6 /* SobelVer2.fs */; };
 		1700DFCB18E063AC004112B6 /* GradientsFromSobel.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */; };
 		1700DFCE18E1B2B3004112B6 /* GaussianBlurV.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFCD18E1B2B3004112B6 /* GaussianBlurV.fs */; };
@@ -116,6 +117,9 @@
 		1700060818F297B400B1D45C /* RenderBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderBuffer.cpp; sourceTree = "<group>"; };
 		1700060918F297B400B1D45C /* RenderBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderBuffer.h; sourceTree = "<group>"; };
 		1700060B18F4399B00B1D45C /* StrokeWidthTransform3.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StrokeWidthTransform3.fs; sourceTree = "<group>"; };
+		1700060C18F6884100B1D45C /* ScaleColor.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ScaleColor.fs; sourceTree = "<group>"; };
+		1700060E18F69BF300B1D45C /* StrokeWidthTransformProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StrokeWidthTransformProgram.cpp; sourceTree = "<group>"; };
+		1700060F18F69BF300B1D45C /* StrokeWidthTransformProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrokeWidthTransformProgram.h; sourceTree = "<group>"; };
 		1700DFC718E03B8D004112B6 /* SobelVer1.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer1.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		1700DFC818E03C81004112B6 /* SobelVer2.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer2.fs; sourceTree = "<group>"; };
 		1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = GradientsFromSobel.fs; sourceTree = "<group>"; };
@@ -215,7 +219,7 @@
 		17B473AB18EACDBA0012148E /* NeighbourSum1.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = NeighbourSum1.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		17B473AC18EAD8610012148E /* NeighbourSum2.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = NeighbourSum2.fs; sourceTree = "<group>"; };
 		17B473AE18EAD9DC0012148E /* StrokeWidthTransform1.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StrokeWidthTransform1.fs; sourceTree = "<group>"; };
-		17B473AF18EAEE250012148E /* ScreenSpaceUtil.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ScreenSpaceUtil.fs; sourceTree = "<group>"; };
+		17B473AF18EAEE250012148E /* TextureUtil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TextureUtil.fsh; sourceTree = "<group>"; };
 		17EED2D818A392280094A37D /* DrawableRect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DrawableRect.cpp; sourceTree = "<group>"; };
 		17EED2D918A392280094A37D /* DrawableRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawableRect.h; sourceTree = "<group>"; };
 		17EED2DB18A396E80094A37D /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture.cpp; sourceTree = "<group>"; };
@@ -315,6 +319,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1700060D18F6953700B1D45C /* Shader Programs */ = {
+			isa = PBXGroup;
+			children = (
+				1700060E18F69BF300B1D45C /* StrokeWidthTransformProgram.cpp */,
+				1700060F18F69BF300B1D45C /* StrokeWidthTransformProgram.h */,
+			);
+			name = "Shader Programs";
+			sourceTree = "<group>";
+		};
+		1700061118F7E0A300B1D45C /* Connected Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Connected Components";
+			sourceTree = "<group>";
+		};
 		1700DFC618E03B74004112B6 /* Sobel */ = {
 			isa = PBXGroup;
 			children = (
@@ -475,12 +495,14 @@
 			children = (
 				170005FF18ED869800B1D45C /* AlphaTest.fs */,
 				17B473A718E445020012148E /* Canny */,
+				1700061118F7E0A300B1D45C /* Connected Components */,
 				1700DFD318E1C403004112B6 /* Gaussian Blur */,
 				17F5945118DB3CB800B1C3C7 /* Grayscale.fs */,
 				17658F28189FA824003A8B11 /* Normal.fs */,
-				17B473AF18EAEE250012148E /* ScreenSpaceUtil.fs */,
+				1700060C18F6884100B1D45C /* ScaleColor.fs */,
 				1700DFC618E03B74004112B6 /* Sobel */,
 				17B473AD18EAD9C70012148E /* Stroke Width Transform */,
+				17B473AF18EAEE250012148E /* TextureUtil.fsh */,
 				17658F27189FA6AC003A8B11 /* Trivial.vs */,
 			);
 			name = shaders;
@@ -546,6 +568,7 @@
 		17EED57818ACFA680094A37D /* SWT */ = {
 			isa = PBXGroup;
 			children = (
+				1700060D18F6953700B1D45C /* Shader Programs */,
 				1744D95C18C0B193004605D1 /* Chain.cpp */,
 				1744D95D18C0B193004605D1 /* Chain.h */,
 				17F3F9DF18BBAE0900C78815 /* Component.cpp */,
@@ -642,6 +665,7 @@
 				1700DFCB18E063AC004112B6 /* GradientsFromSobel.fs in Sources */,
 				17EED57118A505910094A37D /* Uniform.cpp in Sources */,
 				17EEEF1818AE6D7000B5A290 /* ImgProc.cpp in Sources */,
+				1700061018F69BF300B1D45C /* StrokeWidthTransformProgram.cpp in Sources */,
 				17F5945718DC6CAA00B1C3C7 /* SobelHor.fs in Sources */,
 				17EED2E018A398350094A37D /* VertexPositionTexture.cpp in Sources */,
 				171A0315189BD4B200A72B91 /* Window.cpp in Sources */,

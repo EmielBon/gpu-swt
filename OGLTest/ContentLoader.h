@@ -26,16 +26,15 @@ public:
     
     static void SetGraphicsDevice(GraphicsDevice *device);
     
+    
+public:
+    
+    static String ContentPath;
+    
 private:
     
-    static String contentPath;
     static GraphicsDevice *device;
 };
-
-inline void ContentLoader::SetContentPath(const String &path)
-{
-    contentPath = path;
-}
 
 inline void ContentLoader::SetGraphicsDevice(GraphicsDevice *d)
 {

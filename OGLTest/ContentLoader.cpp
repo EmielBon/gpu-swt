@@ -15,20 +15,20 @@
 
 using namespace std;
 
-String ContentLoader::contentPath = "";
+String ContentLoader::ContentPath = "";
 GraphicsDevice* ContentLoader::device = nullptr;
 
 template<>
 Ptr<VertexShader> ContentLoader::Load(const String &resourceName)
 {
-    String sourceText = FileReadAll(contentPath + resourceName + ".vs");
+    String sourceText = FileReadAll(ContentPath + resourceName + ".vs");
     return New<VertexShader>(sourceText);
 }
 
 template<>
 Ptr<FragmentShader> ContentLoader::Load(const String &resourceName)
 {
-    String sourceText = FileReadAll(contentPath + resourceName + ".fs");
+    String sourceText = FileReadAll(ContentPath + resourceName + ".fs");
     return New<FragmentShader>(sourceText);
 }
 
@@ -49,7 +49,7 @@ Ptr<Program> ContentLoader::Load(const String &resourceName)
 template<>
 cv::Mat ContentLoader::LoadV(const String &resourceName)
 {
-    cv::Mat image = cvLoadImage((contentPath + resourceName + ".jpg").c_str());
+    cv::Mat image = cvLoadImage((ContentPath + resourceName + ".jpg").c_str());
     if (image.data == NULL)
         throw std::runtime_error("Error reading file");
     return image;

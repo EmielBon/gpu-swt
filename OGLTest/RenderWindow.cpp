@@ -29,7 +29,7 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
 {
     instance = this;
     
-    ContentLoader::SetContentPath("/Users/emiel/Desktop/OGLTest/OGLTest/");
+    ContentLoader::ContentPath = "/Users/emiel/Desktop/OGLTest/OGLTest/";
     currentTextureIndex = 0;
     
     // Load the input image as a cv::Mat

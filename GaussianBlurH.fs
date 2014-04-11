@@ -1,16 +1,13 @@
 #version 150
 
+#pragma include TextureUtil.fsh
+
 uniform sampler2D Texture;
 
 out vec4 FragColor;
 
 const float offsets[3] = float[](0.0, 1.3846153846, 3.2307692308);
 const float weights[3] = float[](0.2270270270, 0.3162162162, 0.0702702703);
-
-vec4 sample(sampler2D sampler, vec2 xy)
-{
-    return texture(sampler, xy / textureSize(sampler, 0));
-}
 
 void main()
 {

@@ -1,5 +1,7 @@
 #version 150
 
+#pragma include TextureUtil.fsh
+
 uniform sampler2D Gradients;
 uniform float LowerThreshold = 0.08;
 uniform float UpperThreshold = 0.16;
@@ -11,11 +13,6 @@ const float Pi = 3.14159265359;
 const float PiOver2 = Pi / 2;
 const float PiOver4 = Pi / 4;
 const float PiOver8 = Pi / 8;
-
-vec4 fetch(sampler2D sampler, vec2 xy)
-{
-    return texelFetch(sampler, ivec2(xy), 0);
-}
 
 void main()
 {
@@ -29,7 +26,7 @@ void main()
     vec4 r = step(a, b);
     float binned = dot(r, vec4(PiOver4));
     
-    // todo: assumes binned == Pi/2 -> cos(binned) == 0 (anaologuous for sin), hopefully glsl is that precise (should test)
+    // todo: is round implementation dependant?
     vec2 binnedGradient = round( vec2(cos(binned), sin(binned)) );
     vec2 dir = sign(binnedGradient);
     
@@ -40,6 +37,7 @@ void main()
     // todo: seprarable convolution (averaging) operation
     for (int i = -1; i <= 1; ++i)
     for (int j = -1; j <= 1; ++j)
+        // todo: look at lerp instead of smoothstep
         sum += smoothstep(LowerThreshold, UpperThreshold, fetch(Gradients, gl_FragCoord.xy + vec2(i, j)).g);
     
     bool localMaximum = magnitude > forwardNeighbourGradient && magnitude > backwardNeighbourGradient;
@@ -47,10 +45,9 @@ void main()
     bool weakEdge = magnitude >= LowerThreshold;
     bool acceptedWeakEdge = weakEdge && sum / 9 >= UpperThreshold;
     bool isEdgePixel = localMaximum && (strongEdge || acceptedWeakEdge);
-    //vec2 constants = vec2(1.0, isEdgePixel);
     
     if (!isEdgePixel)
-        discard;
+        discard; // used to directly build the stencil buffer
     else
-        FragColor = vec4( vec3(isEdgePixel ? 1 : 0), 0 );// constants.xxxx * constants.yyyx;
+        FragColor = vec4( vec3(isEdgePixel ? 1 : 0), 0 );
 }

@@ -1,5 +1,7 @@
 #version 150
 
+#pragma include TextureUtil.fsh
+
 uniform sampler2D Edges;
 uniform sampler2D Gradients;
 uniform bool DarkOnLight;// = true;
@@ -16,11 +18,6 @@ const int   MaxIterations = int(MaxRayLength / prec);
 #define ditch3 { FragColor = vec4(0, 1, 0, 1); return; }
 
 out vec4 FragColor;
-
-vec4 fetch(sampler2D sampler, vec2 xy)
-{
-    return texelFetch(sampler, ivec2(xy), 0);
-}
 
 bool inRange(sampler2D sampler, ivec2 xy)
 {

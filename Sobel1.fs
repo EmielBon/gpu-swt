@@ -1,15 +1,12 @@
 #version 150
 
+#pragma include TextureUtil.fsh
+
 uniform sampler2D Texture;
 
 const vec3 weights = vec3(3, 10, 3);
 
 out vec4 FragColor;
-
-vec4 fetch(sampler2D sampler, vec2 xy)
-{
-    return texelFetch(sampler, ivec2(xy), 0);
-}
 
 void main()
 {

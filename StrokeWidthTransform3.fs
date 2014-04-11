@@ -1,22 +1,20 @@
 #version 150
 
+#pragma include TextureUtil.fsh
+
 uniform sampler2D Gradients;
-uniform sampler2D StrokeWidths;
-uniform bool DarkOnLight;// = true;
+uniform sampler2D LineLengths;
+uniform sampler2D Values;
+uniform bool DarkOnLight;
 
 out vec4 FragColor;
-
-vec4 fetch(sampler2D sampler, vec2 xy)
-{
-    return texelFetch(sampler, ivec2(xy), 0);
-}
 
 void main()
 {
     vec2 gradient = normalize( fetch(Gradients, gl_FragCoord.xy).xy );
-    float strokeWidth = fetch(StrokeWidths, gl_FragCoord.xy).r;
+    float lineLength = fetch(LineLengths, gl_FragCoord.xy).r;
     ivec2 pos0 = ivec2(gl_FragCoord.xy);
-    ivec2 pos1 = ivec2(pos0 + gradient * (strokeWidth * (DarkOnLight ? 1 : -1)));
+    ivec2 pos1 = ivec2(pos0 + gradient * (lineLength * (DarkOnLight ? 1 : -1)));
     
     bool steep = abs(pos1.y - pos0.y) > abs(pos1.x - pos0.x);
     
@@ -45,10 +43,11 @@ void main()
         vec2 pos = vec2(x, y);
         
         if (steep)
-            sum += fetch(StrokeWidths, pos.yx).r;
+            sum += fetch(Values, pos.yx).r;
         else
-            sum += fetch(StrokeWidths, pos.xy).r;
+            sum += fetch(Values, pos.xy).r;
         err = err - dy;
+        
         if (err < 0) { y += ystep; err += dx; }
     }
     
