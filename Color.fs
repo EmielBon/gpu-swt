@@ -1,8 +1,8 @@
 #version 150
 
-flat in vec4 Color;
-in vec2 FragTexCoord;
-out vec4 FragColor;
+flat in  vec4 Color;
+     in  vec2 FragTexCoord;
+     out vec4 FragColor;
 
 void main()
 {

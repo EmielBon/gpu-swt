@@ -4,7 +4,7 @@
 
 uniform sampler2D Edges;
 uniform sampler2D Gradients;
-uniform bool DarkOnLight;// = true;
+uniform bool      DarkOnLight;
 
 const float prec = 0.2;
 const float Pi = 3.14159265359;

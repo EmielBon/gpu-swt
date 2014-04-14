@@ -4,7 +4,7 @@
 #pragma include Codec.fsh
 
 uniform sampler2D Texture;
-uniform int PassIndex;
+uniform int       PassIndex;
 
 out vec4 FragColor;
 
@@ -22,7 +22,7 @@ void main()
     {
         ivec2 uv = uv_coord + ivec2(0, 1);
         float neighbor = getId(uv);
-        //value = neighbor * clamp(pixel, 0, 1); // I get the idea, neighbour = [value|0], pixel = [0|value], so clamp(pixel) is probable [0|1], but it doesn't work
+        //value = neighbor * clamp(pixel, 0, 1); // I get the idea, neighbour = [value|0], pixel = [0|value], so clamp(pixel) is probably [0|1], but it doesn't work
         value = (neighbor != 0 && pixel != 0) ? neighbor : pixel;
     }
     else

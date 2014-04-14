@@ -3,11 +3,12 @@
 #pragma include TextureUtil.fsh
 #pragma include Codec.fsh
 
-in vec3 Position;
-in vec2 TexCoord;
 uniform sampler2D Texture;
+
+     in  vec3 Position;
+     in  vec2 TexCoord;
 flat out vec4 Color; // ScatterID
-out vec2 FragTexCoord;
+     out vec2 FragTexCoord;
 
 void main()
 {

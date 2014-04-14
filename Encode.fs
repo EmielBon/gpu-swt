@@ -3,7 +3,7 @@
 #pragma include TextureUtil.fsh
 #pragma include Codec.fsh
 
-uniform vec3 BackgroundColor = vec3(0, 0, 0);
+uniform vec3      BackgroundColor = vec3(0, 0, 0);
 uniform sampler2D Texture;
 
 out vec4 FragColor;

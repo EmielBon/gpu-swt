@@ -1,7 +1,7 @@
 #version 150
 
 uniform sampler2D Texture;
-uniform float Scale;
+uniform float     Scale;
 
 in  vec2 FragTexCoord;
 out vec4 FragColor;

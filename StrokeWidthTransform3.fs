@@ -5,7 +5,7 @@
 uniform sampler2D Gradients;
 uniform sampler2D LineLengths;
 uniform sampler2D Values;
-uniform bool DarkOnLight;
+uniform bool      DarkOnLight;
 
 out vec4 FragColor;
 

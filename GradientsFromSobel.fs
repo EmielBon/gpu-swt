@@ -15,5 +15,5 @@ void main()
     
     gradient = normalize(gradient);
     
-    FragColor = vec4(gradient.x, gradient.y, 0, 1);
+    FragColor = vec4(gradient, 0, 1);
 }

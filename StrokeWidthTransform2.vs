@@ -2,15 +2,15 @@
 
 #pragma include TextureUtil.fsh
 
-in  vec3  Position;
-in  vec2  TexCoord;
-flat out float Value;
-out vec2  FragTexCoord;
-
 uniform sampler2D Gradients;
 uniform sampler2D LineLengths;
 uniform sampler2D Values;
-uniform bool DarkOnLight;
+uniform bool      DarkOnLight;
+
+     in  vec3  Position;
+     in  vec2  TexCoord;
+     out vec2  FragTexCoord;
+flat out float Value;
 
 void main()
 {
