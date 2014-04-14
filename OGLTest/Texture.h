@@ -37,6 +37,8 @@ public:
 
     int GetColorChannels() const;
     
+    void GetTextureImage(GLenum format, GLenum type, GLvoid *buffer);
+    
 private:
     
     template<typename T>
@@ -87,6 +89,13 @@ inline int Texture::GetHeight() const
 inline int Texture::GetColorChannels() const
 {
     return colorChannels;
+}
+
+inline void Texture::GetTextureImage(GLenum format, GLenum type, GLvoid *buffer)
+{
+    Bind();
+    glGetTexImage(GL_TEXTURE_2D, 0, format, type, buffer);
+    Unbind();
 }
 
 template<typename T>

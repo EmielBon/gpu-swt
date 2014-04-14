@@ -18,7 +18,8 @@ Shader::Shader(const String &sourceText, GLenum shaderType) : shaderId(0)
     if(shaderId == 0)
         throw runtime_error("glCreateShader failed");
     
-    String fullSource = sourceText;
+    source     = sourceText;
+    fullSource = sourceText;
     
     String includeDirective = "#pragma include ";
     size_t found = fullSource.find(includeDirective);
@@ -30,7 +31,6 @@ Shader::Shader(const String &sourceText, GLenum shaderType) : shaderId(0)
         String includedFileText = ContentLoader::FileReadAll(ContentLoader::ContentPath + fileName);
         fullSource.replace(found, endPos - found, includedFileText);
         found = fullSource.find(includeDirective);
-        printf("%s", fullSource.c_str());
     }
     
     //set the source code

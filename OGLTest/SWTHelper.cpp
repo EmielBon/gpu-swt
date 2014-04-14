@@ -35,7 +35,6 @@ void DrawChains(const cv::Mat &input, const LinkedList< Ptr<Chain> > &components
 List<BoundingBox> SWTHelper::StrokeWidthTransform(const cv::Mat &input)
 {
     cv::Mat grayImage = ImgProc::ConvertToGrayscale(input); Draw(grayImage, "Grayscale (OpenCV)");
-    
 #ifdef EQUALIZE_HISTOGRAM
     cv::Mat grayImage2 = grayImage.clone();
     grayImage = ImgProc::ContrastStretch(grayImage2, 0, 100);
@@ -43,7 +42,7 @@ List<BoundingBox> SWTHelper::StrokeWidthTransform(const cv::Mat &input)
     Draw(grayImage, "Equalized grayscale (OpenCV)");
 #endif
 #ifdef SHARPEN_INPUT
-    grayImage = ImgProc::Sharpen(grayImage); Draw(grayImage, "Sharpened (OpenCV)");
+    auto grayImage = ImgProc::Sharpen(input); Draw(grayImage, "Sharpened (OpenCV)");
 #endif
     cv::Mat edges     = ImgProc::CalculateEdgeMap(grayImage); Draw(edges, "Edge map (Canny edge detector)");
     cv::Mat gradients = ImgProc::CalculateGradients(grayImage, true); Draw(gradients, "Gradients (OpenCV)");

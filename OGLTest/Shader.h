@@ -25,9 +25,15 @@ public:
     
     void Dispose();
     
+    String GetSource() const;
+    
+    String GetFullSource() const;
+    
 private:
     
     GLuint shaderId;
+    String source;
+    String fullSource;
 };
 
 inline GLuint Shader::GetHandle() const
@@ -39,4 +45,14 @@ inline void Shader::Dispose()
 {
     glDeleteShader(shaderId);
     shaderId = 0;
+}
+
+inline String Shader::GetSource() const
+{
+    return source;
+}
+
+inline String Shader::GetFullSource() const
+{
+    return fullSource;
 }

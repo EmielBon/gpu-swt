@@ -1,6 +1,6 @@
 #version 150
 
-in float Value;
+flat in float Value;
 out vec4 FragColor;
 
 void main()

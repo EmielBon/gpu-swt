@@ -22,6 +22,8 @@
 #include "VertexShader.h"
 #include "FragmentShader.h"
 
+// 38000 Canny
+// OpenCV Sobel: 7648
 RenderWindow* RenderWindow::instance = nullptr;
 
 RenderWindow::RenderWindow(int width, int height, const String &title)

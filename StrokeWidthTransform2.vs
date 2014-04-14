@@ -4,7 +4,7 @@
 
 in  vec3  Position;
 in  vec2  TexCoord;
-out float Value;
+flat out float Value;
 out vec2  FragTexCoord;
 
 uniform sampler2D Gradients;

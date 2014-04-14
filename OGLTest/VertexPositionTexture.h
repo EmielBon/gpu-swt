@@ -14,6 +14,10 @@ struct VertexPositionTexture
 {
 public:
     
+    VertexPositionTexture() = default;
+    
+    VertexPositionTexture(const Vector3 &position, const Vector2 &texCoord);
+    
     static const VertexDeclaration& VertexDeclaration();
     
 public:
@@ -21,3 +25,9 @@ public:
     Vector3 Position;
     Vector2 TexCoord;
 };
+
+inline VertexPositionTexture::VertexPositionTexture(const Vector3 &position, const Vector2 &texCoord)
+    : Position(position), TexCoord(texCoord)
+{
+    
+}
