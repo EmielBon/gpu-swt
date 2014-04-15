@@ -57,8 +57,7 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     
     // Load the framebuffers
     FrameBuffer frameBuffer1(width, height, GL_RGB, GL_UNSIGNED_BYTE);
-    FrameBuffer frameBuffer2(width, height, GL_RGB, GL_FLOAT);
-    FrameBuffer frameBuffer3(width, height, GL_RGB, GL_FLOAT, RenderBuffer::Type::DepthStencil);
+    FrameBuffer frameBuffer2(width, height, GL_RGB, GL_FLOAT, RenderBuffer::Type::DepthStencil);
     
     // Load the full-screen rect
     DrawableRect rect(-1, -1, 1, 1, 1, 1);
@@ -71,10 +70,10 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     auto gray = Grayscale(input, frameBuffer1);
     auto gradients = Sobel2(*gray, frameBuffer2);
     auto blurred = GaussianBlur(*gray, frameBuffer2);
-    auto edges = Canny(*blurred, frameBuffer3);
-    auto strokeWidths1 = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::With, frameBuffer3);
-    auto strokeWidths2 = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::Against, frameBuffer3);
-    auto connectedComponents = ConnectedComponents(*strokeWidths1, frameBuffer3);
+    auto edges = Canny(*blurred, frameBuffer2);
+    auto strokeWidths1 = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::With, frameBuffer2);
+    auto strokeWidths2 = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::Against, frameBuffer2);
+    auto connectedComponents = ConnectedComponents(*strokeWidths1, frameBuffer2);
     //RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)), "Edges (OpenCV Canny)");*/
     
     return List<BoundingBox>();
@@ -342,8 +341,8 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     }
     
     // todo: skip index buffer for line drawing
-    List<GLushort> indices( vertices.size() );
-    GLushort counter = 0;
+    List<GLuint> indices( vertices.size() );
+    GLuint counter = 0;
     for(auto& index : indices)
         index = counter++;
     
@@ -428,7 +427,9 @@ Ptr<Texture> ConnectedComponents(const Texture &strokeWidths, FrameBuffer &frame
     
     auto encode = LoadScreenSpaceProgram("Encode");
     auto verticalRun = LoadScreenSpaceProgram("VerticalRuns");
-    auto gatherNeighbor = LoadProgram("GatherNeighbor", "Color");
+    auto normal = LoadScreenSpaceProgram("Normal");
+    auto color = LoadScreenSpaceProgram("Color");
+    auto gatherNeighbor = ContentLoader::Load<Program>("GatherNeighbor");
     
     Ptr<Texture> encodedPositions, verticalRuns, columnProcessing1;
     
@@ -454,17 +455,26 @@ Ptr<Texture> ConnectedComponents(const Texture &strokeWidths, FrameBuffer &frame
     
     RenderWindow::Instance().AddTexture(verticalRuns, "Connected Components 2 (vertical runs)");
     
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    normal->Use();
+    normal->Uniforms["Texture"].SetValue(*verticalRuns);
+    Render(frameBuffer, PrimitiveType::Triangles, ColorAttachmentOption::Keep);
+    
     GLfloat buffer[width * height];
     verticalRuns->GetTextureImage(GL_BLUE, GL_FLOAT, buffer);
     
     List<VertexPositionTexture> vertices;
     for (int x = 0; x < strokeWidths.GetWidth(); ++x)
     for (int y = 0; y < strokeWidths.GetHeight(); ++y)
-        if (buffer[x + y * width] != 0.0)
-            vertices.push_back(VertexPositionTexture(Vector3(x, y, 0), Vector2(0, 0)));
+    {
+        float rootID = buffer[x + y * width];
+        if (rootID != 0.0)
+            vertices.push_back(VertexPositionTexture(Vector3(x, y, rootID), Vector2(0, 0)));
+    }
     
-    List<GLushort> indices( vertices.size() );
-    GLushort counter = 0;
+    List<GLuint> indices( vertices.size() );
+    GLuint counter = 0;
     for(auto& index : indices)
         index = counter++;
     
@@ -479,12 +489,16 @@ Ptr<Texture> ConnectedComponents(const Texture &strokeWidths, FrameBuffer &frame
     device.VertexBuffer = pixelVertices;
     device.IndexBuffer  = pixelIndices;
     
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glDepthFunc(GL_GREATER);
+    glClearDepth(0);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
     
     gatherNeighbor->Use();
     gatherNeighbor->Uniforms["Texture"].SetValue(*verticalRuns);
-    columnProcessing1 = Render(frameBuffer, PrimitiveType::Lines);
+    columnProcessing1 = Render(frameBuffer, PrimitiveType::Points);
+    
+    glDisable(GL_DEPTH_TEST);
     
     RenderWindow::Instance().AddTexture(columnProcessing1, "Connected Components 3 (gather neighbor)");
     

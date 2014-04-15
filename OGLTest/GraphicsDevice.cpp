@@ -15,5 +15,5 @@ void GraphicsDevice::DrawPrimitives(PrimitiveType type)
     // bind the index buffer
     IndexBuffer->Bind();
     // draw the VAO
-    glDrawElements((GLenum)type, IndexBuffer->Count(), GL_UNSIGNED_SHORT, (GLvoid*)NULL);
+    glDrawElements((GLenum)type, IndexBuffer->Count(), GL_UNSIGNED_INT, (GLvoid*)NULL);
 }

@@ -17,3 +17,8 @@ vec2 getScreenSpaceCoord(sampler2D sampler, vec2 screenTexCoord)
 {
     return screenTexCoord / (textureSize(sampler, 0) - vec2(1)) * 2 - vec2(1);
 }
+
+ivec2 size(sampler2D sampler)
+{
+    return textureSize(sampler, 0);
+}

@@ -184,6 +184,7 @@
 		1776532C18C8A13A004553B6 /* ConnectedComponentsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectedComponentsHelper.h; sourceTree = "<group>"; };
 		17ACBD7718FC1DA40052244F /* GatherNeighbor.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = GatherNeighbor.vs; sourceTree = "<group>"; };
 		17ACBD7918FC20E90052244F /* Color.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Color.fs; sourceTree = "<group>"; };
+		17ACBD7A18FD3A020052244F /* GatherNeighbor.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = GatherNeighbor.fs; sourceTree = "<group>"; };
 		17B473A618E444FD0012148E /* Canny.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Canny.fs; sourceTree = "<group>"; };
 		17B473A918EABD870012148E /* CannySobel2.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CannySobel2.fs; sourceTree = "<group>"; };
 		17B473AA18EACA5B0012148E /* NonMaximumSuppression.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = NonMaximumSuppression.fs; sourceTree = "<group>"; };
@@ -270,6 +271,7 @@
 			children = (
 				1700061218F8062700B1D45C /* Codec.fsh */,
 				1700061318F8069B00B1D45C /* Encode.fs */,
+				17ACBD7A18FD3A020052244F /* GatherNeighbor.fs */,
 				17ACBD7718FC1DA40052244F /* GatherNeighbor.vs */,
 				1700061418F810A000B1D45C /* VerticalRuns.fs */,
 			);

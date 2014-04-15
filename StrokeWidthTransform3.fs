@@ -37,10 +37,13 @@ void main()
     int y = pos0.y;
     
     float sum = 0;
+    float debug = 0;
     
     for (int x = pos0.x; x <= pos1.x; ++x)
     {
-        vec2 pos = vec2(x, y);
+        ivec2 pos = ivec2(x, y);
+        
+        float oldSum = sum;
         
         if (steep)
             sum += fetch(Values, pos.yx).r;
@@ -48,8 +51,11 @@ void main()
             sum += fetch(Values, pos.xy).r;
         err = err - dy;
         
+        if (oldSum == sum)
+            debug = 1;
+        
         if (err < 0) { y += ystep; err += dx; }
     }
     
-    FragColor = vec4(vec3(sum / dx), 1);
+    FragColor = vec4(sum / dx, debug, 0, 1);
 }
