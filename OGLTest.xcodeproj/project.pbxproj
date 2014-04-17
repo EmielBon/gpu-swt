@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1700060A18F297B400B1D45C /* RenderBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1700060818F297B400B1D45C /* RenderBuffer.cpp */; };
-		1700061018F69BF300B1D45C /* StrokeWidthTransformProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1700060E18F69BF300B1D45C /* StrokeWidthTransformProgram.cpp */; };
 		1700DFC918E03C81004112B6 /* SobelVer2.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFC818E03C81004112B6 /* SobelVer2.fs */; };
 		1700DFCB18E063AC004112B6 /* GradientsFromSobel.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */; };
 		1700DFCE18E1B2B3004112B6 /* GaussianBlurV.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFCD18E1B2B3004112B6 /* GaussianBlurV.fs */; };
@@ -84,8 +83,6 @@
 		1700060918F297B400B1D45C /* RenderBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderBuffer.h; sourceTree = "<group>"; };
 		1700060B18F4399B00B1D45C /* StrokeWidthTransform3.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StrokeWidthTransform3.fs; sourceTree = "<group>"; };
 		1700060C18F6884100B1D45C /* ScaleColor.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ScaleColor.fs; sourceTree = "<group>"; };
-		1700060E18F69BF300B1D45C /* StrokeWidthTransformProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StrokeWidthTransformProgram.cpp; sourceTree = "<group>"; };
-		1700060F18F69BF300B1D45C /* StrokeWidthTransformProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrokeWidthTransformProgram.h; sourceTree = "<group>"; };
 		1700061218F8062700B1D45C /* Codec.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Codec.fsh; sourceTree = "<group>"; };
 		1700061318F8069B00B1D45C /* Encode.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Encode.fs; sourceTree = "<group>"; };
 		1700061418F810A000B1D45C /* VerticalRuns.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = VerticalRuns.fs; sourceTree = "<group>"; };
@@ -184,7 +181,9 @@
 		1776532C18C8A13A004553B6 /* ConnectedComponentsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectedComponentsHelper.h; sourceTree = "<group>"; };
 		17ACBD7718FC1DA40052244F /* GatherNeighbor.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = GatherNeighbor.vs; sourceTree = "<group>"; };
 		17ACBD7918FC20E90052244F /* Color.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Color.fs; sourceTree = "<group>"; };
-		17ACBD7A18FD3A020052244F /* GatherNeighbor.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = GatherNeighbor.fs; sourceTree = "<group>"; };
+		17ACBD7A18FD3A020052244F /* GatherScatter.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = GatherScatter.fs; sourceTree = "<group>"; };
+		17ACBD7B18FFC79F0052244F /* UpdateColumn.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = UpdateColumn.fs; sourceTree = "<group>"; };
+		17ACBD7C18FFF1A70052244F /* ScatterBack.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ScatterBack.vs; sourceTree = "<group>"; };
 		17B473A618E444FD0012148E /* Canny.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Canny.fs; sourceTree = "<group>"; };
 		17B473A918EABD870012148E /* CannySobel2.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CannySobel2.fs; sourceTree = "<group>"; };
 		17B473AA18EACA5B0012148E /* NonMaximumSuppression.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = NonMaximumSuppression.fs; sourceTree = "<group>"; };
@@ -257,22 +256,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1700060D18F6953700B1D45C /* Shader Programs */ = {
-			isa = PBXGroup;
-			children = (
-				1700060E18F69BF300B1D45C /* StrokeWidthTransformProgram.cpp */,
-				1700060F18F69BF300B1D45C /* StrokeWidthTransformProgram.h */,
-			);
-			name = "Shader Programs";
-			sourceTree = "<group>";
-		};
 		1700061118F7E0A300B1D45C /* Connected Components */ = {
 			isa = PBXGroup;
 			children = (
 				1700061218F8062700B1D45C /* Codec.fsh */,
 				1700061318F8069B00B1D45C /* Encode.fs */,
-				17ACBD7A18FD3A020052244F /* GatherNeighbor.fs */,
 				17ACBD7718FC1DA40052244F /* GatherNeighbor.vs */,
+				17ACBD7A18FD3A020052244F /* GatherScatter.fs */,
+				17ACBD7C18FFF1A70052244F /* ScatterBack.vs */,
+				17ACBD7B18FFC79F0052244F /* UpdateColumn.fs */,
 				1700061418F810A000B1D45C /* VerticalRuns.fs */,
 			);
 			name = "Connected Components";
@@ -512,7 +504,6 @@
 		17EED57818ACFA680094A37D /* SWT */ = {
 			isa = PBXGroup;
 			children = (
-				1700060D18F6953700B1D45C /* Shader Programs */,
 				1744D95C18C0B193004605D1 /* Chain.cpp */,
 				1744D95D18C0B193004605D1 /* Chain.h */,
 				17F3F9DF18BBAE0900C78815 /* Component.cpp */,
@@ -609,7 +600,6 @@
 				1700DFCB18E063AC004112B6 /* GradientsFromSobel.fs in Sources */,
 				17EED57118A505910094A37D /* Uniform.cpp in Sources */,
 				17EEEF1818AE6D7000B5A290 /* ImgProc.cpp in Sources */,
-				1700061018F69BF300B1D45C /* StrokeWidthTransformProgram.cpp in Sources */,
 				17F5945718DC6CAA00B1C3C7 /* SobelHor.fs in Sources */,
 				17EED2E018A398350094A37D /* VertexPositionTexture.cpp in Sources */,
 				171A0315189BD4B200A72B91 /* Window.cpp in Sources */,

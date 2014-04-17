@@ -215,12 +215,12 @@ Ptr<Texture> CannySobel(const Texture &texture, FrameBuffer &frameBuffer)
     // Render gray texture -> FrameBuffer2 with SobelHor1 to gradientH texture
     sobel1->Use();
     sobel1->Uniforms["Texture"].SetValue(texture);
-    scharrAveraging = RenderProfiled(frameBuffer, "Canny");
+    scharrAveraging = RenderProfiled(frameBuffer, "CannySobel 1");
     
     // Render gradientH texture -> FrameBuffer2 with SobelHor2 to gradientH texture
     sobel2->Use();
     sobel2->Uniforms["Texture"].SetValue(*scharrAveraging);
-    gradients = RenderProfiled(frameBuffer, "Canny");
+    gradients = RenderProfiled(frameBuffer, "CannySobel 2");
     
     return gradients;
 }
@@ -236,11 +236,11 @@ Ptr<Texture> GaussianBlur(const Texture &texture, FrameBuffer &frameBuffer)
     
     gaussianH->Use();
     gaussianH->Uniforms["Texture"].SetValue(texture);
-    gaussian1 = Render(frameBuffer);
+    gaussian1 = RenderProfiled(frameBuffer, "Gaussian Blur (hor)");
     
     gaussianV->Use();
     gaussianV->Uniforms["Texture"].SetValue(*gaussian1);
-    gaussian2 = Render(frameBuffer);
+    gaussian2 = RenderProfiled(frameBuffer, "Gaussian Blur (ver)");
     
     RenderWindow::Instance().AddTexture(gaussian2, "Blurred (Gaussian)");
     
@@ -266,7 +266,7 @@ Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer)
     
     canny->Use();
     canny->Uniforms["Gradients"].SetValue(*gradients);
-    edges = Render(frameBuffer);
+    edges = RenderProfiled(frameBuffer, "Canny");
     
     glDisable(GL_STENCIL_TEST);
     
@@ -310,7 +310,7 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     strokeWidthTransform1->Uniforms["Edges"].SetValue(edges);
     strokeWidthTransform1->Uniforms["Gradients"].SetValue(gradients);
     strokeWidthTransform1->Uniforms["DarkOnLight"].SetValue(darkOnLight);
-    strokeWidthValues = Render(frameBuffer);
+    strokeWidthValues = RenderProfiled(frameBuffer, "SWT 1");
     
     RenderWindow::Instance().AddTexture(strokeWidthValues, "Stroke Width values");
     
@@ -358,7 +358,7 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     strokeWidthTransform2->Uniforms["LineLengths"].SetValue(*strokeWidthValues);
     strokeWidthTransform2->Uniforms["Values"].SetValue(*strokeWidthValues);
     strokeWidthTransform2->Uniforms["DarkOnLight"].SetValue(darkOnLight);
-    strokeWidthTransform = Render(frameBuffer, PrimitiveType::Lines);
+    strokeWidthTransform = RenderProfiled(frameBuffer, "SWT 2", PrimitiveType::Lines);
     
     RenderWindow::Instance().AddTexture(strokeWidthTransform, String("Stroke Width Transform (") + (darkOnLight ? "with" : "against") + " the gradient)");
     
@@ -378,7 +378,7 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     strokeWidthTransform3->Uniforms["Gradients"].SetValue(gradients);
     strokeWidthTransform3->Uniforms["LineLengths"].SetValue(*strokeWidthTransform);
     strokeWidthTransform3->Uniforms["DarkOnLight"].SetValue(darkOnLight);
-    avgStrokeWidthValues = Render(frameBuffer);
+    avgStrokeWidthValues = RenderProfiled(frameBuffer, "SWT 1 (avg)");
     
     RenderWindow::Instance().AddTexture(avgStrokeWidthValues, "Average Stroke Width values");
     
@@ -395,7 +395,7 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     strokeWidthTransform2->Uniforms["LineLengths"].SetValue(*strokeWidthValues);
     strokeWidthTransform2->Uniforms["Values"].SetValue(*avgStrokeWidthValues);
     strokeWidthTransform2->Uniforms["DarkOnLight"].SetValue(direction == GradientDirection::With);
-    avgStrokeWidthTransform = Render(frameBuffer, PrimitiveType::Lines);
+    avgStrokeWidthTransform = RenderProfiled(frameBuffer, "SWT 2 (avg)", PrimitiveType::Lines);
     
     RenderWindow::Instance().AddTexture(avgStrokeWidthTransform, String("Average Stroke Width Transform (") + (darkOnLight ? "with" : "against") + " the gradient)");
     
@@ -429,9 +429,11 @@ Ptr<Texture> ConnectedComponents(const Texture &strokeWidths, FrameBuffer &frame
     auto verticalRun = LoadScreenSpaceProgram("VerticalRuns");
     auto normal = LoadScreenSpaceProgram("Normal");
     auto color = LoadScreenSpaceProgram("Color");
-    auto gatherNeighbor = ContentLoader::Load<Program>("GatherNeighbor");
+    auto gatherNeighbor = LoadProgram("GatherNeighbor", "GatherScatter");
+    auto updateColumn = LoadScreenSpaceProgram("UpdateColumn");
+    auto scatterBack = LoadProgram("ScatterBack", "GatherScatter");
     
-    Ptr<Texture> encodedPositions, verticalRuns, columnProcessing1;
+    Ptr<Texture> encodedPositions, verticalRuns, columnProcessing1, columnProcessing2, columnProcessing3;
     
     frameBuffer.Bind();
     
@@ -501,6 +503,15 @@ Ptr<Texture> ConnectedComponents(const Texture &strokeWidths, FrameBuffer &frame
     glDisable(GL_DEPTH_TEST);
     
     RenderWindow::Instance().AddTexture(columnProcessing1, "Connected Components 3 (gather neighbor)");
+    
+    device.VertexBuffer = quadVertices;
+    device.IndexBuffer  = quadIndices;
+    
+    updateColumn->Use();
+    updateColumn->Uniforms["Texture"].SetValue(*columnProcessing1);
+    columnProcessing2 = Render(frameBuffer, PrimitiveType::Triangles);
+    
+    RenderWindow::Instance().AddTexture(columnProcessing2, "Connected Components 4 (update column)");
     
     frameBuffer.Unbind();
     
