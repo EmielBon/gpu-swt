@@ -103,10 +103,8 @@ void Program::Use()
     auto &vertexArray       = vertexDeclaration.GetVertexArray();
     GLuint stride           = vertexDeclaration.Stride();
     
-    //vertexBuffer.Bind();
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.GetHandle());
-    //vertexArray.Bind();
-    glBindVertexArray(vertexArray.GetHandle());
+    vertexBuffer.Bind();
+    vertexArray.Bind();
     
     auto &vertexDeclarationElements = vertexDeclaration.GetElements();
     
@@ -121,8 +119,8 @@ void Program::Use()
         glVertexAttribPointer(location, size, type, GL_FALSE, stride, (const GLvoid*)vertexElement.GetElementOffset());
     }
     
-    //vertexBuffer.Unbind();
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    vertexBuffer.Unbind();
+    
     
     glUseProgram(programId);
 }

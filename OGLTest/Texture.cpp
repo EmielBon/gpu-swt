@@ -11,9 +11,7 @@
 Texture::Texture(int width, int height, GLenum filteringType) : width(width), height(height), FilteringType(filteringType)
 {
     Setup(glGenTextures, glDeleteTextures, glBindTexture, GL_TEXTURE_2D);
-    
     Generate();
-    //glGenTextures(1, &textureId);
     
     Bind();
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, FilteringType);

@@ -51,6 +51,7 @@ inline void IOGLBindableResource<T>::Bind() const
     //{
     boundBuffer = GetHandle();
     BindFunction( TargetName, GetHandle() );
+    check_gl_error();
     //}
 }
 
@@ -61,6 +62,7 @@ inline void IOGLBindableResource<T>::Unbind() const
     //{
     boundBuffer = 0;
     BindFunction( TargetName, 0);
+    check_gl_error();
     //}
 }
 

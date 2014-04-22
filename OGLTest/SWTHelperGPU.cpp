@@ -20,6 +20,7 @@
 #include "ImgProc.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "GLError.h"
 
 enum class ColorAttachmentOption
 {

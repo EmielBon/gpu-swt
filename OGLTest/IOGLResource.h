@@ -9,6 +9,7 @@
 #pragma once
 
 #include "types.h"
+#include "GLError.h"
 
 class IOGLResource
 {
@@ -38,6 +39,7 @@ inline void IOGLResource::Setup(Function<void(GLsizei, GLuint*)> generateFunctio
 inline void IOGLResource::Generate()
 {
     GenerateFunction(1, &handle);
+    check_gl_error();
 }
 
 inline GLuint IOGLResource::GetHandle() const
@@ -48,4 +50,5 @@ inline GLuint IOGLResource::GetHandle() const
 inline void IOGLResource::Dispose()
 {
     DisposeFunction(1, &handle);
+    check_gl_error();
 }

@@ -32,5 +32,6 @@ inline void OGLBuffer<T>::SetData(GLenum target, size_t size, const void *data)
 {
     IOGLBindableResource<T>::Bind();
     glBufferData(target, size, data, GL_STATIC_DRAW);
+    check_gl_error();
     IOGLBindableResource<T>::Unbind();
 }

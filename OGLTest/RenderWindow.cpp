@@ -21,9 +21,8 @@
 #include "types.h"
 #include "VertexShader.h"
 #include "FragmentShader.h"
+#include "GLError.h"
 
-// 38000 Canny
-// OpenCV Sobel: 7648
 RenderWindow* RenderWindow::instance = nullptr;
 
 RenderWindow::RenderWindow(int width, int height, const String &title)
@@ -38,6 +37,8 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     cv::Mat input = ContentLoader::LoadV<cv::Mat>("sign800x600"); AddTexture(input, "Input image");
     SetWindowSize(input.size(), {1024, 1024});
 
+    check_gl_error();
+    
     rect1 = New<DrawableRect>(-1, 1, 1, -1);
     
     // Load the shader program
@@ -54,9 +55,6 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     List<BoundingBox> boundingBoxes = SWTHelperGPU::StrokeWidthTransform(input);
     cv::Mat output = ImgProc::DrawBoundingBoxes(input, boundingBoxes, {0, 255, 255, 255});
     AddTexture(output, "Detected text regions");
-    
-    GLenum error = glGetError();
-    printf("%X", error);
 }
 
 void RenderWindow::SetWindowSize(const cv::Size &size, const cv::Size &max)
@@ -84,6 +82,8 @@ void RenderWindow::DrawRect(const DrawableRect &rect)
 
 void RenderWindow::Draw()
 {
+    check_gl_error();
+    
     static bool keyPressed = false; // to make it draw the first time
     
     if (glfwGetKey(window, GLFW_KEY_RIGHT) && !keyPressed)
