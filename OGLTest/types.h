@@ -22,11 +22,11 @@
 #include <tuple>
 #include <set>
 #include <list>
+#include <functional>
 
 // Third party libraries
 #include <GL/glew.h>
 #include <opencv2/core/core.hpp>
-
 #include <time.h>
 
 enum class GradientDirection
@@ -50,10 +50,13 @@ template<class T> using OrderedSet = std::set<T, bool(*)(T, T)>;
 template<class T> using List = std::vector<T>;
 template<class T> using LinkedList = std::list<T>;
 template<class T> using Stack = std::stack<T>;
+template<class T> using Function = std::function<T>;
 template<class T, class U> using Map = std::map<T, U>;
 
+using OGLBindFunction = void(*)(GLenum, GLuint);
+
 // Macros
-#define New std::make_shared
+#define New   std::make_shared
 #define Tuple std::tuple
 
 // Forward declarations

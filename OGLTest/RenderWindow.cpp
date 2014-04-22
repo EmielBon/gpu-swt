@@ -41,7 +41,6 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     rect1 = New<DrawableRect>(-1, 1, 1, -1);
     
     // Load the shader program
-    //program = ContentLoader::Load<Program>("SimpleShader");
     List< Ptr<Shader> > shaders;
     
     auto vs = ContentLoader::Load<VertexShader>("Trivial");
@@ -55,6 +54,9 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     List<BoundingBox> boundingBoxes = SWTHelperGPU::StrokeWidthTransform(input);
     cv::Mat output = ImgProc::DrawBoundingBoxes(input, boundingBoxes, {0, 255, 255, 255});
     AddTexture(output, "Detected text regions");
+    
+    GLenum error = glGetError();
+    printf("%X", error);
 }
 
 void RenderWindow::SetWindowSize(const cv::Size &size, const cv::Size &max)

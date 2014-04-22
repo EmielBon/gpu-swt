@@ -11,70 +11,26 @@
 #include "IOGLBindableResource.h"
 #include "types.h"
 
-class OGLBuffer : public IOGLBindableResource
+template<class T>
+class OGLBuffer : public IOGLBindableResource<T>
 {
-protected:
-    
-    OGLBuffer();
-    
 public:
     
-    GLuint GetHandle() const;
-    
-    void BindTo(GLenum target);
+    void Setup(GLenum target);
     
     void SetData(GLenum target, size_t size, const void *data);
-    
-    void Unbind();
-    
-    bool IsBound();
-    
-    void Dispose();
-    
-protected:
-    
-    GLuint bufferId;
-    GLenum boundTarget;
 };
 
-inline OGLBuffer::OGLBuffer() : boundTarget(GL_NONE)
+template<class T>
+inline void OGLBuffer<T>::Setup(GLenum target)
 {
-    glGenBuffers(1, &bufferId);
+    IOGLBindableResource<T>::Setup(glGenBuffers, glDeleteBuffers, glBindBuffer, target);
 }
 
-inline GLuint OGLBuffer::GetHandle() const
+template<class T>
+inline void OGLBuffer<T>::SetData(GLenum target, size_t size, const void *data)
 {
-    return bufferId;
-}
-
-inline void OGLBuffer::BindTo(GLenum target)
-{
-    glBindBuffer(target, bufferId);
-    boundTarget = target;
-}
-
-inline void OGLBuffer::SetData(GLenum target, size_t size, const void *data)
-{
-    Bind();
+    IOGLBindableResource<T>::Bind();
     glBufferData(target, size, data, GL_STATIC_DRAW);
-    Unbind();
+    IOGLBindableResource<T>::Unbind();
 }
-
-inline void OGLBuffer::Unbind()
-{
-    if (IsBound())
-        glBindBuffer(boundTarget, 0);
-    boundTarget = GL_NONE;
-}
-
-inline bool OGLBuffer::IsBound()
-{
-    return boundTarget != GL_NONE;
-}
-
-inline void OGLBuffer::Dispose()
-{
-    glDeleteBuffers(1, &bufferId);
-    bufferId = 0;
-}
-

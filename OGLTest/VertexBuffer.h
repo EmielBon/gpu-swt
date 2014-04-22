@@ -13,15 +13,13 @@
 #include "VertexDeclaration.h"
 #include <GL/glew.h>
 
-class VertexBuffer : public OGLBuffer
+class VertexBuffer : public OGLBuffer<VertexBuffer>
 {
     friend class GraphicsDevice;
     
 public:
     
-    VertexBuffer() = default;
-    
-    void Bind();
+    VertexBuffer();
     
     template<class T>
     void SetData(const List<T> &data);
@@ -33,9 +31,10 @@ private:
     VertexDeclaration vertexDeclaration;
 };
 
-inline void VertexBuffer::Bind()
+inline VertexBuffer::VertexBuffer()
 {
-    BindTo(GL_ARRAY_BUFFER);
+    Setup(GL_ARRAY_BUFFER);
+    Generate();
 }
 
 template<class T>

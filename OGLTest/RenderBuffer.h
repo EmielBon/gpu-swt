@@ -11,7 +11,7 @@
 #include "IOGLBindableResource.h"
 #include "types.h"
 
-class RenderBuffer : public IOGLBindableResource
+class RenderBuffer : public IOGLBindableResource<RenderBuffer>
 {
 public:
     
@@ -26,37 +26,4 @@ public:
 public:
     
     RenderBuffer(Type type, int width, int height);
-    
-    GLuint GetHandle() const;
-    
-    void Bind();
-    
-    void Unbind();
-    
-    void Dispose();
-    
-public:
-    
-    GLuint bufferId;
 };
-
-inline GLuint RenderBuffer::GetHandle() const
-{
-    return bufferId;
-}
-
-inline void RenderBuffer::Bind()
-{
-    glBindRenderbuffer(GL_RENDERBUFFER, bufferId);
-}
-
-inline void RenderBuffer::Unbind()
-{
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-}
-
-inline void RenderBuffer::Dispose()
-{
-    glDeleteRenderbuffers(1, &bufferId);
-    bufferId = 0;
-}

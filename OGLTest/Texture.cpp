@@ -8,13 +8,16 @@
 
 #include "Texture.h"
 
-Texture::Texture(int width, int height, GLenum filteringType) : width(width), height(height)
+Texture::Texture(int width, int height, GLenum filteringType) : width(width), height(height), FilteringType(filteringType)
 {
-    glGenTextures(1, &textureId);
+    Setup(glGenTextures, glDeleteTextures, glBindTexture, GL_TEXTURE_2D);
+    
+    Generate();
+    //glGenTextures(1, &textureId);
     
     Bind();
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filteringType);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filteringType);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, FilteringType);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, FilteringType);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     Unbind();
@@ -39,7 +42,7 @@ Texture::Texture(const cv::Mat &image) : Texture(image.size().width, image.size(
 Texture::Texture(int width, int height, GLenum format, GLenum type, GLenum filteringType) : Texture(width, height, filteringType)
 {
     Format = format;
-    Type = type;
+    Type   = type;
     
     switch(format)
     {

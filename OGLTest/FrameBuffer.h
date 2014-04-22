@@ -12,20 +12,12 @@
 #include "RenderBuffer.h"
 #include "types.h"
 
-class FrameBuffer : public IOGLBindableResource
+class FrameBuffer : public IOGLBindableResource<FrameBuffer>
 {
 public:
     
     FrameBuffer(int width, int height, GLenum format, GLenum type, RenderBuffer::Type attachment = RenderBuffer::Type::None);
     
-    GLuint GetHandle() const;
-
-    void Bind();
-
-    void Unbind();
-
-    void Dispose();
-
     void SetColorAttachment0(Ptr<::Texture> texture);
 
     bool IsFrameBufferComplete() const;
@@ -40,31 +32,10 @@ private:
     
 public:
     
-    GLuint bufferId;
+    //GLuint bufferId;
     Ptr<::Texture> Texture;
     Ptr<RenderBuffer> Attachment;
 };
-
-inline GLuint FrameBuffer::GetHandle() const
-{
-    return bufferId;
-}
-
-inline void FrameBuffer::Bind()
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, bufferId);
-}
-
-inline void FrameBuffer::Unbind()
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-inline void FrameBuffer::Dispose()
-{
-    glDeleteFramebuffers(1, &bufferId);
-    bufferId = 0;
-}
 
 inline bool FrameBuffer::IsFrameBufferComplete() const
 {

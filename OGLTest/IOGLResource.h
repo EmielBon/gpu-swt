@@ -8,13 +8,44 @@
 
 #pragma once
 
-#include <GL/glew.h>
+#include "types.h"
 
 class IOGLResource
 {
 public:
     
-    virtual GLuint GetHandle() const = 0;
+    void Setup(Function<void(GLsizei, GLuint*)> generateFunction, Function<void(GLsizei, GLuint*)> disposeFunction);
     
-    virtual void Dispose() = 0;
+    void Generate();
+    
+    GLuint GetHandle() const;
+    
+    void Dispose();
+    
+protected:
+    
+    GLuint handle;
+    Function<void(GLsizei, GLuint*)> GenerateFunction;
+    Function<void(GLsizei, GLuint*)> DisposeFunction;
 };
+
+inline void IOGLResource::Setup(Function<void(GLsizei, GLuint*)> generateFunction, Function<void(GLsizei, GLuint*)> disposeFunction)
+{
+    GenerateFunction = generateFunction;
+    DisposeFunction  = disposeFunction;
+}
+
+inline void IOGLResource::Generate()
+{
+    GenerateFunction(1, &handle);
+}
+
+inline GLuint IOGLResource::GetHandle() const
+{
+    return handle;
+}
+
+inline void IOGLResource::Dispose()
+{
+    DisposeFunction(1, &handle);
+}

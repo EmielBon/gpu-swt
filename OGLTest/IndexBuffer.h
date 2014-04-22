@@ -11,13 +11,11 @@
 #include "types.h"
 #include "OGLBuffer.h"
 
-class IndexBuffer : public OGLBuffer
+class IndexBuffer : public OGLBuffer<IndexBuffer>
 {
 public:
     
     IndexBuffer();
-    
-    void Bind();
     
     void SetData(const List<GLuint> &indices);
     
@@ -30,11 +28,8 @@ private:
 
 inline IndexBuffer::IndexBuffer() : count(0)
 {
-}
-
-inline void IndexBuffer::Bind()
-{
-    BindTo(GL_ELEMENT_ARRAY_BUFFER);
+    Setup(GL_ELEMENT_ARRAY_BUFFER);
+    Generate();
 }
 
 inline void IndexBuffer::SetData(const List<GLuint> &indices)

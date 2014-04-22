@@ -18,13 +18,9 @@ public:
     
     VertexArray();
     
-    GLuint GetHandle() const;
-    
     void Bind();
     
     void Unbind();
-    
-    void Dispose();
     
 public:
     
@@ -33,12 +29,8 @@ public:
 
 inline VertexArray::VertexArray()
 {
-    glGenVertexArrays(1, &vertexArrayObjectId);
-}
-
-inline GLuint VertexArray::GetHandle() const
-{
-    return vertexArrayObjectId;
+    Setup(glGenVertexArrays, glDeleteVertexArrays);
+    Generate();
 }
 
 inline void VertexArray::Bind()
@@ -49,9 +41,4 @@ inline void VertexArray::Bind()
 inline void VertexArray::Unbind()
 {
     glBindVertexArray(0);
-}
-
-inline void VertexArray::Dispose()
-{
-    glDeleteVertexArrays(1, &vertexArrayObjectId);
 }

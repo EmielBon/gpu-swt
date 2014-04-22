@@ -44,6 +44,8 @@ Ptr<Program> LoadScreenSpaceProgram(const String &name);
 Ptr<Texture> Render(FrameBuffer &frameBuffer, PrimitiveType primitiveType = PrimitiveType::Triangles, ColorAttachmentOption option = ColorAttachmentOption::CreateNew);
 Ptr<Texture> RenderProfiled(FrameBuffer &frameBuffer, const char* name, PrimitiveType primitiveType = PrimitiveType::Triangles, ColorAttachmentOption option = ColorAttachmentOption::CreateNew);
 
+unsigned long totalClicks = 0;
+
 List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
 {
     glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
@@ -76,6 +78,8 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     auto connectedComponents = ConnectedComponents(*strokeWidths1, frameBuffer2);
     //RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)), "Edges (OpenCV Canny)");*/
     
+    printf("Total time: %.1fms\n", totalClicks * 1000.0f / CLOCKS_PER_SEC);
+    
     return List<BoundingBox>();
 }
 
@@ -100,10 +104,13 @@ Ptr<Texture> RenderProfiled(FrameBuffer &frameBuffer, const char *name, Primitiv
     device.DrawPrimitives(primitiveType);
     glFinish();
     f = clock() - f;
-    printf("OpenGL %s timer: %lu\n", name, f);
+    totalClicks += f;
+    printf("%s (%.1fms)\n", name, (f * 1000.0f) / CLOCKS_PER_SEC);
     auto result = frameBuffer.Texture;
     if (option == ColorAttachmentOption::CreateNew)
         frameBuffer.CreateNewColorAttachment0();
+    
+    RenderWindow::Instance().AddTexture(result, name);
     
     return result;
 }
@@ -116,8 +123,7 @@ Ptr<Texture> Grayscale(const Texture &texture, FrameBuffer &frameBuffer)
     
     grayscale->Use();
     grayscale->Uniforms["Texture"].SetValue(texture);
-    auto result = RenderProfiled(frameBuffer, "grayscale");
-    RenderWindow::Instance().AddTexture(result, "Grayscale");
+    auto result = RenderProfiled(frameBuffer, "Grayscale");
     
     return result;
 }
@@ -266,11 +272,9 @@ Ptr<Texture> Canny(const Texture &texture, FrameBuffer &frameBuffer)
     
     canny->Use();
     canny->Uniforms["Gradients"].SetValue(*gradients);
-    edges = RenderProfiled(frameBuffer, "Canny");
+    edges = RenderProfiled(frameBuffer, "Edges (Canny)");
     
     glDisable(GL_STENCIL_TEST);
-    
-    RenderWindow::Instance().AddTexture(edges, "Edges (Canny)");
     
     return edges;
 }
@@ -310,9 +314,7 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     strokeWidthTransform1->Uniforms["Edges"].SetValue(edges);
     strokeWidthTransform1->Uniforms["Gradients"].SetValue(gradients);
     strokeWidthTransform1->Uniforms["DarkOnLight"].SetValue(darkOnLight);
-    strokeWidthValues = RenderProfiled(frameBuffer, "SWT 1");
-    
-    RenderWindow::Instance().AddTexture(strokeWidthValues, "Stroke Width values");
+    strokeWidthValues = RenderProfiled(frameBuffer, "Stroke Width values");
     
     glDisable(GL_STENCIL_TEST);
     
@@ -358,9 +360,7 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     strokeWidthTransform2->Uniforms["LineLengths"].SetValue(*strokeWidthValues);
     strokeWidthTransform2->Uniforms["Values"].SetValue(*strokeWidthValues);
     strokeWidthTransform2->Uniforms["DarkOnLight"].SetValue(darkOnLight);
-    strokeWidthTransform = RenderProfiled(frameBuffer, "SWT 2", PrimitiveType::Lines);
-    
-    RenderWindow::Instance().AddTexture(strokeWidthTransform, String("Stroke Width Transform (") + (darkOnLight ? "with" : "against") + " the gradient)");
+    strokeWidthTransform = RenderProfiled(frameBuffer, (String("Stroke Width Transform (") + (darkOnLight ? "with" : "against") + " the gradient)").c_str(), PrimitiveType::Lines);
     
     device.VertexBuffer = quadVertexBuffer;
     device.IndexBuffer = quadIndexBuffer;
@@ -378,9 +378,7 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     strokeWidthTransform3->Uniforms["Gradients"].SetValue(gradients);
     strokeWidthTransform3->Uniforms["LineLengths"].SetValue(*strokeWidthTransform);
     strokeWidthTransform3->Uniforms["DarkOnLight"].SetValue(darkOnLight);
-    avgStrokeWidthValues = RenderProfiled(frameBuffer, "SWT 1 (avg)");
-    
-    RenderWindow::Instance().AddTexture(avgStrokeWidthValues, "Average Stroke Width values");
+    avgStrokeWidthValues = RenderProfiled(frameBuffer, "Average Stroke Width values");
     
     glDisable(GL_STENCIL_TEST);
     
@@ -395,9 +393,7 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     strokeWidthTransform2->Uniforms["LineLengths"].SetValue(*strokeWidthValues);
     strokeWidthTransform2->Uniforms["Values"].SetValue(*avgStrokeWidthValues);
     strokeWidthTransform2->Uniforms["DarkOnLight"].SetValue(direction == GradientDirection::With);
-    avgStrokeWidthTransform = RenderProfiled(frameBuffer, "SWT 2 (avg)", PrimitiveType::Lines);
-    
-    RenderWindow::Instance().AddTexture(avgStrokeWidthTransform, String("Average Stroke Width Transform (") + (darkOnLight ? "with" : "against") + " the gradient)");
+    avgStrokeWidthTransform = RenderProfiled(frameBuffer, (String("Average Stroke Width Transform (") + (darkOnLight ? "with" : "against") + " the gradient)").c_str(), PrimitiveType::Lines);
     
     glDisable(GL_DEPTH_TEST);
     
@@ -433,21 +429,19 @@ Ptr<Texture> ConnectedComponents(const Texture &strokeWidths, FrameBuffer &frame
     auto updateColumn = LoadScreenSpaceProgram("UpdateColumn");
     auto scatterBack = LoadProgram("ScatterBack", "GatherScatter");
     
-    Ptr<Texture> encodedPositions, verticalRuns, columnProcessing1, columnProcessing2, columnProcessing3;
+    Ptr<Texture> encodedPositions, verticalRuns;
     
     frameBuffer.Bind();
     
     encode->Use();
     encode->Uniforms["Texture"].SetValue(strokeWidths);
     encode->Uniforms["BackgroundColor"].SetValue(0.0f);
-    encodedPositions = Render(frameBuffer);
-    
-    RenderWindow::Instance().AddTexture(encodedPositions, "Connected Components 1 (encoded values)");
+    encodedPositions = RenderProfiled(frameBuffer, "Connected Components 1 Encode Positions");
     
     verticalRun->Use();
     verticalRuns = encodedPositions;
     
-    int log_h = (int)(log10f(strokeWidths.GetHeight()) / log10f(2.0f)); // log2(h)
+    int log_h = (int)(log2f(strokeWidths.GetHeight()));
     for(int i = 0; i <= log_h; ++i)
     {
         verticalRun->Uniforms["Texture"].SetValue(*verticalRuns);
@@ -455,7 +449,7 @@ Ptr<Texture> ConnectedComponents(const Texture &strokeWidths, FrameBuffer &frame
         verticalRuns = Render(frameBuffer);
     }
     
-    RenderWindow::Instance().AddTexture(verticalRuns, "Connected Components 2 (vertical runs)");
+    RenderWindow::Instance().AddTexture(verticalRuns, "Connected Components 2 Vertical Runs");
     
     glClear(GL_COLOR_BUFFER_BIT);
     
@@ -466,54 +460,72 @@ Ptr<Texture> ConnectedComponents(const Texture &strokeWidths, FrameBuffer &frame
     GLfloat buffer[width * height];
     verticalRuns->GetTextureImage(GL_BLUE, GL_FLOAT, buffer);
     
-    List<VertexPositionTexture> vertices;
-    for (int x = 0; x < strokeWidths.GetWidth(); ++x)
-    for (int y = 0; y < strokeWidths.GetHeight(); ++y)
-    {
-        float rootID = buffer[x + y * width];
-        if (rootID != 0.0)
-            vertices.push_back(VertexPositionTexture(Vector3(x, y, rootID), Vector2(0, 0)));
-    }
-    
-    List<GLuint> indices( vertices.size() );
-    GLuint counter = 0;
-    for(auto& index : indices)
-        index = counter++;
-    
-    Ptr<VertexBuffer> pixelVertices = New<VertexBuffer>();
-    pixelVertices->SetData(vertices);
-    Ptr<IndexBuffer> pixelIndices = New<IndexBuffer>();
-    pixelIndices->SetData(indices);
-    
     auto quadVertices = device.VertexBuffer;
     auto quadIndices  = device.IndexBuffer;
     
-    device.VertexBuffer = pixelVertices;
-    device.IndexBuffer  = pixelIndices;
+    Ptr<Texture> tex0, tex1;
     
-    glDepthFunc(GL_GREATER);
-    glClearDepth(0);
-    glClear(GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
+    tex0 = verticalRuns;
     
-    gatherNeighbor->Use();
-    gatherNeighbor->Uniforms["Texture"].SetValue(*verticalRuns);
-    columnProcessing1 = Render(frameBuffer, PrimitiveType::Points);
-    
-    glDisable(GL_DEPTH_TEST);
-    
-    RenderWindow::Instance().AddTexture(columnProcessing1, "Connected Components 3 (gather neighbor)");
-    
-    device.VertexBuffer = quadVertices;
-    device.IndexBuffer  = quadIndices;
-    
-    updateColumn->Use();
-    updateColumn->Uniforms["Texture"].SetValue(*columnProcessing1);
-    columnProcessing2 = Render(frameBuffer, PrimitiveType::Triangles);
-    
-    RenderWindow::Instance().AddTexture(columnProcessing2, "Connected Components 4 (update column)");
-    
-    frameBuffer.Unbind();
+    /*for(int column = strokeWidths.GetWidth() - 2; column >= 0; --column)
+    {
+        List<VertexPositionTexture> vertices;
+        for (int y = 0; y < strokeWidths.GetHeight(); ++y)
+        {
+            float rootID = buffer[column + y * width];
+            if (rootID != 0.0)
+                vertices.push_back(VertexPositionTexture(Vector3(column, y, rootID), Vector2(0, 0)));
+        }
+        
+        List<GLuint> indices( vertices.size() );
+        GLuint counter = 0;
+        for(auto& index : indices)
+            index = counter++;
+        
+        Ptr<VertexBuffer> pixelVertices = New<VertexBuffer>();
+        pixelVertices->SetData(vertices);
+        Ptr<IndexBuffer> pixelIndices = New<IndexBuffer>();
+        pixelIndices->SetData(indices);
+        
+        device.VertexBuffer = pixelVertices;
+        device.IndexBuffer  = pixelIndices;
+        
+        glDepthFunc(GL_GREATER);
+        glClearDepth(0);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
+        
+        gatherNeighbor->Use();
+        gatherNeighbor->Uniforms["Texture"].SetValue(*verticalRuns);
+        columnProcessing1 = Render(frameBuffer, PrimitiveType::Points);
+        
+        glDisable(GL_DEPTH_TEST);
+        
+        device.VertexBuffer = quadVertices;
+        device.IndexBuffer  = quadIndices;
+        
+        updateColumn->Use();
+        updateColumn->Uniforms["Texture"].SetValue(*columnProcessing1);
+        columnProcessing2 = Render(frameBuffer, PrimitiveType::Triangles);
+        
+        normal->Use();
+        normal->Uniforms["Texture"].SetValue(*columnProcessing2);
+        Render(frameBuffer, PrimitiveType::Triangles, ColorAttachmentOption::Keep);
+        
+        glDepthFunc(GL_GREATER);
+        glClearDepth(0);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
+        
+        device.VertexBuffer = pixelVertices;
+        device.IndexBuffer  = pixelIndices;
+        
+        scatterBack->Use();
+        scatterBack->Uniforms["Texture"].SetValue(*columnProcessing2);
+        columnProcessing3 = Render(frameBuffer, PrimitiveType::Points);
+        
+        glDisable(GL_DEPTH_TEST);
+    }*/
     
     return encodedPositions;
 }

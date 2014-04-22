@@ -10,7 +10,9 @@
 
 RenderBuffer::RenderBuffer(Type type, int width, int height)
 {
-    glGenRenderbuffers(1, &bufferId);
+    Setup(glGenRenderbuffers, glDeleteRenderbuffers, glBindRenderbuffer, GL_RENDERBUFFER);
+    
+    Generate();
     
     GLenum storageFormat = GL_NONE;
     

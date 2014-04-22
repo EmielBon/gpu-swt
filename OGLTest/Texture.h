@@ -11,7 +11,7 @@
 #include "types.h"
 #include "IOGLBindableResource.h"
 
-class Texture : public IOGLBindableResource
+class Texture : public IOGLBindableResource<Texture>
 {
 protected:
     
@@ -23,14 +23,6 @@ public:
     
     Texture(int width, int height, GLenum format, GLenum type, GLenum filteringType);
     
-    GLuint GetHandle() const;
-    
-    void Bind();
-    
-    void Unbind();
-    
-    void Dispose();
-    
     int GetWidth() const;
     
     int GetHeight() const;
@@ -39,6 +31,10 @@ public:
     
     void GetTextureImage(GLenum format, GLenum type, GLvoid *buffer);
     
+    Ptr<Texture> GetEmptyClone() const;
+    
+    //Ptr<Texture> Clone() const;
+    
 private:
     
     template<typename T>
@@ -46,7 +42,6 @@ private:
     
 private:
     
-    GLuint textureId;
     int width, height;
     int colorChannels;
 
@@ -54,27 +49,8 @@ public:
     
     GLenum Format;
     GLenum Type;
+    GLenum FilteringType;
 };
-
-inline GLuint Texture::GetHandle() const
-{
-    return textureId;
-}
-
-inline void Texture::Bind()
-{
-    glBindTexture(GL_TEXTURE_2D, textureId);
-}
-
-inline void Texture::Unbind()
-{
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-inline void Texture::Dispose()
-{
-    glDeleteTextures(1, &textureId);
-}
 
 inline int Texture::GetWidth() const
 {
@@ -97,6 +73,17 @@ inline void Texture::GetTextureImage(GLenum format, GLenum type, GLvoid *buffer)
     glGetTexImage(GL_TEXTURE_2D, 0, format, type, buffer);
     Unbind();
 }
+
+inline Ptr<Texture> Texture::GetEmptyClone() const
+{
+    return New<Texture>(width, height, Format, Type, FilteringType);
+}
+
+/*inline Ptr<Texture> Texture::Clone() const
+{
+    auto texture = GetEmptyClone();
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height);
+}*/
 
 template<typename T>
 inline void Texture::SetData(const cv::Mat &image, GLenum format, GLenum type)

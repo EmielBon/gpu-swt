@@ -13,7 +13,7 @@
 #include "Uniform.h"
 #include <GL/glew.h>
 
-class Program : public IOGLResource
+class Program
 {
 public:
     

@@ -11,7 +11,10 @@
 
 FrameBuffer::FrameBuffer(int width, int height, GLenum format, GLenum type, RenderBuffer::Type attachment)
 {
-    glGenFramebuffers(1, &bufferId);
+    Setup(glGenFramebuffers, glDeleteFramebuffers, glBindFramebuffer, GL_FRAMEBUFFER);
+    Generate();
+    
+    glGetError();
     
     Bind();
     

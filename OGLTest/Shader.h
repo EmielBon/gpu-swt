@@ -13,7 +13,7 @@
 #include <GLFW/glfw3.h>
 #include <GL/glew.h>
 
-class Shader : public IOGLResource
+class Shader
 {
 public:
     

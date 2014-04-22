@@ -8,7 +8,7 @@ uniform sampler2D Texture;
      in  vec3  Position;
      in  vec2  TexCoord;
      out vec2  FragTexCoord;
-flat out float NeighborRootID; // ScatterID
+flat out float ScatterID;
 
 void main()
 {
@@ -20,9 +20,9 @@ void main()
     
     ivec2 current_root_xy = decode(current_root_id);
     
-    FragTexCoord   = TexCoord;
-    NeighborRootID = neighbor_root_id;
+    FragTexCoord = TexCoord;
+    ScatterID    = neighbor_root_id;
     
-    ivec2 neighbor_root_xy = decode(NeighborRootID);
+    ivec2 neighbor_root_xy = decode(ScatterID);
     gl_Position = vec4(getScreenSpaceCoord(Texture, current_root_xy), (neighbor_root_xy.x + neighbor_root_xy.y * 800.0) / (800 * 600), 1);
 }
