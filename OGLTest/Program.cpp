@@ -121,6 +121,5 @@ void Program::Use()
     
     vertexBuffer.Unbind();
     
-    
     glUseProgram(programId);
 }

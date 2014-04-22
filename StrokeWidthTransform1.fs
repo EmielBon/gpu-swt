@@ -32,13 +32,15 @@ bool isEdgePixel(vec2 xy)
 
 void main()
 {
-    if (!isEdgePixel(gl_FragCoord.xy))
+    ivec2 uv = ivec2(gl_FragCoord.xy);
+    
+    if (!isEdgePixel(uv))
         ditch;
     
-    vec2 gradient = fetch(Gradients, gl_FragCoord.xy).xy;
+    vec2 gradient = fetch(Gradients, uv).xy;
     vec2 dp = normalize(gradient) * (prec * (DarkOnLight ? 1 : -1));
     
-    vec2 realPosition = gl_FragCoord.xy + vec2(0.5);
+    vec2 realPosition = uv + vec2(0.5);
     ivec2 position = ivec2(realPosition);
     
     for (int i = 0; i <= MaxIterations; ++i)
@@ -52,12 +54,12 @@ void main()
         position = newPos;
         if (!inRange(Edges, position))
             ditch;
-        if (isEdgePixel(position) && distance(gl_FragCoord.xy, position) > 5)
+        if (isEdgePixel(position) && distance(uv, position) > 5)
             break;
     }
     
     vec2 dq = normalize( fetch(Gradients, position).xy ) * (DarkOnLight ? 1 : -1);
-    float rayLength = distance(gl_FragCoord.xy, position);
+    float rayLength = distance(uv, position);
     int keep = int(acos(dot(dp, -dq)) < MaxOppositeEdgeGradientDifference);
     FragColor = vec4(vec3(rayLength * keep), 1);
     //if (rayLength < 5)

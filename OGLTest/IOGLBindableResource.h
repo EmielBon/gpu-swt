@@ -22,12 +22,14 @@ public:
     
     void Unbind() const;
     
-    bool IsBound() const;
+    bool IsBound() const { return GetHandle() == boundBuffer; }
 
+    static void BindDefault();
+    
 protected:
     
-    Function<void(GLenum, GLuint)> BindFunction;
-    GLenum TargetName;
+    static Function<void(GLenum, GLuint)> BindFunction;
+    static GLenum TargetName;
     
 private:
     
@@ -35,6 +37,8 @@ private:
 };
 
 template<class T> GLuint IOGLBindableResource<T>::boundBuffer = 0;
+template<class T> Function<void(GLenum, GLuint)> IOGLBindableResource<T>::BindFunction;
+template<class T> GLenum IOGLBindableResource<T>::TargetName = GL_NONE;
 
 template<class T>
 inline void IOGLBindableResource<T>::Setup(Function<void(GLsizei, GLuint*)> generateFunction, Function<void(GLsizei, GLuint*)> disposeFunction, Function<void(GLenum, GLuint)> bindFunction, GLenum targetName)
@@ -47,27 +51,25 @@ inline void IOGLBindableResource<T>::Setup(Function<void(GLsizei, GLuint*)> gene
 template<class T>
 inline void IOGLBindableResource<T>::Bind() const
 {
-    //if (!IsBound())
-    //{
-    boundBuffer = GetHandle();
-    BindFunction( TargetName, GetHandle() );
-    check_gl_error();
-    //}
+    if (!IsBound())
+    {
+        boundBuffer = GetHandle();
+        BindFunction( TargetName, GetHandle() );
+        check_gl_error();
+    }
 }
 
 template<class T>
 inline void IOGLBindableResource<T>::Unbind() const
 {
-    //if (IsBound())
-    //{
-    boundBuffer = 0;
-    BindFunction( TargetName, 0);
-    check_gl_error();
-    //}
+    if (IsBound())
+        BindDefault();
 }
 
 template<class T>
-inline bool IOGLBindableResource<T>::IsBound() const
+inline void IOGLBindableResource<T>::BindDefault()
 {
-    return GetHandle() == boundBuffer;
+    BindFunction(TargetName, 0);
+    boundBuffer = 0;
+    check_gl_error();
 }

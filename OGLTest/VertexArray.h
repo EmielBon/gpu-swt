@@ -20,6 +20,8 @@ public:
     
     void Bind();
     
+    static void BindDefault();
+    
     void Unbind();
     
 public:
@@ -38,7 +40,12 @@ inline void VertexArray::Bind()
     glBindVertexArray( GetHandle() );
 }
 
-inline void VertexArray::Unbind()
+inline void VertexArray::BindDefault()
 {
     glBindVertexArray(0);
+}
+
+inline void VertexArray::Unbind()
+{
+    BindDefault();
 }

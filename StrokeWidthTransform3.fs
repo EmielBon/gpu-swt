@@ -11,9 +11,10 @@ out vec4 FragColor;
 
 void main()
 {
-    vec2 gradient = normalize( fetch(Gradients, gl_FragCoord.xy).xy );
-    float lineLength = fetch(LineLengths, gl_FragCoord.xy).r;
     ivec2 pos0 = ivec2(gl_FragCoord.xy);
+    
+    vec2 gradient = normalize( fetch(Gradients, pos0).xy );
+    float lineLength = fetch(LineLengths, pos0).r;
     ivec2 pos1 = ivec2(pos0 + gradient * (lineLength * (DarkOnLight ? 1 : -1)));
     
     bool steep = abs(pos1.y - pos0.y) > abs(pos1.x - pos0.x);

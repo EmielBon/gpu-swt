@@ -7,6 +7,10 @@
 //
 #include "Window.h"
 #include "ContentLoader.h"
+#include "IndexBuffer.h"
+#include "VertexArray.h"
+#include "Program.h"
+
 #include <iostream>
 #include <stdexcept>
 
@@ -57,11 +61,11 @@ void Window::Show()
 void Window::Draw()
 {
     // unbind the index buffer
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    IndexBuffer::BindDefault();
     // unbind the VAO
-    glBindVertexArray(0);
+    VertexArray::BindDefault();
     // unbind the program
-    glUseProgram(0);
+    Program::UseDefault();
     
     glfwSwapBuffers(window);
     glfwPollEvents();

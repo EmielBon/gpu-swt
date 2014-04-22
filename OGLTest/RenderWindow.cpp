@@ -22,6 +22,7 @@
 #include "VertexShader.h"
 #include "FragmentShader.h"
 #include "GLError.h"
+#include "FrameBuffer.h"
 
 RenderWindow* RenderWindow::instance = nullptr;
 
@@ -102,7 +103,7 @@ void RenderWindow::Draw()
     }
     if (keyPressed)
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        FrameBuffer::BindDefault();
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);
         DrawRect(*rect1);

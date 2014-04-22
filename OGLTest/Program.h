@@ -27,6 +27,8 @@ public:
     
     void Use();
     
+    static void UseDefault();
+    
 private:
     
     static GLuint CreateFromShaders(const List< Ptr<Shader> > &shaders);
@@ -53,4 +55,9 @@ inline GLuint Program::GetHandle() const
 inline void Program::Dispose()
 {
     glDeleteProgram(programId);
+}
+
+inline void Program::UseDefault()
+{
+    glUseProgram(0);
 }
