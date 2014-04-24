@@ -95,6 +95,6 @@ inline void Texture::SetData(const cv::Mat &image, GLenum format, GLenum type)
     pixelData.resize(width * height);
     std::copy(image.begin<T>(), image.end<T>(), pixelData.begin());
     Bind();
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, type, pixelData.data());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, format, type, pixelData.data());
     Unbind();
 }

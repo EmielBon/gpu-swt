@@ -8,12 +8,12 @@
 
 #include "GrayFilter.h"
 
-GrayFilter::GrayFilter(Ptr<Texture> input)
+GrayFilter::GrayFilter(GraphicsDevice *device, const Texture &input) : base(device)
 {
     
 }
 
-Ptr<Texture> GrayFilter::Apply(FrameBuffer* target)
+void GrayFilter::LoadShaderPrograms()
 {
-    return nullptr;
+    AddScreenSpaceProgram("Grayscale");
 }

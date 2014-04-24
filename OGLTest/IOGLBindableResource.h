@@ -22,9 +22,11 @@ public:
     
     void Unbind() const;
     
-    bool IsBound() const { return GetHandle() == boundBuffer; }
-
+    bool IsBound() const;
+    
     static void BindDefault();
+    
+    static T& GetCurrentlyBound() { return *static_cast<T*>(boundBuffer); }
     
 protected:
     
@@ -33,10 +35,10 @@ protected:
     
 private:
     
-    static GLuint boundBuffer;
+    static IOGLBindableResource<T> *boundBuffer;
 };
 
-template<class T> GLuint IOGLBindableResource<T>::boundBuffer = 0;
+template<class T> IOGLBindableResource<T>* IOGLBindableResource<T>::boundBuffer = nullptr;
 template<class T> Function<void(GLenum, GLuint)> IOGLBindableResource<T>::BindFunction;
 template<class T> GLenum IOGLBindableResource<T>::TargetName = GL_NONE;
 
@@ -53,7 +55,7 @@ inline void IOGLBindableResource<T>::Bind() const
 {
     if (!IsBound())
     {
-        boundBuffer = GetHandle();
+        boundBuffer = const_cast<IOGLBindableResource*>(this);
         BindFunction( TargetName, GetHandle() );
         check_gl_error();
     }
@@ -67,9 +69,17 @@ inline void IOGLBindableResource<T>::Unbind() const
 }
 
 template<class T>
+inline bool IOGLBindableResource<T>::IsBound() const
+{
+    if (boundBuffer)
+        return GetHandle() == boundBuffer->GetHandle();
+    return false;
+}
+
+template<class T>
 inline void IOGLBindableResource<T>::BindDefault()
 {
     BindFunction(TargetName, 0);
-    boundBuffer = 0;
+    boundBuffer = nullptr;
     check_gl_error();
 }

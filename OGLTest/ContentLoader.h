@@ -24,19 +24,7 @@ public:
     
     static String FileReadAll(const String& filePath);
     
-    static void SetGraphicsDevice(GraphicsDevice *device);
-    
-    
 public:
     
     static String ContentPath;
-    
-private:
-    
-    static GraphicsDevice *device;
 };
-
-inline void ContentLoader::SetGraphicsDevice(GraphicsDevice *d)
-{
-    device = d;
-}

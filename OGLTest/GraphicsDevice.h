@@ -15,11 +15,18 @@ class GraphicsDevice
 {
 public:
     
-    void DrawPrimitives(PrimitiveType type);
+    static void DrawPrimitives(PrimitiveType type);
+    
+    static void SetBuffers(Ptr<VertexBuffer> vertexBuffer, Ptr<IndexBuffer> indexBuffer);
     
 public:
     
-    Ptr<VertexBuffer> VertexBuffer;
-    Ptr<VertexArray>  VertexArray;
-    Ptr<IndexBuffer>  IndexBuffer;
+    static Ptr<VertexBuffer> VertexBuffer;
+    static Ptr<IndexBuffer>  IndexBuffer;
 };
+
+inline void GraphicsDevice::SetBuffers(Ptr<::VertexBuffer> vertexBuffer, Ptr<::IndexBuffer> indexBuffer)
+{
+    VertexBuffer = vertexBuffer;
+    IndexBuffer  = indexBuffer;
+}

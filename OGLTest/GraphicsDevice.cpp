@@ -8,7 +8,9 @@
 
 #include "GraphicsDevice.h"
 #include "IndexBuffer.h"
-#include "VertexArray.h"
+
+Ptr<VertexBuffer> GraphicsDevice::VertexBuffer = nullptr;
+Ptr<IndexBuffer>  GraphicsDevice::IndexBuffer  = nullptr;
 
 void GraphicsDevice::DrawPrimitives(PrimitiveType type)
 {

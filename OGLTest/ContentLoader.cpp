@@ -16,7 +16,6 @@
 using namespace std;
 
 String ContentLoader::ContentPath = "";
-GraphicsDevice* ContentLoader::device = nullptr;
 
 template<>
 Ptr<VertexShader> ContentLoader::Load(const String &resourceName)
@@ -43,7 +42,7 @@ Ptr<Program> ContentLoader::Load(const String &resourceName)
     shaders.push_back(std::dynamic_pointer_cast<Shader>(vs));
     shaders.push_back(std::dynamic_pointer_cast<Shader>(fs));
     
-    return New<Program>(device, shaders);
+    return New<Program>(shaders);
 }
 
 template<>

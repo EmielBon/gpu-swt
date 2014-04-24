@@ -7,14 +7,16 @@
 //
 
 #include "Program.h"
-#include "Shader.h"
+#include "VertexShader.h"
+#include "FragmentShader.h"
 #include "GraphicsDevice.h"
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "VertexDeclaration.h"
+#include "ContentLoader.h"
 #include <GL/glew.h>
 
-Program::Program(GraphicsDevice *device, const List< Ptr<Shader>> &shaders) : programId(0), device(device)
+Program::Program(const List< Ptr<Shader>> &shaders) : programId(0)
 {
     programId = CreateFromShaders(shaders);
     AssertLinkingSuccess(programId);
@@ -98,7 +100,7 @@ GLint Program::GetAttributeLocation(const String &name) const
 
 void Program::Use()
 {
-    auto &vertexBuffer      = *device->VertexBuffer;
+    auto &vertexBuffer      = *GraphicsDevice::VertexBuffer;
     auto &vertexDeclaration = vertexBuffer.GetVertexDeclaration();
     auto &vertexArray       = vertexDeclaration.GetVertexArray();
     GLuint stride           = vertexDeclaration.Stride();
@@ -122,4 +124,17 @@ void Program::Use()
     vertexBuffer.Unbind();
     
     glUseProgram(programId);
+}
+
+Ptr<Program> Program::LoadFromSources(const String &vertexShaderSource, const String &fragmentShaderSource)
+{
+    List< Ptr<Shader> > shaders;
+    
+    auto vs = ContentLoader::Load<VertexShader>(vertexShaderSource);
+    auto fs = ContentLoader::Load<FragmentShader>(fragmentShaderSource);
+    
+    shaders.push_back(std::dynamic_pointer_cast<Shader>(vs));
+    shaders.push_back(std::dynamic_pointer_cast<Shader>(fs));
+    
+    return New<Program>(shaders);
 }

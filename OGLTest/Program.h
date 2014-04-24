@@ -17,7 +17,7 @@ class Program
 {
 public:
     
-    Program(GraphicsDevice *device, const List< Ptr<Shader> > &shaders);
+    Program(const List< Ptr<Shader> > &shaders);
     
     GLuint GetHandle() const;
     
@@ -28,6 +28,10 @@ public:
     void Use();
     
     static void UseDefault();
+    
+    static Ptr<Program> Load(const String &name);
+    
+    static Ptr<Program> LoadFromSources(const String &vertexShaderSource, const String &fragmentShaderSource);
     
 private:
     
@@ -40,7 +44,6 @@ private:
 private:
     
     GLuint programId;
-    GraphicsDevice *device;
     
 public:
     
@@ -60,4 +63,9 @@ inline void Program::Dispose()
 inline void Program::UseDefault()
 {
     glUseProgram(0);
+}
+
+inline Ptr<Program> Program::Load(const String &name)
+{
+    return LoadFromSources(name, name);
 }

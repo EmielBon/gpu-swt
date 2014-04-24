@@ -49,8 +49,6 @@ Window::Window(int width, int height, const String &title)
         throw std::runtime_error("OpenGL 3.2 API is not available.");
     
     glDisable(GL_CULL_FACE);
-    
-    ContentLoader::SetGraphicsDevice(&GraphicsDevice);
 }
 
 void Window::Show()
@@ -74,9 +72,7 @@ void Window::Draw()
 void Window::RunMainLoop()
 {
     while (!glfwWindowShouldClose(window))
-    {
         Draw();
-    }
 }
 
 void Window::OnKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mods)

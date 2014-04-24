@@ -27,7 +27,7 @@
 RenderWindow* RenderWindow::instance = nullptr;
 
 RenderWindow::RenderWindow(int width, int height, const String &title)
-    : base(width, height, title), device(GraphicsDevice)
+    : base(width, height, title)
 {
     instance = this;
     
@@ -51,7 +51,7 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     shaders.push_back(std::dynamic_pointer_cast<Shader>(vs));
     shaders.push_back(std::dynamic_pointer_cast<Shader>(fs));
     
-    program = New<Program>(&device, shaders);
+    program = New<Program>(shaders);
     
     List<BoundingBox> boundingBoxes = SWTHelperGPU::StrokeWidthTransform(input);
     cv::Mat output = ImgProc::DrawBoundingBoxes(input, boundingBoxes, {0, 255, 255, 255});
@@ -69,8 +69,7 @@ void RenderWindow::SetWindowSize(const cv::Size &size, const cv::Size &max)
 
 void RenderWindow::DrawRect(const DrawableRect &rect)
 {
-    device.VertexBuffer = rect.VertexBuffer;
-    device.IndexBuffer  = rect.IndexBuffer;
+    GraphicsDevice::SetBuffers(rect.VertexBuffer, rect.IndexBuffer);
     
     auto &texture = *textures[currentTextureIndex];
     
@@ -78,7 +77,7 @@ void RenderWindow::DrawRect(const DrawableRect &rect)
     program->Uniforms["Texture"].SetValue(texture);
     program->Uniforms["Channels"].SetValue(texture.GetColorChannels());
     
-    device.DrawPrimitives(PrimitiveType::Triangles);
+    GraphicsDevice::DrawPrimitives(PrimitiveType::Triangles);
 }
 
 void RenderWindow::Draw()

@@ -12,11 +12,13 @@
 
 class GrayFilter : public Filter
 {
+private:
+    
+    using base = Filter;
+    
 public:
     
-    GrayFilter(Ptr<Texture> input);
+    GrayFilter(GraphicsDevice *device, const Texture &input);
     
-    Ptr<Texture> Apply(FrameBuffer* target);
-    
-    
+    void LoadShaderPrograms();
 };

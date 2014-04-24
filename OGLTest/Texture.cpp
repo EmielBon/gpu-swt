@@ -48,10 +48,12 @@ Texture::Texture(int width, int height, GLenum format, GLenum type, GLenum filte
         case GL_RG  : colorChannels = 2; break;
         case GL_BGR : colorChannels = 3; break;
         case GL_RGB : colorChannels = 3; break;
+        case GL_RGBA: colorChannels = 4; break;
+        case GL_BGRA: colorChannels = 4; break;
         default : throw std::runtime_error("Incompatible format"); break;
     }
     
     Bind();
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, type, 0); // fill with 0's (last argument)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, format, type, 0); // fill with 0's (last argument)
     Unbind();
 }

@@ -37,7 +37,6 @@ private:
     
 private:
     
-    ::GraphicsDevice&  device;
     Ptr<Program>       program;
     Ptr<DrawableRect>  rect1;
     List<Ptr<Texture>> textures;

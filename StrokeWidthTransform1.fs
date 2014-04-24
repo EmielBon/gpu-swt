@@ -9,7 +9,7 @@ uniform bool      DarkOnLight;
 const float prec = 0.2;
 const float Pi = 3.14159265359;
 const float MaxOppositeEdgeGradientDifference = Pi / 2;
-const float MaxRayLength = 50;
+const int   MaxRayLength = 50;
 const vec4  Black = vec4(0, 0, 0, 1);
 const int   MaxIterations = int(MaxRayLength / prec);
 
@@ -25,41 +25,45 @@ bool inRange(sampler2D sampler, ivec2 xy)
     return clamp(xy, ivec2(0), size) == xy;
 }
 
-bool isEdgePixel(vec2 xy)
+bool isEdgePixel(ivec2 xy)
 {
     return fetch(Edges, xy).r == 1.0;
 }
 
 void main()
 {
-    ivec2 uv = ivec2(gl_FragCoord.xy);
+    ivec2 pos0 = ivec2(gl_FragCoord.xy);
+    int dir = DarkOnLight ? 1 : -1;
+    float meh = dir * prec;
     
-    if (!isEdgePixel(uv))
+    if (!isEdgePixel(pos0))
         ditch;
     
-    vec2 gradient = fetch(Gradients, uv).xy;
-    vec2 dp = normalize(gradient) * (prec * (DarkOnLight ? 1 : -1));
+    vec2 gradient0 = fetch(Gradients, pos0).xy;
+    vec2 dp = normalize(gradient0) * meh;
     
-    vec2 realPosition = uv + vec2(0.5);
-    ivec2 position = ivec2(realPosition);
+    vec2 realPos1 = pos0 + vec2(0.5) + (dp * 5);
+    ivec2 pos1 = ivec2(realPos1);
     
-    for (int i = 0; i <= MaxIterations; ++i)
+    int i;
+    for (i = 0; i <= MaxIterations; ++i)
     {
-        if (i == MaxIterations)
-            ditch;
-        realPosition += dp;
-        ivec2 newPos = ivec2(realPosition);
-        if (newPos == position)
-            continue;
-        position = newPos;
-        if (!inRange(Edges, position))
-            ditch;
-        if (isEdgePixel(position) && distance(uv, position) > 5)
+        realPos1 += dp;
+        //ivec2 newPos1 = ivec2(realPos1);
+        //if (newPos1 == pos1)
+        //    continue;
+        //pos1 = newPos1;
+        pos1 = ivec2(realPos1);
+        if (isEdgePixel(pos1))
             break;
     }
     
-    vec2 dq = normalize( fetch(Gradients, position).xy ) * (DarkOnLight ? 1 : -1);
-    float rayLength = distance(uv, position);
+    if (i >= MaxIterations || !inRange(Edges, pos1))
+        ditch;
+    
+    vec2 gradient1 = fetch(Gradients, pos1).xy;
+    vec2 dq = normalize(gradient1) * dir;
+    float rayLength = distance(pos0, pos1);
     int keep = int(acos(dot(dp, -dq)) < MaxOppositeEdgeGradientDifference);
     FragColor = vec4(vec3(rayLength * keep), 1);
     //if (rayLength < 5)

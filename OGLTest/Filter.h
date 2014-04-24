@@ -14,5 +14,27 @@ class Filter
 {
 public:
     
-    virtual Ptr<Texture> Apply() = 0;
+    Filter(GraphicsDevice *device);
+    
+    void Apply();
+    
+    virtual void LoadShaderPrograms() = 0;
+    
+protected:
+    
+    Ptr<Program> LoadScreenSpaceProgram(const String &name);
+    
+    void AddScreenSpaceProgram(const String &name);
+    
+    void AddProgram(const String &name);
+    
+protected:
+    
+    GraphicsDevice *device;
+    Map<String, Ptr<Program>> Programs;
 };
+
+inline Filter::Filter(GraphicsDevice *device) : device(device)
+{
+    
+}

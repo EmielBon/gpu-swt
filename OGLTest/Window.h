@@ -38,9 +38,5 @@ private:
 protected:
     
     GLFWwindow* window;
-    
-public:
-    
-    GraphicsDevice GraphicsDevice;
 };
 
