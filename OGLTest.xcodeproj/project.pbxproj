@@ -62,6 +62,7 @@
 		17F1D147190950DB00C75B9C /* GaussianFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F1D145190950DB00C75B9C /* GaussianFilter.cpp */; };
 		17F1D14A190953B100C75B9C /* TexturePool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F1D148190953B100C75B9C /* TexturePool.cpp */; };
 		17F1D14D1909567000C75B9C /* CannyFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F1D14B1909567000C75B9C /* CannyFilter.cpp */; };
+		17F1D151190A6EED00C75B9C /* SWTFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F1D14F190A6EED00C75B9C /* SWTFilter.cpp */; };
 		17F3F9E118BBAE0900C78815 /* Component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F3F9DF18BBAE0900C78815 /* Component.cpp */; };
 		17F5944718D87DA100B1C3C7 /* FrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F5944518D87DA100B1C3C7 /* FrameBuffer.cpp */; };
 		17F5945218DB3CB800B1C3C7 /* Grayscale.fs in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945118DB3CB800B1C3C7 /* Grayscale.fs */; };
@@ -233,6 +234,8 @@
 		17F1D149190953B100C75B9C /* TexturePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TexturePool.h; sourceTree = "<group>"; };
 		17F1D14B1909567000C75B9C /* CannyFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CannyFilter.cpp; sourceTree = "<group>"; };
 		17F1D14C1909567000C75B9C /* CannyFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CannyFilter.h; sourceTree = "<group>"; };
+		17F1D14F190A6EED00C75B9C /* SWTFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SWTFilter.cpp; sourceTree = "<group>"; };
+		17F1D150190A6EED00C75B9C /* SWTFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTFilter.h; sourceTree = "<group>"; };
 		17F3F9DF18BBAE0900C78815 /* Component.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Component.cpp; sourceTree = "<group>"; };
 		17F3F9E018BBAE0900C78815 /* Component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Component.h; sourceTree = "<group>"; };
 		17F5944518D87DA100B1C3C7 /* FrameBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameBuffer.cpp; sourceTree = "<group>"; };
@@ -531,31 +534,41 @@
 		17EED57818ACFA680094A37D /* SWT */ = {
 			isa = PBXGroup;
 			children = (
+				17F1D14E190A6EBE00C75B9C /* Filters */,
 				1744D95C18C0B193004605D1 /* Chain.cpp */,
 				1744D95D18C0B193004605D1 /* Chain.h */,
 				17F3F9DF18BBAE0900C78815 /* Component.cpp */,
 				17F3F9E018BBAE0900C78815 /* Component.h */,
 				1776532B18C8A13A004553B6 /* ConnectedComponentsHelper.cpp */,
 				1776532C18C8A13A004553B6 /* ConnectedComponentsHelper.h */,
-				17ACBD861906A2BF0052244F /* Filter.cpp */,
-				17ACBD871906A2BF0052244F /* Filter.h */,
-				17ACBD831906A2890052244F /* GrayFilter.cpp */,
-				17ACBD841906A2890052244F /* GrayFilter.h */,
 				17EED57C18AD205B0094A37D /* Ray.cpp */,
 				17EED57D18AD205B0094A37D /* Ray.h */,
-				17F1D1421909484B00C75B9C /* SobelFilter.cpp */,
-				17F1D1431909484B00C75B9C /* SobelFilter.h */,
 				17EED57918AD16340094A37D /* SWTHelper.cpp */,
 				17EED57A18AD16340094A37D /* SWTHelper.h */,
 				1700DFD018E1B37F004112B6 /* SWTHelperGPU.cpp */,
 				1700DFD118E1B37F004112B6 /* SWTHelperGPU.h */,
 				1739564418CDE7DE003BF7D0 /* SWTParameters.h */,
-				17F1D145190950DB00C75B9C /* GaussianFilter.cpp */,
-				17F1D146190950DB00C75B9C /* GaussianFilter.h */,
-				17F1D14B1909567000C75B9C /* CannyFilter.cpp */,
-				17F1D14C1909567000C75B9C /* CannyFilter.h */,
 			);
 			name = SWT;
+			sourceTree = "<group>";
+		};
+		17F1D14E190A6EBE00C75B9C /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				17F1D14B1909567000C75B9C /* CannyFilter.cpp */,
+				17F1D14C1909567000C75B9C /* CannyFilter.h */,
+				17ACBD861906A2BF0052244F /* Filter.cpp */,
+				17ACBD871906A2BF0052244F /* Filter.h */,
+				17F1D145190950DB00C75B9C /* GaussianFilter.cpp */,
+				17F1D146190950DB00C75B9C /* GaussianFilter.h */,
+				17ACBD831906A2890052244F /* GrayFilter.cpp */,
+				17ACBD841906A2890052244F /* GrayFilter.h */,
+				17F1D1421909484B00C75B9C /* SobelFilter.cpp */,
+				17F1D1431909484B00C75B9C /* SobelFilter.h */,
+				17F1D14F190A6EED00C75B9C /* SWTFilter.cpp */,
+				17F1D150190A6EED00C75B9C /* SWTFilter.h */,
+			);
+			name = Filters;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -645,6 +658,7 @@
 				17EEEF1818AE6D7000B5A290 /* ImgProc.cpp in Sources */,
 				17F5945718DC6CAA00B1C3C7 /* SobelHor.fs in Sources */,
 				17ACBD851906A2890052244F /* GrayFilter.cpp in Sources */,
+				17F1D151190A6EED00C75B9C /* SWTFilter.cpp in Sources */,
 				17EED2E018A398350094A37D /* VertexPositionTexture.cpp in Sources */,
 				171A0315189BD4B200A72B91 /* Window.cpp in Sources */,
 			);

@@ -20,6 +20,8 @@ public:
     
     CannyFilter();
     
+    void LoadShaderPrograms();
+    
     Ptr<Texture> PerformSteps(const Texture &input);
     
 private:
@@ -32,6 +34,8 @@ private:
     
     Ptr<Texture> Differentiation(const Texture &input);
     
+    void PrepareStencilTest();
+    
 private:
     
     Ptr<Program> canny, scharr, diffCanny;
@@ -39,14 +43,14 @@ private:
 
 inline CannyFilter::CannyFilter() : base("Canny")
 {
+
+}
+
+inline void CannyFilter::LoadShaderPrograms()
+{
     canny     = LoadScreenSpaceProgram("Canny");
     scharr    = LoadScreenSpaceProgram("Sobel1");
     diffCanny = LoadScreenSpaceProgram("CannySobel2");
-}
-
-inline Ptr<Texture> CannyFilter::PerformSteps(const Texture &input)
-{
-    return DetectEdges( *Gradients(input) );
 }
 
 inline Ptr<Texture> CannyFilter::Gradients(const Texture &input)

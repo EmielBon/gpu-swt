@@ -20,6 +20,8 @@ public:
     
     SobelFilter();
     
+    void LoadShaderPrograms();
+    
     Ptr<Texture> PerformSteps(const Texture &input);
 
 private:
@@ -34,6 +36,11 @@ private:
 };
 
 inline SobelFilter::SobelFilter() : base("Sobel")
+{
+    
+}
+
+inline void SobelFilter::LoadShaderPrograms()
 {
     scharr = LoadScreenSpaceProgram("Sobel1");
     diff   = LoadScreenSpaceProgram("Sobel2");

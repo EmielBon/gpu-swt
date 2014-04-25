@@ -10,7 +10,7 @@
 
 #include <time.h>
 
-//#define PROFILING
+#define PROFILING
 
 #define now() clock()
 

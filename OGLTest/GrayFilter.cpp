@@ -10,7 +10,7 @@
 
 Ptr<Texture> GrayFilter::PerformSteps(const Texture &input)
 {
-    Grayscale->Use();
-    Grayscale->Uniforms["Texture"].SetValue(input);
+    grayscale->Use();
+    grayscale->Uniforms["Texture"].SetValue(input);
     return Render("Grayscale");
 }

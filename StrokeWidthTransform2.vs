@@ -14,12 +14,15 @@ flat out float Value;
 
 void main()
 {
-    Value = fetch(Values, Position.xy).r;
-    float lineLength = fetch(LineLengths, Position.xy).r;
-    vec2 gradient = normalize( fetch(Gradients, Position.xy).xy) * (DarkOnLight ? 1 : -1);
+    ivec2 pos        = ivec2(Position.xy);
+    Value            = fetch(Values, pos).r;
+    float lineLength = fetch(LineLengths, pos).r;
+    vec2 gradient    = fetch(Gradients, pos).xy;
+    gradient         = normalize(gradient) * (DarkOnLight ? 1 : -1);
+    
     float z = Value / 50;
-    vec4 p1 = vec4(getScreenSpaceCoord(Gradients, Position.xy), z, 1);
-    vec4 p2 = vec4(getScreenSpaceCoord(Gradients, Position.xy + gradient * lineLength), z, 1);
+    vec4 p1 = vec4(getScreenSpaceCoord(Gradients, pos), z, 1);
+    vec4 p2 = vec4(getScreenSpaceCoord(Gradients, pos + gradient * lineLength), z, 1);
     
     if (Position.z == 0.0)
         gl_Position = p1;

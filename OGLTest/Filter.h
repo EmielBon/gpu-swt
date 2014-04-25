@@ -25,7 +25,16 @@ protected:
     
     virtual Ptr<Texture> PerformSteps(const Texture &input) = 0;
     
-    static Ptr<Program> LoadScreenSpaceProgram(const String &name);
+    virtual void LoadShaderPrograms() = 0;
+    
+    Ptr<Program> LoadScreenSpaceProgram(const String &name);
+    
+    Ptr<Program> LoadProgram(const String &name);
+    
+    Ptr<Program> LoadProgram(const String &vertexShaderSource, const String &fragmentShaderSource);
+    
+    // Apply a filter as part of this filter, aggregating the profiling information
+    Ptr<Texture> ApplyFilter(Filter &filter, const Texture &input);
     
     void StartAccumulatedRender() { accumulate = true; }
     
@@ -45,10 +54,21 @@ public:
     String Name;
     unsigned long RenderTime;
     unsigned long CopyTime;
+    unsigned long CompileTime;
     unsigned long TotalTime;
 };
 
-inline Filter::Filter(const String &name) : accumulate(false), accumulated(0), Name(name), RenderTime(0), CopyTime(0), TotalTime(0)
+inline Filter::Filter(const String &name) : accumulate(false), accumulated(0), Name(name), RenderTime(0), CopyTime(0), CompileTime(0), TotalTime(0)
 {
     
+}
+
+inline Ptr<Program> Filter::LoadScreenSpaceProgram(const String &name)
+{
+    return LoadProgram("Trivial", name);
+}
+
+inline Ptr<Program> Filter::LoadProgram(const String &name)
+{
+    return LoadProgram(name, name);
 }

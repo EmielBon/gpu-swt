@@ -50,6 +50,7 @@ Ptr<Texture> ApplyPass(Ptr<Filter> filter, const Texture &input);
 
 unsigned long renderTime  = 0;
 unsigned long copyTime    = 0;
+unsigned long compileTime = 0;
 unsigned long accumulated = 0;
 bool accumulate = false;
 Ptr<Texture> accumulatedTexture = nullptr;
@@ -102,7 +103,19 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     
     totalTime = now() - totalTime;
     
-    printf("%s: T(%.1fms) R(%.1fms=%.1f%%) C(%.1fms=%.1f%%)\n", "Total", GetTimeMsec(totalTime), GetTimeMsec(renderTime), (renderTime * 100.0f) / totalTime, GetTimeMsec(copyTime), (copyTime * 100.0f) / totalTime);
+    unsigned long misc = totalTime - renderTime - copyTime - compileTime;
+    
+    printf("%s: T(%.1fms) R(%.1fms=%.1f%%) Cpy(%.1fms=%.1f%%) Cpl(%.1fms=%.1f%%) M(%.1fms=%.1f%%)\n", "Total",
+           GetTimeMsec(totalTime),
+           GetTimeMsec(renderTime),
+           renderTime * 100.0f / totalTime,
+           GetTimeMsec(copyTime),
+           copyTime * 100.0f / totalTime,
+           GetTimeMsec(compileTime),
+           compileTime * 100.0f / totalTime,
+           GetTimeMsec(misc),
+           misc * 100.0f / totalTime
+           );
     
     return List<BoundingBox>();
 }
@@ -163,11 +176,11 @@ void EndAccumulatedRender(const String& name)
 
 Ptr<Texture> ApplyPass(Ptr<Filter> filter, const Texture &input)
 {
-    auto result = filter->Apply(input);
-    renderTime += filter->RenderTime;
-    copyTime   += filter->CopyTime;
+    auto result  = filter->Apply(input);
+    renderTime  += filter->RenderTime;
+    copyTime    += filter->CopyTime;
+    compileTime += filter->CompileTime;
     RenderWindow::Instance().AddTexture(result, filter->Name);
-    filter.reset();
     return result;
 }
 

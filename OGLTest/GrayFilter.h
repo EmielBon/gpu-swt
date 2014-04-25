@@ -20,14 +20,21 @@ public:
     
     GrayFilter();
     
+    void LoadShaderPrograms();
+    
     Ptr<Texture> PerformSteps(const Texture &input);
 
 private:
     
-    Ptr<Program> Grayscale;
+    Ptr<Program> grayscale;
 };
 
 inline GrayFilter::GrayFilter() : base("Grayscale")
 {
-    Grayscale = LoadScreenSpaceProgram("Grayscale");
+    
+}
+
+inline void GrayFilter::LoadShaderPrograms()
+{
+    grayscale = LoadScreenSpaceProgram("Grayscale");
 }

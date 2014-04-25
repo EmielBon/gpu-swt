@@ -23,7 +23,7 @@ public:
     
     Texture(int width, int height, GLenum format, GLenum type, GLenum filteringType);
     
-    virtual ~Texture() { printf("Destroyed\n"); }
+    virtual ~Texture() { /*printf("Destroyed\n");*/ }
     
     int GetWidth() const;
     
@@ -31,7 +31,7 @@ public:
 
     int GetColorChannels() const;
     
-    void GetTextureImage(GLenum format, GLenum type, GLvoid *buffer);
+    void GetTextureImage(GLenum format, GLenum type, GLvoid *buffer) const;
     
     Ptr<Texture> GetEmptyClone() const;
     
@@ -69,7 +69,7 @@ inline int Texture::GetColorChannels() const
     return colorChannels;
 }
 
-inline void Texture::GetTextureImage(GLenum format, GLenum type, GLvoid *buffer)
+inline void Texture::GetTextureImage(GLenum format, GLenum type, GLvoid *buffer) const
 {
     Bind();
     glGetTexImage(GL_TEXTURE_2D, 0, format, type, buffer);
