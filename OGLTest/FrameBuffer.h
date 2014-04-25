@@ -24,6 +24,8 @@ public:
 
     void CreateNewColorAttachment0();
     
+    Ptr<Texture> CopyColorAttachment() const;
+    
 private:
 
     void CreateNewColorAttachment0(int width, int height, GLenum format, GLenum type);

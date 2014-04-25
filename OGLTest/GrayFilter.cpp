@@ -8,12 +8,9 @@
 
 #include "GrayFilter.h"
 
-GrayFilter::GrayFilter(GraphicsDevice *device, const Texture &input) : base(device)
+Ptr<Texture> GrayFilter::PerformSteps(const Texture &input)
 {
-    
-}
-
-void GrayFilter::LoadShaderPrograms()
-{
-    AddScreenSpaceProgram("Grayscale");
+    Grayscale->Use();
+    Grayscale->Uniforms["Texture"].SetValue(input);
+    return Render("Grayscale");
 }

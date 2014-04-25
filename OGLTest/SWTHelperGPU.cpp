@@ -21,16 +21,13 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "GLError.h"
+#include "Profiling.h"
+#include "GrayFilter.h"
+#include "SobelFilter.h"
+#include "GaussianFilter.h"
+#include "CannyFilter.h"
 
-#define PROFILING
-
-enum class ColorAttachmentOption
-{
-    CreateNew,
-    Keep,
-};
-
-#define now() clock()
+#define USE_NEW_SYSTEM
 
 Ptr<Texture> Grayscale(const Texture &texture);
 // Old version, retained for performance evaluation later. Small shaders, but 5 passes and (3 + 2) * 2 + 2 = 12 texel fetches per pixel
@@ -47,10 +44,9 @@ Ptr<Texture> ConnectedComponents(const Texture &strokeWidths);
 Ptr<Program> LoadProgram(const String &vertexShaderSource, const String &fragmentShaderSource);
 Ptr<Program> LoadScreenSpaceProgram(const String &name);
 void StartAccumulatedRender();
-Ptr<Texture> Render(const String &name = "", PrimitiveType primitiveType = PrimitiveType::Triangles, ColorAttachmentOption option = ColorAttachmentOption::CreateNew);
+Ptr<Texture> Render(const String &name = "");
 void EndAccumulatedRender();
-void PrintTime(const String &name, unsigned long clicks);
-void PrintTime2(const String &name, unsigned long clicks, unsigned long total);
+Ptr<Texture> ApplyPass(Ptr<Filter> filter, const Texture &input);
 
 unsigned long renderTime  = 0;
 unsigned long copyTime    = 0;
@@ -60,7 +56,7 @@ Ptr<Texture> accumulatedTexture = nullptr;
 
 List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
 {
-    auto total = now();
+    auto totalTime = now();
     
     glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
     glClampColor(GL_CLAMP_VERTEX_COLOR, GL_FALSE);
@@ -70,36 +66,43 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     int height = input.size().height;
     
     // Load the framebuffers
-    FrameBuffer frameBuffer1(width, height, GL_RGBA, GL_UNSIGNED_BYTE);
-    FrameBuffer frameBuffer2(width, height, GL_RGBA, GL_FLOAT, RenderBuffer::Type::DepthStencil);
+    FrameBuffer frameBuffer1(width, height, GL_BGRA, GL_UNSIGNED_BYTE);
+    FrameBuffer frameBuffer2(width, height, GL_BGRA, GL_FLOAT, RenderBuffer::Type::DepthStencil);
     
     // Load the full-screen rect
     DrawableRect rect(-1, -1, 1, 1, 1, 1);
-    GraphicsDevice::VertexBuffer = rect.VertexBuffer;
-    GraphicsDevice::IndexBuffer  = rect.IndexBuffer;
+    GraphicsDevice::SetBuffers(rect.VertexBuffer, rect.IndexBuffer);
     
     // Create a Texture from the input
-    Texture texture(input);
+    Ptr<Texture> texture = New<Texture>(input);
     
     frameBuffer1.Bind();
-    
-    auto gray = Grayscale(input);
+
+#ifdef USE_NEW_SYSTEM
+    auto gray = ApplyPass(New<GrayFilter>(), *texture);
+#else
+    auto gray = Grayscale(*texture);
+#endif
     
     frameBuffer2.Bind();
-    
+
+#ifdef USE_NEW_SYSTEM
+    auto gradients = ApplyPass( New<SobelFilter>(), *gray );
+    auto blurred   = ApplyPass( New<GaussianFilter>(), *gray );
+    auto edges     = ApplyPass( New<CannyFilter>(), *blurred );
+#else
     auto gradients = Sobel2(*gray);
-    auto blurred = GaussianBlur(*gray);
-    auto edges = Canny(*blurred);
+    auto blurred   = GaussianBlur(*gray);
+    auto edges     = Canny(*blurred);
+#endif
     auto strokeWidths1 = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::With);
     auto strokeWidths2 = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::Against);
     auto connectedComponents = ConnectedComponents(*strokeWidths1);
     //RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)), "Edges (OpenCV Canny)");*/
     
-    total = now() - total;
+    totalTime = now() - totalTime;
     
-    PrintTime2("Render time", renderTime, total);
-    PrintTime2("Copy time", copyTime, total);
-    PrintTime("Total time", total);
+    printf("%s: T(%.1fms) R(%.1fms=%.1f%%) C(%.1fms=%.1f%%)\n", "Total", GetTimeMsec(totalTime), GetTimeMsec(renderTime), (renderTime * 100.0f) / totalTime, GetTimeMsec(copyTime), (copyTime * 100.0f) / totalTime);
     
     return List<BoundingBox>();
 }
@@ -110,15 +113,13 @@ void StartAccumulatedRender()
     accumulated = 0;
 }
 
-Ptr<Texture> Render(const String &name, PrimitiveType primitiveType, ColorAttachmentOption option /* = ColorAttachmentOption::CreateNew */)
+#ifdef PROFILING
+
+Ptr<Texture> Render(const String &name)
 {
     auto& frameBuffer = FrameBuffer::GetCurrentlyBound();
-    
-#ifdef PROFILING
     auto f = now();
-#endif
-    GraphicsDevice::DrawPrimitives(primitiveType);
-#ifdef PROFILING
+    GraphicsDevice::DrawPrimitives();
     glFinish();
     f = now() - f;
     accumulated += f;
@@ -127,15 +128,30 @@ Ptr<Texture> Render(const String &name, PrimitiveType primitiveType, ColorAttach
         renderTime += f;
         PrintTime(name, f);
     }
-#endif
-    auto result = frameBuffer.Texture;
-    if (option == ColorAttachmentOption::CreateNew)
-        frameBuffer.CreateNewColorAttachment0();
+    f = now();
+    auto result = frameBuffer.CopyColorAttachment();
+    glFinish();
+    copyTime += now() - f;
     if (name != "")
         RenderWindow::Instance().AddTexture(result, name);
     accumulatedTexture = result;
     return result;
 }
+
+#else
+
+Ptr<Texture> Render(const String &name)
+{
+    auto& frameBuffer = FrameBuffer::GetCurrentlyBound();
+    GraphicsDevice::DrawPrimitives();
+    auto result = frameBuffer.CopyColorAttachment();
+    if (name != "")
+        RenderWindow::Instance().AddTexture(result, name);
+    accumulatedTexture = result;
+    return result;
+}
+
+#endif
 
 void EndAccumulatedRender(const String& name)
 {
@@ -143,6 +159,16 @@ void EndAccumulatedRender(const String& name)
     renderTime += accumulated;
     PrintTime(name, accumulated);
     RenderWindow::Instance().AddTexture(accumulatedTexture, name);
+}
+
+Ptr<Texture> ApplyPass(Ptr<Filter> filter, const Texture &input)
+{
+    auto result = filter->Apply(input);
+    renderTime += filter->RenderTime;
+    copyTime   += filter->CopyTime;
+    RenderWindow::Instance().AddTexture(result, filter->Name);
+    filter.reset();
+    return result;
 }
 
 Ptr<Texture> Grayscale(const Texture &texture)
@@ -309,7 +335,7 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     auto quadIndexBuffer = GraphicsDevice::IndexBuffer;
     
     auto linesVertexBuffer = New<::VertexBuffer>();
-    auto linesIndexBuffer = New<::IndexBuffer>();
+    auto linesIndexBuffer = New<::IndexBuffer>(PrimitiveType::Lines);
     
     Ptr<Texture> strokeWidthValues, strokeWidthTransform, avgStrokeWidthValues, avgStrokeWidthTransform;
     
@@ -370,7 +396,7 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     strokeWidthTransform2->Uniforms["LineLengths"].SetValue(*strokeWidthValues);
     strokeWidthTransform2->Uniforms["Values"].SetValue(*strokeWidthValues);
     strokeWidthTransform2->Uniforms["DarkOnLight"].SetValue(darkOnLight);
-    strokeWidthTransform = Render((String("Stroke Width Transform (") + (darkOnLight ? "with" : "against") + " the gradient)").c_str(), PrimitiveType::Lines);
+    strokeWidthTransform = Render((String("Stroke Width Transform (") + (darkOnLight ? "with" : "against") + " the gradient)").c_str());
     
     GraphicsDevice::SetBuffers(quadVertexBuffer, quadIndexBuffer);
     
@@ -401,7 +427,7 @@ Ptr<Texture> StrokeWidthTransform(const Texture &edges, const Texture &gradients
     strokeWidthTransform2->Uniforms["LineLengths"].SetValue(*strokeWidthValues);
     strokeWidthTransform2->Uniforms["Values"].SetValue(*avgStrokeWidthValues);
     strokeWidthTransform2->Uniforms["DarkOnLight"].SetValue(direction == GradientDirection::With);
-    avgStrokeWidthTransform = Render((String("Average Stroke Width Transform (") + (darkOnLight ? "with" : "against") + " the gradient)").c_str(), PrimitiveType::Lines);
+    avgStrokeWidthTransform = Render((String("Average Stroke Width Transform (") + (darkOnLight ? "with" : "against") + " the gradient)").c_str());
     
     glDisable(GL_DEPTH_TEST);
     
@@ -422,13 +448,13 @@ Ptr<Texture> ConnectedComponents(const Texture &strokeWidths)
     int width = strokeWidths.GetWidth();
     int height = strokeWidths.GetHeight();
     
-    auto encode = LoadScreenSpaceProgram("Encode");
-    auto verticalRun = LoadScreenSpaceProgram("VerticalRuns");
-    auto normal = LoadScreenSpaceProgram("Normal");
-    auto color = LoadScreenSpaceProgram("Color");
+    auto encode         = LoadScreenSpaceProgram("Encode");
+    auto verticalRun    = LoadScreenSpaceProgram("VerticalRuns");
+    auto normal         = LoadScreenSpaceProgram("Normal");
+    auto color          = LoadScreenSpaceProgram("Color");
     auto gatherNeighbor = LoadProgram("GatherNeighbor", "GatherScatter");
-    auto updateColumn = LoadScreenSpaceProgram("UpdateColumn");
-    auto scatterBack = LoadProgram("ScatterBack", "GatherScatter");
+    auto updateColumn   = LoadScreenSpaceProgram("UpdateColumn");
+    auto scatterBack    = LoadProgram("ScatterBack", "GatherScatter");
     
     Ptr<Texture> encodedPositions, verticalRuns;
     
@@ -449,12 +475,6 @@ Ptr<Texture> ConnectedComponents(const Texture &strokeWidths)
         verticalRuns = Render();
     }
     EndAccumulatedRender("Connected Components 2 Vertical Runs");
-    
-    glClear(GL_COLOR_BUFFER_BIT);
-    
-    normal->Use();
-    normal->Uniforms["Texture"].SetValue(*verticalRuns);
-    Render("Prepare Column Processing", PrimitiveType::Triangles, ColorAttachmentOption::Keep);
     
     GLfloat buffer[width * height];
     verticalRuns->GetTextureImage(GL_BLUE, GL_FLOAT, buffer);
@@ -545,14 +565,4 @@ Ptr<Program> LoadProgram(const String &vertexShaderSource, const String &fragmen
 Ptr<Program> LoadScreenSpaceProgram(const String &name)
 {
     return LoadProgram("Trivial", name);
-}
-
-void PrintTime(const String &name, unsigned long clicks)
-{
-    printf("%s (%.1fms)\n", name.c_str(), (clicks * 1000.0f) / CLOCKS_PER_SEC);
-}
-
-void PrintTime2(const String &name, unsigned long clicks, unsigned long total)
-{
-    printf("%s: %.1fms (%.1f%%)\n", name.c_str(), (clicks * 1000.0f) / CLOCKS_PER_SEC, (clicks * 100.0f) / total);
 }

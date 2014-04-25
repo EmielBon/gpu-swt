@@ -9,32 +9,46 @@
 #pragma once
 
 #include "types.h"
+#include "Program.h"
 
 class Filter
 {
+protected:
+    
+    Filter(const String &name);
+    
 public:
     
-    Filter(GraphicsDevice *device);
-    
-    void Apply();
-    
-    virtual void LoadShaderPrograms() = 0;
+    Ptr<Texture> Apply(const Texture &input);
     
 protected:
     
-    Ptr<Program> LoadScreenSpaceProgram(const String &name);
+    virtual Ptr<Texture> PerformSteps(const Texture &input) = 0;
     
-    void AddScreenSpaceProgram(const String &name);
+    static Ptr<Program> LoadScreenSpaceProgram(const String &name);
     
-    void AddProgram(const String &name);
+    void StartAccumulatedRender() { accumulate = true; }
     
-protected:
+    Ptr<Texture> Render(const String &name);
+
+    void EndAccumulatedRender() { accumulate = false; }
     
-    GraphicsDevice *device;
-    Map<String, Ptr<Program>> Programs;
+    void PrintProfilingInfo() const;
+    
+private:
+    
+    bool accumulate;
+    unsigned long accumulated = 0;
+    
+public:
+    
+    String Name;
+    unsigned long RenderTime;
+    unsigned long CopyTime;
+    unsigned long TotalTime;
 };
 
-inline Filter::Filter(GraphicsDevice *device) : device(device)
+inline Filter::Filter(const String &name) : accumulate(false), accumulated(0), Name(name), RenderTime(0), CopyTime(0), TotalTime(0)
 {
     
 }

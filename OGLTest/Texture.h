@@ -23,6 +23,8 @@ public:
     
     Texture(int width, int height, GLenum format, GLenum type, GLenum filteringType);
     
+    virtual ~Texture() { printf("Destroyed\n"); }
+    
     int GetWidth() const;
     
     int GetHeight() const;
@@ -32,8 +34,6 @@ public:
     void GetTextureImage(GLenum format, GLenum type, GLvoid *buffer);
     
     Ptr<Texture> GetEmptyClone() const;
-    
-    //Ptr<Texture> Clone() const;
     
 private:
     
@@ -50,6 +50,8 @@ public:
     GLenum Format;
     GLenum Type;
     GLenum FilteringType;
+    static const GLenum INTERNAL_FORMAT = GL_RGBA;
+    static const GLenum PREFERRED_TYPE  = GL_UNSIGNED_INT_8_8_8_8_REV;
 };
 
 inline int Texture::GetWidth() const
@@ -79,12 +81,6 @@ inline Ptr<Texture> Texture::GetEmptyClone() const
     return New<Texture>(width, height, Format, Type, FilteringType);
 }
 
-/*inline Ptr<Texture> Texture::Clone() const
-{
-    auto texture = GetEmptyClone();
-    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, width, height);
-}*/
-
 template<typename T>
 inline void Texture::SetData(const cv::Mat &image, GLenum format, GLenum type)
 {
@@ -95,6 +91,6 @@ inline void Texture::SetData(const cv::Mat &image, GLenum format, GLenum type)
     pixelData.resize(width * height);
     std::copy(image.begin<T>(), image.end<T>(), pixelData.begin());
     Bind();
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, format, type, pixelData.data());
+        glTexImage2D(GL_TEXTURE_2D, 0, INTERNAL_FORMAT, width, height, 0, format, type, pixelData.data());
     Unbind();
 }

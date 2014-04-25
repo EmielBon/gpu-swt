@@ -77,7 +77,7 @@ void RenderWindow::DrawRect(const DrawableRect &rect)
     program->Uniforms["Texture"].SetValue(texture);
     program->Uniforms["Channels"].SetValue(texture.GetColorChannels());
     
-    GraphicsDevice::DrawPrimitives(PrimitiveType::Triangles);
+    GraphicsDevice::DrawPrimitives();
 }
 
 void RenderWindow::Draw()

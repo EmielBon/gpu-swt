@@ -15,7 +15,7 @@ class GraphicsDevice
 {
 public:
     
-    static void DrawPrimitives(PrimitiveType type);
+    static void DrawPrimitives();
     
     static void SetBuffers(Ptr<VertexBuffer> vertexBuffer, Ptr<IndexBuffer> indexBuffer);
     

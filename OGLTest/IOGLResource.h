@@ -15,6 +15,8 @@ class IOGLResource
 {
 public:
     
+    virtual ~IOGLResource() = default;
+    
     void Setup(Function<void(GLsizei, GLuint*)> generateFunction, Function<void(GLsizei, GLuint*)> disposeFunction);
     
     void Generate();

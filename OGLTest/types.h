@@ -27,7 +27,6 @@
 // Third party libraries
 #include <GL/glew.h>
 #include <opencv2/core/core.hpp>
-#include <time.h>
 
 enum class GradientDirection
 {

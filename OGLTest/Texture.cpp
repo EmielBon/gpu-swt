@@ -54,6 +54,6 @@ Texture::Texture(int width, int height, GLenum format, GLenum type, GLenum filte
     }
     
     Bind();
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, format, type, 0); // fill with 0's (last argument)
+        glTexImage2D(GL_TEXTURE_2D, 0, INTERNAL_FORMAT, width, height, 0, format, type, (const GLvoid*)NULL);
     Unbind();
 }

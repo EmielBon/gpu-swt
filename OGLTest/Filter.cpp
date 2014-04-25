@@ -8,10 +8,40 @@
 
 #include "Filter.h"
 #include "Program.h"
+#include "Profiling.h"
+#include "FrameBuffer.h"
+#include "GraphicsDevice.h"
 
-void Filter::Apply()
+Ptr<Texture> Filter::Apply(const Texture &input)
 {
-    LoadShaderPrograms();
+    TotalTime = now();
+    
+    auto output = PerformSteps(input);
+    
+    TotalTime = now() - TotalTime;
+#ifdef PROFILING
+    PrintProfilingInfo();
+#endif
+    return output;
+}
+
+Ptr<Texture> Filter::Render(const String &name)
+{
+    auto f = now();
+    GraphicsDevice::DrawPrimitives();
+    glFinish();
+    f = now() - f;
+    accumulated += f;
+    if (!accumulate)
+    {
+        accumulated = 0;
+        RenderTime += f;
+    }
+    f = now();
+    auto result = FrameBuffer::GetCurrentlyBound().CopyColorAttachment();
+    glFinish();
+    CopyTime += now() - f;
+    return result;
 }
 
 Ptr<Program> Filter::LoadScreenSpaceProgram(const String &name)
@@ -19,12 +49,7 @@ Ptr<Program> Filter::LoadScreenSpaceProgram(const String &name)
     return Program::LoadFromSources("Trivial", name);
 }
 
-void Filter::AddScreenSpaceProgram(const String &name)
+void Filter::PrintProfilingInfo() const
 {
-    Programs[name] = LoadScreenSpaceProgram(name);
-}
-
-void Filter::AddProgram(const String &name)
-{
-    Programs[name] = Program::Load(name);
+    printf("%s: T(%.1fms) R(%.1fms=%.1f%%) C(%.1fms=%.1f%%)\n", Name.c_str(), GetTimeMsec(TotalTime), GetTimeMsec(RenderTime), (RenderTime * 100.0f) / TotalTime, GetTimeMsec(CopyTime), (CopyTime * 100.0f) / TotalTime);
 }

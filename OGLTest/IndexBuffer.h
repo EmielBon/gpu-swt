@@ -10,12 +10,13 @@
 
 #include "types.h"
 #include "OGLBuffer.h"
+#include "PrimitiveType.h"
 
 class IndexBuffer : public OGLBuffer<IndexBuffer>
 {
 public:
     
-    IndexBuffer();
+    IndexBuffer(PrimitiveType primitiveType = PrimitiveType::Triangles);
     
     void SetData(const List<GLuint> &indices);
     
@@ -24,9 +25,13 @@ public:
 private:
     
     GLsizei count;
+    
+public:
+    
+    ::PrimitiveType PrimitiveType;
 };
 
-inline IndexBuffer::IndexBuffer() : count(0)
+inline IndexBuffer::IndexBuffer(::PrimitiveType primitiveType /* = PrimitiveType::Triangles */) : count(0), PrimitiveType(primitiveType)
 {
     Setup(GL_ELEMENT_ARRAY_BUFFER);
     Generate();

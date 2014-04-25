@@ -51,3 +51,12 @@ void FrameBuffer::CreateNewColorAttachment0(int width, int height, GLenum format
     auto texture = New<::Texture>(width, height, format, type, GL_NEAREST);
     SetColorAttachment0(texture);
 }
+
+Ptr<Texture> FrameBuffer::CopyColorAttachment() const
+{
+    auto texture = Texture->GetEmptyClone();
+    texture->Bind();
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, texture->GetWidth(), texture->GetHeight());
+    texture->Unbind();
+    return texture;
+}

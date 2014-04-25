@@ -11,16 +11,15 @@
 RenderBuffer::RenderBuffer(Type type, int width, int height)
 {
     Setup(glGenRenderbuffers, glDeleteRenderbuffers, glBindRenderbuffer, GL_RENDERBUFFER);
-    
     Generate();
     
     GLenum storageFormat = GL_NONE;
     
     switch(type)
     {
-        case Type::Depth: storageFormat = GL_DEPTH_COMPONENT24; break;
-        case Type::Stencil: storageFormat = GL_STENCIL_INDEX8; break;
-        case Type::DepthStencil: storageFormat = GL_DEPTH24_STENCIL8; break;
+        case Type::Depth:        storageFormat = GL_DEPTH_COMPONENT24; break;
+        case Type::Stencil:      storageFormat = GL_STENCIL_INDEX8;    break;
+        case Type::DepthStencil: storageFormat = GL_DEPTH24_STENCIL8;  break;
         default: break;
     }
     

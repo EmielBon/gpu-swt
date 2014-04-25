@@ -12,10 +12,10 @@
 Ptr<VertexBuffer> GraphicsDevice::VertexBuffer = nullptr;
 Ptr<IndexBuffer>  GraphicsDevice::IndexBuffer  = nullptr;
 
-void GraphicsDevice::DrawPrimitives(PrimitiveType type)
+void GraphicsDevice::DrawPrimitives()
 {
     // bind the index buffer
     IndexBuffer->Bind();
     // draw the VAO
-    glDrawElements((GLenum)type, IndexBuffer->Count(), GL_UNSIGNED_INT, (GLvoid*)NULL);
+    glDrawElements((GLenum)(IndexBuffer->PrimitiveType), IndexBuffer->Count(), GL_UNSIGNED_INT, (GLvoid*)NULL);
 }

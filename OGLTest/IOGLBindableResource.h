@@ -16,6 +16,8 @@ class IOGLBindableResource : public IOGLResource
 {
 public:
     
+    virtual ~IOGLBindableResource() = default;
+    
     void Setup(Function<void(GLsizei, GLuint*)> generateFunction, Function<void(GLsizei, GLuint*)> disposeFunction, Function<void(GLenum, GLuint)> bindFunction, GLenum targetName);
     
     void Bind() const;

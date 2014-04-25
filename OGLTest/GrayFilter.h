@@ -18,7 +18,16 @@ private:
     
 public:
     
-    GrayFilter(GraphicsDevice *device, const Texture &input);
+    GrayFilter();
     
-    void LoadShaderPrograms();
+    Ptr<Texture> PerformSteps(const Texture &input);
+
+private:
+    
+    Ptr<Program> Grayscale;
 };
+
+inline GrayFilter::GrayFilter() : base("Grayscale")
+{
+    Grayscale = LoadScreenSpaceProgram("Grayscale");
+}
