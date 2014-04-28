@@ -17,6 +17,10 @@ class VertexBuffer : public OGLBuffer<VertexBuffer>
 {
     friend class GraphicsDevice;
     
+private:
+    
+    using base = OGLBuffer<VertexBuffer>;
+    
 public:
     
     VertexBuffer();
@@ -40,7 +44,7 @@ inline VertexBuffer::VertexBuffer()
 template<class T>
 inline void VertexBuffer::SetData(const List<T> &data)
 {
-    OGLBuffer::SetData(GL_ARRAY_BUFFER, data.size() * sizeof(T), data.data());
+    base::SetData(GL_ARRAY_BUFFER, data.size(), sizeof(T), data.data());
     vertexDeclaration = T::VertexDeclaration();
 }
 

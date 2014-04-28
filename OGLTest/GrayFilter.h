@@ -18,18 +18,18 @@ private:
     
 public:
     
-    GrayFilter();
+    GrayFilter(Ptr<Texture> input = nullptr);
     
     void LoadShaderPrograms();
     
-    Ptr<Texture> PerformSteps(const Texture &input);
+    Ptr<Texture> PerformSteps();
 
 private:
     
     Ptr<Program> grayscale;
 };
 
-inline GrayFilter::GrayFilter() : base("Grayscale")
+inline GrayFilter::GrayFilter(Ptr<Texture> input) : base("Grayscale", input)
 {
     
 }

@@ -18,11 +18,11 @@ private:
     
 public:
     
-    SobelFilter();
+    SobelFilter(Ptr<Texture> input = nullptr);
     
     void LoadShaderPrograms();
     
-    Ptr<Texture> PerformSteps(const Texture &input);
+    Ptr<Texture> PerformSteps();
 
 private:
     
@@ -35,7 +35,7 @@ private:
     Ptr<Program> scharr, diff;
 };
 
-inline SobelFilter::SobelFilter() : base("Sobel")
+inline SobelFilter::SobelFilter(Ptr<Texture> input) : base("Sobel", input)
 {
     
 }
@@ -46,7 +46,7 @@ inline void SobelFilter::LoadShaderPrograms()
     diff   = LoadScreenSpaceProgram("Sobel2");
 }
 
-inline Ptr<Texture> SobelFilter::PerformSteps(const Texture &input)
+inline Ptr<Texture> SobelFilter::PerformSteps()
 {
-    return Differentiation( *ScharrAveraging(input) );
+    return Differentiation( *ScharrAveraging( *Input) );
 }

@@ -30,6 +30,7 @@
 
 enum class GradientDirection
 {
+    Unspecified,
     With,
     Against,
 };

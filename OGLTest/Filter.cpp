@@ -12,14 +12,24 @@
 #include "FrameBuffer.h"
 #include "GraphicsDevice.h"
 
-Ptr<Texture> Filter::Apply(const Texture &input)
+Ptr<Texture> Filter::Apply()
 {
+    TotalTime = RenderTime = CopyTime = CompileTime = 0;
+    
+    if (!Input)
+        throw std::runtime_error(String("No input specified for filter: ") + Name);
+        
     auto t = now();
     
-    LoadShaderPrograms();
-    CompileTime += now() - t;
-    
-    auto output = PerformSteps(input);
+    if (!initialized)
+    {
+        LoadShaderPrograms();
+        CompileTime += now() - t;
+        Initialize();
+        initialized = true;
+    }
+
+    auto output = PerformSteps();
     
     TotalTime = now() - t;
 #ifdef PROFILING
@@ -30,6 +40,7 @@ Ptr<Texture> Filter::Apply(const Texture &input)
 
 Ptr<Texture> Filter::Render(const String &name)
 {
+    glFinish();
     auto f = now();
     GraphicsDevice::DrawPrimitives();
     glFinish();
@@ -52,9 +63,9 @@ Ptr<Program> Filter::LoadProgram(const String &vertexShaderSource, const String 
     return Program::LoadFromSources(vertexShaderSource, fragmentShaderSource);
 }
 
-Ptr<Texture> Filter::ApplyFilter(Filter &filter, const Texture &input)
+Ptr<Texture> Filter::ApplyFilter(Filter &filter)
 {
-    auto result  = filter.Apply(input);
+    auto result  = filter.Apply();
     RenderTime  += filter.RenderTime;
     CopyTime    += filter.CopyTime;
     CompileTime += filter.CompileTime;

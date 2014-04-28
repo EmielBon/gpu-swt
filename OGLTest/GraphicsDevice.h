@@ -17,6 +17,8 @@ public:
     
     static void DrawPrimitives();
     
+    static void DrawArrays(PrimitiveType primitiveType);
+    
     static void SetBuffers(Ptr<VertexBuffer> vertexBuffer, Ptr<IndexBuffer> indexBuffer);
     
 public:

@@ -14,24 +14,22 @@
 
 class IndexBuffer : public OGLBuffer<IndexBuffer>
 {
+private:
+    
+    using base = OGLBuffer<IndexBuffer>;
+    
 public:
     
     IndexBuffer(PrimitiveType primitiveType = PrimitiveType::Triangles);
     
     void SetData(const List<GLuint> &indices);
     
-    GLsizei Count() const;
-    
-private:
-    
-    GLsizei count;
-    
 public:
     
     ::PrimitiveType PrimitiveType;
 };
 
-inline IndexBuffer::IndexBuffer(::PrimitiveType primitiveType /* = PrimitiveType::Triangles */) : count(0), PrimitiveType(primitiveType)
+inline IndexBuffer::IndexBuffer(::PrimitiveType primitiveType /* = PrimitiveType::Triangles */) : PrimitiveType(primitiveType)
 {
     Setup(GL_ELEMENT_ARRAY_BUFFER);
     Generate();
@@ -39,11 +37,5 @@ inline IndexBuffer::IndexBuffer(::PrimitiveType primitiveType /* = PrimitiveType
 
 inline void IndexBuffer::SetData(const List<GLuint> &indices)
 {
-    count = (GLsizei)indices.size();
-    OGLBuffer::SetData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLuint), indices.data());
-}
-
-inline GLsizei IndexBuffer::Count() const
-{
-    return count;
+    base::SetData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizei>(indices.size()), sizeof(GLuint), indices.data());
 }

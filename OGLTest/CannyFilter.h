@@ -18,11 +18,11 @@ private:
     
 public:
     
-    CannyFilter();
+    CannyFilter(Ptr<Texture> input = nullptr);
     
     void LoadShaderPrograms();
     
-    Ptr<Texture> PerformSteps(const Texture &input);
+    Ptr<Texture> PerformSteps();
     
 private:
     
@@ -41,9 +41,9 @@ private:
     Ptr<Program> canny, scharr, diffCanny;
 };
 
-inline CannyFilter::CannyFilter() : base("Canny")
+inline CannyFilter::CannyFilter(Ptr<Texture> input) : base("Canny", input)
 {
-
+    
 }
 
 inline void CannyFilter::LoadShaderPrograms()

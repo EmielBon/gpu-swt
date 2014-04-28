@@ -9,8 +9,6 @@
 #pragma once
 
 #include "Filter.h"
-#include "SobelFilter.h"
-#include "CannyFilter.h"
 
 class SWTFilter : public Filter
 {
@@ -20,47 +18,44 @@ private:
     
 public:
     
-    SWTFilter();
+    SWTFilter(Ptr<Texture> input = nullptr);
+    
+    void Initialize();
+    
+protected:
     
     void LoadShaderPrograms();
     
-    Ptr<Texture> PerformSteps(const Texture &input);
+    Ptr<Texture> PerformSteps();
     
 private:
     
-    Ptr<Texture> CastRays(const Texture &gradients, bool darkOnLight);
+    void PrepareEdgeOnlyStencil();
     
-    Ptr<Texture> WriteRayValues(const Texture &values, const Texture &gradients, const Texture &lineLengths, bool darkOnLight);
+    void PrepareMaximizingDepthTest();
     
-    Ptr<Texture> AverageRayValues(const Texture &values, const Texture &gradients, bool darkOnLight);
+    void PrepareRayLines(const Texture &values, VertexBuffer &vertexBuffer, IndexBuffer &indexBuffer);
     
-    Ptr<Texture> ScaleResult(const Texture &input, float scale);
+    Ptr<Texture> CastRays(bool darkOnLight);
     
-    void PrepareStencilTest();
+    Ptr<Texture> WriteRayValues(const Texture &values, const Texture &lineLengths, bool darkOnLight);
     
-    void PrepareDepthTest();
+    Ptr<Texture> AverageRayValues(const Texture &values, bool darkOnLight);
     
-    void PrepareRayLines(const Texture &values);
+    Ptr<Texture> ScaleResult(const Texture &input, float scaleFactor);
     
 private:
     
     Ptr<Program> cast, write, avg, scale;
-    SobelFilter sobel;
-    CannyFilter canny;
+    Ptr<Filter> sobel, gaussian, canny;
+    Ptr<Texture> edges, gradients;
     
-    Ptr<VertexBuffer> linesVertices;
-    Ptr<IndexBuffer>  linesIndices;
+public:
+    
+    ::GradientDirection GradientDirection;
 };
 
-inline SWTFilter::SWTFilter() : base("StrokeWidthTransform")
+inline SWTFilter::SWTFilter(Ptr<Texture> input) : base("StrokeWidthTransform", input), GradientDirection(GradientDirection::Unspecified)
 {
     
-}
-
-inline void SWTFilter::LoadShaderPrograms()
-{
-    cast  = LoadScreenSpaceProgram("StrokeWidthTransform1");
-    write =            LoadProgram("StrokeWidthTransform2");
-    avg   = LoadScreenSpaceProgram("StrokeWidthTransform3");
-    scale = LoadScreenSpaceProgram("ScaleColor");
 }

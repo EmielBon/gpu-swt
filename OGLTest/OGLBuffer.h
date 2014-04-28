@@ -14,24 +14,43 @@
 template<class T>
 class OGLBuffer : public IOGLBindableResource<T>
 {
+private:
+    
+    using base = IOGLBindableResource<T>;
+    
 public:
+    
+    OGLBuffer();
     
     void Setup(GLenum target);
     
-    void SetData(GLenum target, size_t size, const void *data);
+    void SetData(GLenum target, GLsizei count, size_t elementSize, const void *data);
+    
+    GLsizei Count() const { return count; }
+    
+private:
+    
+    GLsizei count;
 };
+
+template<class T>
+inline OGLBuffer<T>::OGLBuffer() : count(0)
+{
+    
+}
 
 template<class T>
 inline void OGLBuffer<T>::Setup(GLenum target)
 {
-    IOGLBindableResource<T>::Setup(glGenBuffers, glDeleteBuffers, glBindBuffer, target);
+    base::Setup(glGenBuffers, glDeleteBuffers, glBindBuffer, target);
 }
 
 template<class T>
-inline void OGLBuffer<T>::SetData(GLenum target, size_t size, const void *data)
+inline void OGLBuffer<T>::SetData(GLenum target, GLsizei count, size_t elementSize, const void *data)
 {
-    IOGLBindableResource<T>::Bind();
-    glBufferData(target, size, data, GL_STATIC_DRAW);
+    base::Bind();
+    glBufferData(target, count * elementSize, data, GL_STATIC_DRAW);
+    this->count = count;
     check_gl_error();
-    IOGLBindableResource<T>::Unbind();
+    base::Unbind();
 }

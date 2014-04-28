@@ -26,6 +26,7 @@
 #include "SobelFilter.h"
 #include "GaussianFilter.h"
 #include "CannyFilter.h"
+#include "SWTFilter.h"
 
 #define USE_NEW_SYSTEM
 
@@ -46,7 +47,7 @@ Ptr<Program> LoadScreenSpaceProgram(const String &name);
 void StartAccumulatedRender();
 Ptr<Texture> Render(const String &name = "");
 void EndAccumulatedRender();
-Ptr<Texture> ApplyPass(Ptr<Filter> filter, const Texture &input);
+Ptr<Texture> ApplyPass(Ptr<Filter> filter);
 
 unsigned long renderTime  = 0;
 unsigned long copyTime    = 0;
@@ -80,7 +81,7 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     frameBuffer1.Bind();
 
 #ifdef USE_NEW_SYSTEM
-    auto gray = ApplyPass(New<GrayFilter>(), *texture);
+    auto gray = ApplyPass( New<GrayFilter>(texture) );
 #else
     auto gray = Grayscale(*texture);
 #endif
@@ -88,17 +89,22 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     frameBuffer2.Bind();
 
 #ifdef USE_NEW_SYSTEM
-    auto gradients = ApplyPass( New<SobelFilter>(), *gray );
-    auto blurred   = ApplyPass( New<GaussianFilter>(), *gray );
-    auto edges     = ApplyPass( New<CannyFilter>(), *blurred );
+    //auto gradients = ApplyPass( New<SobelFilter>(gray) );
+    //auto blurred   = ApplyPass( New<GaussianFilter>(gray) );
+    //auto edges     = ApplyPass( New<CannyFilter>(blurred) );
+    auto swtFilter = New<SWTFilter>(gray);
+    swtFilter->GradientDirection = GradientDirection::With;
+    auto swt1      = ApplyPass(swtFilter);
+    swtFilter->GradientDirection = GradientDirection::Against;
+    auto swt2      = ApplyPass(swtFilter);
 #else
     auto gradients = Sobel2(*gray);
     auto blurred   = GaussianBlur(*gray);
     auto edges     = Canny(*blurred);
+    auto swt1      = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::With);
+    auto swt2      = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::Against);
 #endif
-    auto strokeWidths1 = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::With);
-    auto strokeWidths2 = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::Against);
-    auto connectedComponents = ConnectedComponents(*strokeWidths1);
+    //auto connectedComponents = ConnectedComponents(*swt1);
     //RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)), "Edges (OpenCV Canny)");*/
     
     totalTime = now() - totalTime;
@@ -131,6 +137,7 @@ void StartAccumulatedRender()
 Ptr<Texture> Render(const String &name)
 {
     auto& frameBuffer = FrameBuffer::GetCurrentlyBound();
+    glFinish();
     auto f = now();
     GraphicsDevice::DrawPrimitives();
     glFinish();
@@ -174,9 +181,9 @@ void EndAccumulatedRender(const String& name)
     RenderWindow::Instance().AddTexture(accumulatedTexture, name);
 }
 
-Ptr<Texture> ApplyPass(Ptr<Filter> filter, const Texture &input)
+Ptr<Texture> ApplyPass(Ptr<Filter> filter)
 {
-    auto result  = filter->Apply(input);
+    auto result  = filter->Apply();
     renderTime  += filter->RenderTime;
     copyTime    += filter->CopyTime;
     compileTime += filter->CompileTime;

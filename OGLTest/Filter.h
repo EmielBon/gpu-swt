@@ -15,15 +15,17 @@ class Filter
 {
 protected:
     
-    Filter(const String &name);
+    Filter(const String &name, Ptr<Texture> input = nullptr);
     
 public:
     
-    Ptr<Texture> Apply(const Texture &input);
+    Ptr<Texture> Apply();
+    
+    virtual void Initialize() { }
     
 protected:
     
-    virtual Ptr<Texture> PerformSteps(const Texture &input) = 0;
+    virtual Ptr<Texture> PerformSteps() = 0;
     
     virtual void LoadShaderPrograms() = 0;
     
@@ -34,7 +36,7 @@ protected:
     Ptr<Program> LoadProgram(const String &vertexShaderSource, const String &fragmentShaderSource);
     
     // Apply a filter as part of this filter, aggregating the profiling information
-    Ptr<Texture> ApplyFilter(Filter &filter, const Texture &input);
+    Ptr<Texture> ApplyFilter(Filter &filter);
     
     void StartAccumulatedRender() { accumulate = true; }
     
@@ -46,19 +48,23 @@ protected:
     
 private:
     
+    bool initialized;
     bool accumulate;
     unsigned long accumulated = 0;
     
 public:
     
     String Name;
+    Ptr<Texture> Input;
+    
     unsigned long RenderTime;
     unsigned long CopyTime;
     unsigned long CompileTime;
     unsigned long TotalTime;
 };
 
-inline Filter::Filter(const String &name) : accumulate(false), accumulated(0), Name(name), RenderTime(0), CopyTime(0), CompileTime(0), TotalTime(0)
+inline Filter::Filter(const String &name, Ptr<Texture> input)
+    : initialized(false), accumulate(false), accumulated(0), Name(name), Input(input), RenderTime(0), CopyTime(0), CompileTime(0), TotalTime(0)
 {
     
 }

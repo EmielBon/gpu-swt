@@ -8,9 +8,9 @@
 
 #include "GrayFilter.h"
 
-Ptr<Texture> GrayFilter::PerformSteps(const Texture &input)
+Ptr<Texture> GrayFilter::PerformSteps()
 {
     grayscale->Use();
-    grayscale->Uniforms["Texture"].SetValue(input);
+    grayscale->Uniforms["Texture"].SetValue(*Input);
     return Render("Grayscale");
 }
