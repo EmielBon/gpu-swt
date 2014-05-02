@@ -12,5 +12,5 @@ Ptr<Texture> GrayFilter::PerformSteps()
 {
     grayscale->Use();
     grayscale->Uniforms["Texture"].SetValue(*Input);
-    return Render("Grayscale");
+    return Render();
 }

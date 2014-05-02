@@ -60,7 +60,6 @@
 		17EEEF1818AE6D7000B5A290 /* ImgProc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17EEEF1618AE6D7000B5A290 /* ImgProc.cpp */; };
 		17F1D1441909484B00C75B9C /* SobelFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F1D1421909484B00C75B9C /* SobelFilter.cpp */; };
 		17F1D147190950DB00C75B9C /* GaussianFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F1D145190950DB00C75B9C /* GaussianFilter.cpp */; };
-		17F1D14A190953B100C75B9C /* TexturePool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F1D148190953B100C75B9C /* TexturePool.cpp */; };
 		17F1D14D1909567000C75B9C /* CannyFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F1D14B1909567000C75B9C /* CannyFilter.cpp */; };
 		17F1D151190A6EED00C75B9C /* SWTFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F1D14F190A6EED00C75B9C /* SWTFilter.cpp */; };
 		17F3F9E118BBAE0900C78815 /* Component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17F3F9DF18BBAE0900C78815 /* Component.cpp */; };
@@ -68,6 +67,7 @@
 		17F5945218DB3CB800B1C3C7 /* Grayscale.fs in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945118DB3CB800B1C3C7 /* Grayscale.fs */; };
 		17F5945518DC61E500B1C3C7 /* SobelHor2.fs in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945418DC61E500B1C3C7 /* SobelHor2.fs */; };
 		17F5945718DC6CAA00B1C3C7 /* SobelHor.fs in Sources */ = {isa = PBXBuildFile; fileRef = 17F5945618DC6CAA00B1C3C7 /* SobelHor.fs */; };
+		17FDE319190E8F8A006652A6 /* ConnectedComponentsFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17FDE317190E8F8A006652A6 /* ConnectedComponentsFilter.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -230,8 +230,6 @@
 		17F1D1431909484B00C75B9C /* SobelFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SobelFilter.h; sourceTree = "<group>"; };
 		17F1D145190950DB00C75B9C /* GaussianFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GaussianFilter.cpp; sourceTree = "<group>"; };
 		17F1D146190950DB00C75B9C /* GaussianFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GaussianFilter.h; sourceTree = "<group>"; };
-		17F1D148190953B100C75B9C /* TexturePool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TexturePool.cpp; sourceTree = "<group>"; };
-		17F1D149190953B100C75B9C /* TexturePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TexturePool.h; sourceTree = "<group>"; };
 		17F1D14B1909567000C75B9C /* CannyFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CannyFilter.cpp; sourceTree = "<group>"; };
 		17F1D14C1909567000C75B9C /* CannyFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CannyFilter.h; sourceTree = "<group>"; };
 		17F1D14F190A6EED00C75B9C /* SWTFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SWTFilter.cpp; sourceTree = "<group>"; };
@@ -247,6 +245,11 @@
 		17F5945418DC61E500B1C3C7 /* SobelHor2.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelHor2.fs; sourceTree = "<group>"; };
 		17F5945618DC6CAA00B1C3C7 /* SobelHor.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelHor.fs; sourceTree = "<group>"; };
 		17FD311718B35A740047B633 /* MathHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathHelper.h; sourceTree = "<group>"; };
+		17FDE317190E8F8A006652A6 /* ConnectedComponentsFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConnectedComponentsFilter.cpp; sourceTree = "<group>"; };
+		17FDE318190E8F8A006652A6 /* ConnectedComponentsFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectedComponentsFilter.h; sourceTree = "<group>"; };
+		17FDE31A19124F42006652A6 /* TextureParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureParameters.h; sourceTree = "<group>"; };
+		17FDE31B19125D10006652A6 /* TextureUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureUtil.h; sourceTree = "<group>"; };
+		17FDE31C19139186006652A6 /* Texture2D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Texture2D.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -446,6 +449,7 @@
 				17EEEF1718AE6D7000B5A290 /* ImgProc.h */,
 				17FD311718B35A740047B633 /* MathHelper.h */,
 				17F1D1411909338D00C75B9C /* Profiling.h */,
+				17FDE31B19125D10006652A6 /* TextureUtil.h */,
 				171A031C189BDD2600A72B91 /* types.h */,
 			);
 			name = Util;
@@ -493,8 +497,8 @@
 				17658F2B189FA980003A8B11 /* Shader.h */,
 				17EED2DB18A396E80094A37D /* Texture.cpp */,
 				17EED2DC18A396E80094A37D /* Texture.h */,
-				17F1D148190953B100C75B9C /* TexturePool.cpp */,
-				17F1D149190953B100C75B9C /* TexturePool.h */,
+				17FDE31C19139186006652A6 /* Texture2D.h */,
+				17FDE31A19124F42006652A6 /* TextureParameters.h */,
 				17EED56F18A505910094A37D /* Uniform.cpp */,
 				17EED57018A505910094A37D /* Uniform.h */,
 				17658F4118A0F96E003A8B11 /* VertexArray.h */,
@@ -567,6 +571,8 @@
 				17F1D1431909484B00C75B9C /* SobelFilter.h */,
 				17F1D14F190A6EED00C75B9C /* SWTFilter.cpp */,
 				17F1D150190A6EED00C75B9C /* SWTFilter.h */,
+				17FDE317190E8F8A006652A6 /* ConnectedComponentsFilter.cpp */,
+				17FDE318190E8F8A006652A6 /* ConnectedComponentsFilter.h */,
 			);
 			name = Filters;
 			sourceTree = "<group>";
@@ -623,7 +629,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				17EED2EC18A3C6240094A37D /* GraphicsDevice.cpp in Sources */,
-				17F1D14A190953B100C75B9C /* TexturePool.cpp in Sources */,
 				1700DFD718E1CE9F004112B6 /* Sobel2.fs in Sources */,
 				17EED2DD18A396E80094A37D /* Texture.cpp in Sources */,
 				17ACBD881906A2BF0052244F /* Filter.cpp in Sources */,
@@ -635,6 +640,7 @@
 				17658F2F189FB5F4003A8B11 /* Program.cpp in Sources */,
 				1700DFCE18E1B2B3004112B6 /* GaussianBlurV.fs in Sources */,
 				17658F25189FA444003A8B11 /* glew.c in Sources */,
+				17FDE319190E8F8A006652A6 /* ConnectedComponentsFilter.cpp in Sources */,
 				1700DFD518E1CA23004112B6 /* Sobel1.fs in Sources */,
 				17F1D147190950DB00C75B9C /* GaussianFilter.cpp in Sources */,
 				1700060A18F297B400B1D45C /* RenderBuffer.cpp in Sources */,

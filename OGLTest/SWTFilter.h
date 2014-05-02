@@ -34,7 +34,7 @@ private:
     
     void PrepareMaximizingDepthTest();
     
-    void PrepareRayLines(const Texture &values, VertexBuffer &vertexBuffer, IndexBuffer &indexBuffer);
+    void PrepareRayLines(const Texture &values);
     
     Ptr<Texture> CastRays(bool darkOnLight);
     
@@ -49,13 +49,15 @@ private:
     Ptr<Program> cast, write, avg, scale;
     Ptr<Filter> sobel, gaussian, canny;
     Ptr<Texture> edges, gradients;
+    Ptr<VertexBuffer> linesVertices;
     
 public:
     
     ::GradientDirection GradientDirection;
 };
 
-inline SWTFilter::SWTFilter(Ptr<Texture> input) : base("StrokeWidthTransform", input), GradientDirection(GradientDirection::Unspecified)
+inline SWTFilter::SWTFilter(Ptr<Texture> input)
+    : base("StrokeWidthTransform", input), GradientDirection(GradientDirection::Unspecified)
 {
     
 }

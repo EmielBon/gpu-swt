@@ -12,12 +12,12 @@ Ptr<Texture> GaussianFilter::HorizontalPass(const Texture &input)
 {
     hor->Use();
     hor->Uniforms["Texture"].SetValue(input);
-    return Render("Gaussian Blur (hor)");
+    return Render();
 }
 
 Ptr<Texture> GaussianFilter::VerticalPass(const Texture &input)
 {
     ver->Use();
     ver->Uniforms["Texture"].SetValue(input);
-    return Render("Gaussian Blur (ver)");
+    return Render();
 }

@@ -28,21 +28,21 @@ Ptr<Texture> CannyFilter::DetectEdges(const Texture &gradients)
 {
     canny->Use();
     canny->Uniforms["Gradients"].SetValue(gradients);
-    return Render("Edges (Canny)");
+    return Render();
 }
 
 Ptr<Texture> CannyFilter::ScharrAveraging(const Texture &input)
 {
     scharr->Use();
     scharr->Uniforms["Texture"].SetValue(input);
-    return Render("CannySobel1");
+    return Render();
 }
 
 Ptr<Texture> CannyFilter::Differentiation(const Texture &input)
 {
     diffCanny->Use();
     diffCanny->Uniforms["Texture"].SetValue(input);
-    return Render("CannySobel2");
+    return Render();
 }
 
 void CannyFilter::PrepareStencilTest()

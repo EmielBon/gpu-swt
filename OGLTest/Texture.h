@@ -8,89 +8,66 @@
 
 #pragma once
 
-#include "types.h"
 #include "IOGLBindableResource.h"
+#include "TextureParameters.h"
+#include "types.h"
 
 class Texture : public IOGLBindableResource<Texture>
 {
+private:
+    
+    using base = IOGLBindableResource<Texture>;
+    
 protected:
     
-    Texture(int width, int height, GLenum filteringType = GL_LINEAR);
+    // Empty constructor, meant to be overridden by subclasses
+    Texture() = default;
     
 public:
     
-    Texture(const cv::Mat &image);
+    Texture(int width, int height, GLenum format, GLenum type, GLenum filteringType, const GLvoid* pixels = NULL);
     
-    Texture(int width, int height, GLenum format, GLenum type, GLenum filteringType);
+    Texture(const TextureParameters &params, const GLvoid* pixels = nullptr);
     
-    virtual ~Texture() { /*printf("Destroyed\n");*/ }
+    virtual ~Texture() = default;
+    
+    // Initialize this texture with parameters and data. Parameters have to be set before calling this function
+    void Initialize(const TextureParameters &params, const GLvoid *pixels = nullptr);
     
     int GetWidth() const;
     
     int GetHeight() const;
 
-    int GetColorChannels() const;
-    
     void GetTextureImage(GLenum format, GLenum type, GLvoid *buffer) const;
     
     Ptr<Texture> GetEmptyClone() const;
     
-private:
+    void SetData(const GLvoid* pixels);
     
-    template<typename T>
-    void SetData(const cv::Mat &image, GLenum format, GLenum type);
-    
-private:
-    
-    int width, height;
-    int colorChannels;
-
 public:
     
-    GLenum Format;
-    GLenum Type;
-    GLenum FilteringType;
+    TextureParameters Parameters;
     static const GLenum INTERNAL_FORMAT = GL_RGBA;
     static const GLenum PREFERRED_TYPE  = GL_UNSIGNED_INT_8_8_8_8_REV;
 };
 
+inline Texture::Texture(int width, int height, GLenum format, GLenum type, GLenum filteringType, const GLvoid *pixels /* = nullptr */)
+    : Texture( TextureParameters(width, height, format, type, filteringType), pixels )
+{
+    
+}
+
 inline int Texture::GetWidth() const
 {
-    return width;
+    return Parameters.Width;
 }
 
 inline int Texture::GetHeight() const
 {
-    return height;
-}
-
-inline int Texture::GetColorChannels() const
-{
-    return colorChannels;
-}
-
-inline void Texture::GetTextureImage(GLenum format, GLenum type, GLvoid *buffer) const
-{
-    Bind();
-    glGetTexImage(GL_TEXTURE_2D, 0, format, type, buffer);
-    Unbind();
+    return Parameters.Height;
 }
 
 inline Ptr<Texture> Texture::GetEmptyClone() const
 {
-    return New<Texture>(width, height, Format, Type, FilteringType);
-}
-
-template<typename T>
-inline void Texture::SetData(const cv::Mat &image, GLenum format, GLenum type)
-{
-    Format = format;
-    Type   = type;
-    
-    List<T> pixelData;
-    pixelData.resize(width * height);
-    std::copy(image.begin<T>(), image.end<T>(), pixelData.begin());
-    Bind();
-        glTexImage2D(GL_TEXTURE_2D, 0, INTERNAL_FORMAT, width, height, 0, format, type, pixelData.data());
-    Unbind();
+    return New<Texture>(Parameters);
 }

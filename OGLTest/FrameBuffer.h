@@ -24,7 +24,7 @@ public:
 
     void CreateNewColorAttachment0();
     
-    Ptr<Texture> CopyColorAttachment() const;
+    Ptr<Texture> CopyColorAttachment(Ptr<::Texture> destination = nullptr) const;
     
 private:
 
@@ -34,7 +34,6 @@ private:
     
 public:
     
-    //GLuint bufferId;
     Ptr<::Texture> Texture;
     Ptr<RenderBuffer> Attachment;
 };

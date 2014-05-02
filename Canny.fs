@@ -16,9 +16,10 @@ const float PiOver8 = Pi / 8;
 
 void main()
 {
-    vec2 gradient = fetch(Gradients, gl_FragCoord.xy).rg;
+    ivec2 pos = ivec2(gl_FragCoord.xy);
+    vec2 gradient = fetch(Gradients, pos).rg;
     
-    float angle = gradient.x;
+    float angle     = gradient.x;
     float magnitude = gradient.y;
     
     vec4 a = vec4(PiOver8, 3 * PiOver8, 5 * PiOver8, 7 * PiOver8);
@@ -28,17 +29,17 @@ void main()
     
     // todo: is round implementation dependant?
     vec2 binnedGradient = round( vec2(cos(binned), sin(binned)) );
-    vec2 dir = sign(binnedGradient);
+    ivec2 dir = ivec2(sign(binnedGradient));
     
-    float  forwardNeighbourGradient = fetch(Gradients, gl_FragCoord.xy + dir).g;
-    float backwardNeighbourGradient = fetch(Gradients, gl_FragCoord.xy - dir).g;
+    float  forwardNeighbourGradient = fetch(Gradients, pos + dir).g;
+    float backwardNeighbourGradient = fetch(Gradients, pos - dir).g;
     
     float sum = 0;
     // todo: seprarable convolution (averaging) operation
     for (int i = -1; i <= 1; ++i)
     for (int j = -1; j <= 1; ++j)
         // todo: look at lerp instead of smoothstep
-        sum += smoothstep(LowerThreshold, UpperThreshold, fetch(Gradients, gl_FragCoord.xy + vec2(i, j)).g);
+        sum += smoothstep(LowerThreshold, UpperThreshold, fetch(Gradients, pos + ivec2(i, j)).g);
     
     bool localMaximum = magnitude > forwardNeighbourGradient && magnitude > backwardNeighbourGradient;
     bool strongEdge = magnitude > UpperThreshold;

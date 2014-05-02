@@ -63,7 +63,7 @@ void main()
     
     vec2 gradient1 = fetch(Gradients, pos1).xy;
     vec2 dq = normalize(gradient1) * dir;
-    float rayLength = distance(pos0, pos1);
+    float rayLength = distance(gl_FragCoord.xy, realPos1);
     int keep = int(acos(dot(dp, -dq)) < MaxOppositeEdgeGradientDifference);
     FragColor = vec4(vec3(rayLength * keep), 1);
     //if (rayLength < 5)

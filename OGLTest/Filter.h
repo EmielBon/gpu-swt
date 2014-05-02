@@ -40,7 +40,9 @@ protected:
     
     void StartAccumulatedRender() { accumulate = true; }
     
-    Ptr<Texture> Render(const String &name);
+    void RenderToTexture(Ptr<Texture> destination, PrimitiveType primitiveType = PrimitiveType::Unspecified);
+    
+    Ptr<Texture> Render(PrimitiveType primitiveType = PrimitiveType::Unspecified);
 
     void EndAccumulatedRender() { accumulate = false; }
     

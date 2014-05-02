@@ -28,7 +28,7 @@ public:
     
     static void BindDefault();
     
-    static T& GetCurrentlyBound() { return *static_cast<T*>(boundBuffer); }
+    static T* GetCurrentlyBound() { return static_cast<T*>(boundBuffer); }
     
 protected:
     

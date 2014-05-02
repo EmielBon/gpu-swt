@@ -28,6 +28,8 @@
 #include <GL/glew.h>
 #include <opencv2/core/core.hpp>
 
+#include "PrimitiveType.h"
+
 enum class GradientDirection
 {
     Unspecified,
@@ -75,6 +77,7 @@ class Program;
 class Shader;
 class StencilBuffer;
 class Texture;
+class TexturePool;
 class Uniform;
 class VertexArray;
 class VertexBuffer;

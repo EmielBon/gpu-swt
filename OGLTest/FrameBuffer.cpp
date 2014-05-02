@@ -43,7 +43,7 @@ void FrameBuffer::SetColorAttachment0(Ptr<::Texture> texture)
 
 void FrameBuffer::CreateNewColorAttachment0()
 {
-    CreateNewColorAttachment0(Texture->GetWidth(), Texture->GetHeight(), Texture->Format, Texture->Type);
+    CreateNewColorAttachment0(Texture->GetWidth(), Texture->GetHeight(), Texture->Parameters.Format, Texture->Parameters.Type);
 }
 
 void FrameBuffer::CreateNewColorAttachment0(int width, int height, GLenum format, GLenum type)
@@ -52,11 +52,14 @@ void FrameBuffer::CreateNewColorAttachment0(int width, int height, GLenum format
     SetColorAttachment0(texture);
 }
 
-Ptr<Texture> FrameBuffer::CopyColorAttachment() const
+Ptr<Texture> FrameBuffer::CopyColorAttachment(Ptr<::Texture> dest /* = nullptr */) const
 {
-    auto texture = Texture->GetEmptyClone();
-    texture->Bind();
-    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, texture->GetWidth(), texture->GetHeight());
-    texture->Unbind();
-    return texture;
+    if (!dest)
+        dest = Texture->GetEmptyClone();
+    auto prev = Texture::GetCurrentlyBound();
+    dest->Bind();
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, dest->GetWidth(), dest->GetHeight());
+    if (prev)
+        prev->Bind();
+    return dest;
 }

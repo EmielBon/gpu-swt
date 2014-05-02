@@ -23,6 +23,7 @@
 #include "FragmentShader.h"
 #include "GLError.h"
 #include "FrameBuffer.h"
+#include "TextureUtil.h"
 
 RenderWindow* RenderWindow::instance = nullptr;
 
@@ -75,7 +76,6 @@ void RenderWindow::DrawRect(const DrawableRect &rect)
     
     program->Use();
     program->Uniforms["Texture"].SetValue(texture);
-    program->Uniforms["Channels"].SetValue(texture.GetColorChannels());
     
     GraphicsDevice::DrawPrimitives();
 }
@@ -117,7 +117,7 @@ void RenderWindow::Draw()
 
 void RenderWindow::AddTexture(const cv::Mat &mat, const String &descriptor)
 {
-    AddTexture(New<Texture>(mat), descriptor);
+    AddTexture(textureFromImage<cv::Vec3b>(mat), descriptor);
 }
 
 void RenderWindow::AddTexture(Ptr<Texture> texture, const String &descriptor)

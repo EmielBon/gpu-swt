@@ -12,12 +12,12 @@ Ptr<Texture> SobelFilter::ScharrAveraging(const Texture &input)
 {
     scharr->Use();
     scharr->Uniforms["Texture"].SetValue(input);
-    return Render("Sobel1");
+    return Render();
 }
 
 Ptr<Texture> SobelFilter::Differentiation(const Texture &input)
 {
     diff->Use();
     diff->Uniforms["Texture"].SetValue(input);
-    return Render("Sobel2");
+    return Render();
 }

@@ -27,6 +27,9 @@
 #include "GaussianFilter.h"
 #include "CannyFilter.h"
 #include "SWTFilter.h"
+#include "ConnectedComponentsFilter.h"
+#include "TextureUtil.h"
+#include "Texture2D.h"
 
 #define USE_NEW_SYSTEM
 
@@ -76,7 +79,7 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     GraphicsDevice::SetBuffers(rect.VertexBuffer, rect.IndexBuffer);
     
     // Create a Texture from the input
-    Ptr<Texture> texture = New<Texture>(input);
+    Ptr<Texture> texture = textureFromImage<cv::Vec3b>(input);
     
     frameBuffer1.Bind();
 
@@ -89,14 +92,12 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     frameBuffer2.Bind();
 
 #ifdef USE_NEW_SYSTEM
-    //auto gradients = ApplyPass( New<SobelFilter>(gray) );
-    //auto blurred   = ApplyPass( New<GaussianFilter>(gray) );
-    //auto edges     = ApplyPass( New<CannyFilter>(blurred) );
-    auto swtFilter = New<SWTFilter>(gray);
+    auto swtFilter  = New<SWTFilter>(gray);
     swtFilter->GradientDirection = GradientDirection::With;
-    auto swt1      = ApplyPass(swtFilter);
+    auto swt1       = ApplyPass(swtFilter);
     swtFilter->GradientDirection = GradientDirection::Against;
-    auto swt2      = ApplyPass(swtFilter);
+    auto swt2       = ApplyPass(swtFilter);
+    auto components = ApplyPass(New<ConnectedComponentsFilter>(swt1));
 #else
     auto gradients = Sobel2(*gray);
     auto blurred   = GaussianBlur(*gray);
@@ -109,7 +110,7 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     
     totalTime = now() - totalTime;
     
-    unsigned long misc = totalTime - renderTime - copyTime - compileTime;
+    auto misc = totalTime - renderTime - copyTime - compileTime;
     
     printf("%s: T(%.1fms) R(%.1fms=%.1f%%) Cpy(%.1fms=%.1f%%) Cpl(%.1fms=%.1f%%) M(%.1fms=%.1f%%)\n", "Total",
            GetTimeMsec(totalTime),
@@ -121,8 +122,8 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
            compileTime * 100.0f / totalTime,
            GetTimeMsec(misc),
            misc * 100.0f / totalTime
-           );
-    
+    );
+
     return List<BoundingBox>();
 }
 
@@ -136,7 +137,7 @@ void StartAccumulatedRender()
 
 Ptr<Texture> Render(const String &name)
 {
-    auto& frameBuffer = FrameBuffer::GetCurrentlyBound();
+    auto frameBuffer = FrameBuffer::GetCurrentlyBound();
     glFinish();
     auto f = now();
     GraphicsDevice::DrawPrimitives();
@@ -149,7 +150,7 @@ Ptr<Texture> Render(const String &name)
         PrintTime(name, f);
     }
     f = now();
-    auto result = frameBuffer.CopyColorAttachment();
+    auto result = frameBuffer->CopyColorAttachment();
     glFinish();
     copyTime += now() - f;
     if (name != "")

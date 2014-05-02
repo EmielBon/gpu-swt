@@ -11,6 +11,7 @@
 #include "VertexShader.h"
 #include "FragmentShader.h"
 #include "Texture.h"
+#include "TextureUtil.h"
 #include <opencv2/highgui/highgui.hpp>
 
 using namespace std;
@@ -57,7 +58,7 @@ cv::Mat ContentLoader::LoadV(const String &resourceName)
 template<>
 Ptr<Texture> ContentLoader::Load(const String &resourceName)
 {
-    return New<Texture>( LoadV<cv::Mat>(resourceName) );
+    return textureFromImage<Vector3>( LoadV<cv::Mat>(resourceName) );
 }
 
 String ContentLoader::FileReadAll(const String &filePath)

@@ -38,11 +38,14 @@ Ptr<Texture> Filter::Apply()
     return output;
 }
 
-Ptr<Texture> Filter::Render(const String &name)
+Ptr<Texture> Filter::Render(PrimitiveType primitiveType /* = PrimitiveType::Unspecified */)
 {
     glFinish();
     auto f = now();
-    GraphicsDevice::DrawPrimitives();
+    if (primitiveType == PrimitiveType::Unspecified)
+        GraphicsDevice::DrawPrimitives();
+    else
+        GraphicsDevice::DrawArrays(primitiveType);
     glFinish();
     f = now() - f;
     accumulated += f;
@@ -52,10 +55,29 @@ Ptr<Texture> Filter::Render(const String &name)
         RenderTime += f;
     }
     f = now();
-    auto result = FrameBuffer::GetCurrentlyBound().CopyColorAttachment();
+    auto result = FrameBuffer::GetCurrentlyBound()->CopyColorAttachment();
     glFinish();
     CopyTime += now() - f;
     return result;
+}
+
+void Filter::RenderToTexture(Ptr<Texture> destination, PrimitiveType primitiveType /* = PrimitiveType::Unspecified */)
+{
+    FrameBuffer::GetCurrentlyBound()->SetColorAttachment0(destination);
+    glFinish();
+    auto f = now();
+    if (primitiveType == PrimitiveType::Unspecified)
+        GraphicsDevice::DrawPrimitives();
+    else
+        GraphicsDevice::DrawArrays(primitiveType);
+    glFinish();
+    f = now() - f;
+    accumulated += f;
+    if (!accumulate)
+    {
+        accumulated = 0;
+        RenderTime += f;
+    }
 }
 
 Ptr<Program> Filter::LoadProgram(const String &vertexShaderSource, const String &fragmentShaderSource)

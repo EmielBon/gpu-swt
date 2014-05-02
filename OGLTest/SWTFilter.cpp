@@ -31,15 +31,15 @@ void SWTFilter::LoadShaderPrograms()
 
 void SWTFilter::Initialize()
 {
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
     gradients    = ApplyFilter(*sobel);
     canny->Input = ApplyFilter(*gaussian);
     edges        = ApplyFilter(*canny); // Builds a edge-only stencil buffer
     
     PrepareEdgeOnlyStencil();
     PrepareMaximizingDepthTest();
+    PrepareRayLines(*edges);
+    
+    glClearColor(0, 0, 0, 1);
 }
 
 Ptr<Texture> SWTFilter::PerformSteps()
@@ -57,12 +57,7 @@ Ptr<Texture> SWTFilter::PerformSteps()
     auto values = CastRays(darkOnLight);
     glDisable(GL_STENCIL_TEST);
     
-    auto linesVertices= New<::VertexBuffer>();
-    auto linesIndices  = New<::IndexBuffer>(PrimitiveType::Lines); // todo: remove, not needed when calling GraphicsDevice::DrawArrays
-    
-    PrepareRayLines(*values, *linesVertices, *linesIndices);
-    
-    GraphicsDevice::SetBuffers(linesVertices, linesIndices);
+    GraphicsDevice::SetBuffers(linesVertices, nullptr);
     glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     auto swt = WriteRayValues(*values, *values, darkOnLight);
@@ -74,7 +69,7 @@ Ptr<Texture> SWTFilter::PerformSteps()
     auto valuesAvg = AverageRayValues(*swt, darkOnLight);
     glDisable(GL_STENCIL_TEST);
     
-    GraphicsDevice::SetBuffers(linesVertices, linesIndices);
+    GraphicsDevice::SetBuffers(linesVertices, nullptr);
     glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     auto swtAvg = WriteRayValues(*valuesAvg, *values, darkOnLight);
@@ -90,7 +85,7 @@ Ptr<Texture> SWTFilter::CastRays(bool darkOnLight)
     cast->Uniforms["Edges"].SetValue(*edges);
     cast->Uniforms["Gradients"].SetValue(*gradients);
     cast->Uniforms["DarkOnLight"].SetValue(darkOnLight);
-    auto result = Render("Stroke Width values");
+    auto result = Render();
     RenderWindow::Instance().AddTexture(result, "SWT values");
     return result;
 }
@@ -103,7 +98,7 @@ Ptr<Texture> SWTFilter::WriteRayValues(const Texture &values, const Texture &lin
     write->Uniforms["LineLengths"].SetValue(lineLengths);
     write->Uniforms["Values"].SetValue(values);
     write->Uniforms["DarkOnLight"].SetValue(darkOnLight);
-    auto result = Render((String("Stroke Width Transform (") + (darkOnLight ? "with" : "against") + " the gradient)").c_str());
+    auto result = Render(PrimitiveType::Lines);
     RenderWindow::Instance().AddTexture(result, "SWT values");
     return result;
 }
@@ -114,7 +109,7 @@ Ptr<Texture> SWTFilter::AverageRayValues(const Texture &values, bool darkOnLight
     avg->Uniforms["Gradients"].SetValue(*gradients);
     avg->Uniforms["LineLengths"].SetValue(values);
     avg->Uniforms["DarkOnLight"].SetValue(darkOnLight);
-    auto result = Render("Average Stroke Width values");
+    auto result = Render();
     RenderWindow::Instance().AddTexture(result, "Avg SWT values");
     return result;
 }
@@ -134,16 +129,19 @@ void SWTFilter::PrepareMaximizingDepthTest()
     glClearDepth(1.0f);
 }
 
-void SWTFilter::PrepareRayLines(const Texture &values, VertexBuffer &vertexBuffer, IndexBuffer &indexBuffer)
+void SWTFilter::PrepareRayLines(const Texture &input)
 {
-    List<VertexPositionTexture> vertices;
-    GLfloat buffer[values.GetWidth() * values.GetHeight()];
-    values.GetTextureImage(GL_RED, GL_FLOAT, buffer);
+    int width  = input.GetWidth();
+    int height = input.GetHeight();
     
-    for(int i = 0; i < values.GetWidth(); ++i)
-    for(int j = 0; j < values.GetHeight(); ++j)
+    List<VertexPositionTexture> vertices(1024);
+    GLfloat buffer[width * height];
+    input.GetTextureImage(GL_RED, GL_FLOAT, buffer);
+    
+    for(int i = 0; i < width;  ++i)
+    for(int j = 0; j < height; ++j)
     {
-        if (buffer[i + j * values.GetWidth()] == 0.0f)
+        if (buffer[i + j * width] == 0.0f)
             continue;
         
         VertexPositionTexture v1, v2;
@@ -153,14 +151,8 @@ void SWTFilter::PrepareRayLines(const Texture &values, VertexBuffer &vertexBuffe
         vertices.push_back(v2);
     }
     
-    // todo: skip index buffer for line drawing
-    List<GLuint> indices( vertices.size() );
-    GLuint counter = 0;
-    for(auto& index : indices)
-        index = counter++;
-    
-    vertexBuffer.SetData(vertices);
-    indexBuffer.SetData(indices);
+    linesVertices = New<VertexBuffer>();
+    linesVertices->SetData(vertices);
 }
 
 Ptr<Texture> SWTFilter::ScaleResult(const Texture &input, float scaleFactor)
@@ -168,5 +160,5 @@ Ptr<Texture> SWTFilter::ScaleResult(const Texture &input, float scaleFactor)
     scale->Use();
     scale->Uniforms["Texture"].SetValue(input);
     scale->Uniforms["Scale"].SetValue(scaleFactor);
-    return Render("Average Stroke Widths (scaled)");
+    return Render();
 }
