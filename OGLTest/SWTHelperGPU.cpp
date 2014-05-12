@@ -29,7 +29,6 @@
 #include "SWTFilter.h"
 #include "ConnectedComponentsFilter.h"
 #include "TextureUtil.h"
-#include "Texture2D.h"
 
 #define USE_NEW_SYSTEM
 
@@ -51,6 +50,7 @@ void StartAccumulatedRender();
 Ptr<Texture> Render(const String &name = "");
 void EndAccumulatedRender();
 Ptr<Texture> ApplyPass(Ptr<Filter> filter);
+void AddTexture(Ptr<Texture> texture);
 
 unsigned long renderTime  = 0;
 unsigned long copyTime    = 0;
@@ -70,35 +70,41 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     int width  = input.size().width;
     int height = input.size().height;
     
-    // Load the framebuffers
-    FrameBuffer frameBuffer1(width, height, GL_BGRA, GL_UNSIGNED_BYTE);
-    FrameBuffer frameBuffer2(width, height, GL_BGRA, GL_FLOAT, RenderBuffer::Type::DepthStencil);
-    
-    // Load the full-screen rect
-    DrawableRect rect(-1, -1, 1, 1, 1, 1);
-    GraphicsDevice::SetBuffers(rect.VertexBuffer, rect.IndexBuffer);
-    
     // Create a Texture from the input
     Ptr<Texture> texture = textureFromImage<cv::Vec3b>(input);
     
-    frameBuffer1.Bind();
-
-#ifdef USE_NEW_SYSTEM
-    auto gray = ApplyPass( New<GrayFilter>(texture) );
-#else
-    auto gray = Grayscale(*texture);
-#endif
+    // Create the framebuffer attachments
+    Ptr<Texture>      colorf       = New<Texture     >(width, height, GL_BGRA, GL_FLOAT, GL_NEAREST);
+    Ptr<RenderBuffer> depthStencil = New<RenderBuffer>(width, height, RenderBuffer::Type::DepthStencil);
     
-    frameBuffer2.Bind();
+    // Create and setup framebuffer
+    FrameBuffer frameBuffer;
+    frameBuffer.Attach(colorf);
+    
+    // Create a full-screen rect
+    DrawableRect rect(-1, -1, 1, 1, 1, 1);
+    GraphicsDevice::SetDefaultBuffers(rect.VertexBuffer, rect.IndexBuffer);
+    GraphicsDevice::UseDefaultBuffers();
+    
+    frameBuffer.Bind();
 
 #ifdef USE_NEW_SYSTEM
-    auto swtFilter  = New<SWTFilter>(gray);
+    auto grayFilter  = New<GrayFilter>(texture);
+    auto gray        = ApplyPass(grayFilter);
+    grayFilter.reset();
+    auto swtFilter   = New<SWTFilter>(gray);
     swtFilter->GradientDirection = GradientDirection::With;
-    auto swt1       = ApplyPass(swtFilter);
+    auto swt1        = ApplyPass(swtFilter);
     swtFilter->GradientDirection = GradientDirection::Against;
-    auto swt2       = ApplyPass(swtFilter);
-    auto components = ApplyPass(New<ConnectedComponentsFilter>(swt1));
+    auto swt2        = ApplyPass(swtFilter);
+    gray.reset();
+    swtFilter.reset();
+    auto connectedComponentsFilter = New<ConnectedComponentsFilter>(swt1);
+    auto components1 = ApplyPass(connectedComponentsFilter);
+    swt1.reset();
+    components1.reset();
 #else
+    auto gray      = Grayscale(*texture);
     auto gradients = Sobel2(*gray);
     auto blurred   = GaussianBlur(*gray);
     auto edges     = Canny(*blurred);
@@ -124,6 +130,8 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
            misc * 100.0f / totalTime
     );
 
+    printf("Textures: Active %i Peak %i\n", Texture::ActiveTextureCount, Texture::PeakTextureCount);
+    
     return List<BoundingBox>();
 }
 
@@ -150,13 +158,14 @@ Ptr<Texture> Render(const String &name)
         PrintTime(name, f);
     }
     f = now();
-    auto result = frameBuffer->CopyColorAttachment();
+    auto dest = frameBuffer->ColorAttachment0->GetEmptyClone();
+    frameBuffer->CopyColorAttachment(*dest);
     glFinish();
     copyTime += now() - f;
     if (name != "")
-        RenderWindow::Instance().AddTexture(result, name);
-    accumulatedTexture = result;
-    return result;
+        RenderWindow::Instance().AddTexture(dest, name);
+    accumulatedTexture = dest;
+    return dest;
 }
 
 #else
@@ -184,12 +193,15 @@ void EndAccumulatedRender(const String& name)
 
 Ptr<Texture> ApplyPass(Ptr<Filter> filter)
 {
-    auto result  = filter->Apply();
+    auto output = FrameBuffer::GetCurrentlyBound()->ColorAttachment0->GetEmptyClone();
+    
+    filter->Apply(output);
     renderTime  += filter->RenderTime;
     copyTime    += filter->CopyTime;
     compileTime += filter->CompileTime;
-    RenderWindow::Instance().AddTexture(result, filter->Name);
-    return result;
+    
+    RenderWindow::Instance().AddFrameBufferSnapshot(filter->Name);
+    return output;
 }
 
 Ptr<Texture> Grayscale(const Texture &texture)

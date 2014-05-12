@@ -19,15 +19,18 @@ protected:
     
 public:
     
-    Ptr<Texture> Apply();
+    void Apply(Ptr<Texture> output);
     
     virtual void Initialize() { }
     
 protected:
     
-    virtual Ptr<Texture> PerformSteps() = 0;
+    virtual void PerformSteps(Ptr<Texture> output) = 0;
     
     virtual void LoadShaderPrograms() = 0;
+    
+    // Reserves auxilary color buffers for use. ColorBuffer[0] is always initialized to be the current ColorAttachment0 in the frame buffer
+    void ReserveColorBuffers(int count);
     
     Ptr<Program> LoadScreenSpaceProgram(const String &name);
     
@@ -36,37 +39,39 @@ protected:
     Ptr<Program> LoadProgram(const String &vertexShaderSource, const String &fragmentShaderSource);
     
     // Apply a filter as part of this filter, aggregating the profiling information
-    Ptr<Texture> ApplyFilter(Filter &filter);
+    void ApplyFilter(Filter &filter, Ptr<Texture> output);
     
-    void StartAccumulatedRender() { accumulate = true; }
-    
-    void RenderToTexture(Ptr<Texture> destination, PrimitiveType primitiveType = PrimitiveType::Unspecified);
-    
-    Ptr<Texture> Render(PrimitiveType primitiveType = PrimitiveType::Unspecified);
+    void Render(PrimitiveType primitiveType = PrimitiveType::Unspecified, GLenum clearOptions = GL_NONE);
 
-    void EndAccumulatedRender() { accumulate = false; }
+    void RenderToTexture(Ptr<Texture> destination, PrimitiveType primitiveType = PrimitiveType::Unspecified, GLenum clearOptions = GL_NONE);
+    
+    // Warning! Clamps values in destination texture between 0 and 1!
+    void CopyFrameBufferColors(const Texture &destination);
+    
+    Ptr<Texture> GetColorAttachment();
+    
+    void SetColorAttachment(Ptr<Texture> colorAttachment);
     
     void PrintProfilingInfo() const;
     
 private:
     
     bool initialized;
-    bool accumulate;
-    unsigned long accumulated = 0;
+    
+protected:
+    
+    List< Ptr<Texture> > ColorBuffers;
     
 public:
     
     String Name;
     Ptr<Texture> Input;
     
-    unsigned long RenderTime;
-    unsigned long CopyTime;
-    unsigned long CompileTime;
-    unsigned long TotalTime;
+    unsigned long RenderTime, CopyTime, CompileTime, TotalTime;
 };
 
 inline Filter::Filter(const String &name, Ptr<Texture> input)
-    : initialized(false), accumulate(false), accumulated(0), Name(name), Input(input), RenderTime(0), CopyTime(0), CompileTime(0), TotalTime(0)
+    : initialized(false), Name(name), Input(input), RenderTime(0), CopyTime(0), CompileTime(0), TotalTime(0)
 {
     
 }

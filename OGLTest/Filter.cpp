@@ -11,8 +11,16 @@
 #include "Profiling.h"
 #include "FrameBuffer.h"
 #include "GraphicsDevice.h"
+#include "Texture.h"
 
-Ptr<Texture> Filter::Apply()
+void Filter::ReserveColorBuffers(int count)
+{
+    ColorBuffers.clear();
+    for(int i = 0; i < count; ++i)
+        ColorBuffers.push_back( Input->GetEmptyClone() );
+}
+
+void Filter::Apply(Ptr<Texture> output)
 {
     TotalTime = RenderTime = CopyTime = CompileTime = 0;
     
@@ -29,55 +37,52 @@ Ptr<Texture> Filter::Apply()
         initialized = true;
     }
 
-    auto output = PerformSteps();
+    PerformSteps(output);
+    ColorBuffers.clear();
     
     TotalTime = now() - t;
 #ifdef PROFILING
     PrintProfilingInfo();
 #endif
-    return output;
 }
 
-Ptr<Texture> Filter::Render(PrimitiveType primitiveType /* = PrimitiveType::Unspecified */)
+void Filter::Render(PrimitiveType primitiveType /* = PrimitiveType::Unspecified */, GLenum clearOptions /* = GL_NONE */)
 {
     glFinish();
     auto f = now();
+    if (clearOptions != GL_NONE);
+        glClear(clearOptions);
     if (primitiveType == PrimitiveType::Unspecified)
         GraphicsDevice::DrawPrimitives();
     else
         GraphicsDevice::DrawArrays(primitiveType);
     glFinish();
-    f = now() - f;
-    accumulated += f;
-    if (!accumulate)
-    {
-        accumulated = 0;
-        RenderTime += f;
-    }
-    f = now();
-    auto result = FrameBuffer::GetCurrentlyBound()->CopyColorAttachment();
+    RenderTime += now() - f;
+}
+
+void Filter::RenderToTexture(Ptr<Texture> destination, PrimitiveType primitiveType /* = PrimitiveType::Unspecified */, GLenum clearOptions /* = GL_NONE */)
+{
+    SetColorAttachment(destination);
+    Render(primitiveType, clearOptions);
+}
+
+void Filter::CopyFrameBufferColors(const Texture &dest)
+{
+    glFinish();
+    auto f = now();
+    FrameBuffer::GetCurrentlyBound()->CopyColorAttachment(dest);
     glFinish();
     CopyTime += now() - f;
-    return result;
 }
 
-void Filter::RenderToTexture(Ptr<Texture> destination, PrimitiveType primitiveType /* = PrimitiveType::Unspecified */)
+Ptr<Texture> Filter::GetColorAttachment()
 {
-    FrameBuffer::GetCurrentlyBound()->SetColorAttachment0(destination);
-    glFinish();
-    auto f = now();
-    if (primitiveType == PrimitiveType::Unspecified)
-        GraphicsDevice::DrawPrimitives();
-    else
-        GraphicsDevice::DrawArrays(primitiveType);
-    glFinish();
-    f = now() - f;
-    accumulated += f;
-    if (!accumulate)
-    {
-        accumulated = 0;
-        RenderTime += f;
-    }
+    return FrameBuffer::GetCurrentlyBound()->ColorAttachment0;
+}
+
+void Filter::SetColorAttachment(Ptr<Texture> colorAttachment)
+{
+    FrameBuffer::GetCurrentlyBound()->Attach(colorAttachment);
 }
 
 Ptr<Program> Filter::LoadProgram(const String &vertexShaderSource, const String &fragmentShaderSource)
@@ -85,18 +90,17 @@ Ptr<Program> Filter::LoadProgram(const String &vertexShaderSource, const String 
     return Program::LoadFromSources(vertexShaderSource, fragmentShaderSource);
 }
 
-Ptr<Texture> Filter::ApplyFilter(Filter &filter)
+void Filter::ApplyFilter(Filter &filter, Ptr<Texture> output)
 {
-    auto result  = filter.Apply();
+    filter.Apply(output);
     RenderTime  += filter.RenderTime;
     CopyTime    += filter.CopyTime;
     CompileTime += filter.CompileTime;
-    return result;
 }
 
 void Filter::PrintProfilingInfo() const
 {
-    unsigned long misc = TotalTime - RenderTime - CopyTime - CompileTime;
+    auto misc = TotalTime - RenderTime - CopyTime - CompileTime;
     
     printf("%s: T(%.1fms) R(%.1fms=%.1f%%) Cpy(%.1fms=%.1f%%) Cpl(%.1fms=%.1f%%) M(%.1fms=%.1f%%)\n",
            Name.c_str(),

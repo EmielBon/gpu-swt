@@ -26,23 +26,34 @@ protected:
     
     void PrepareMaximizingDepthTest();
     
+    void PrepareColumnVertices();
+    
+    void PrepareLineIndices();
+    
     void LoadShaderPrograms();
     
-    Ptr<Texture> PerformSteps();
+    void PerformSteps(Ptr<Texture> output);
     
-    Ptr<Texture> Encode();
+    void Encode(Ptr<Texture> input, Ptr<Texture> output);
     
-    Ptr<Texture> VerticalRuns(Ptr<Texture> input);
+    // This uses the provided input texture as a rendertarget for intermediate steps, overwriting its original values
+    void VerticalRuns(Ptr<Texture> input, Ptr<Texture> output);
     
-    void GatherNeighbor(Ptr<Texture> input, Ptr<Texture> dest);
+    void GatherNeighbor(Ptr<Texture> input, int column, Ptr<Texture> output);
     
-    void UpdateColumn(Ptr<Texture> input, Ptr<Texture> dest);
+    void UpdateColumn(Ptr<Texture> input, Ptr<Texture> output);
     
-    void ScatterBack(Ptr<Texture> input, Ptr<Texture> dest);
+    void ScatterBack(Ptr<Texture> input, int column, Ptr<Texture> output);
+    
+    void UpdateRoots(Ptr<Texture> input, Ptr<Texture> output);
+    
+    void UpdateChildren(Ptr<Texture> input, Ptr<Texture> output);
     
 private:
     
-    Ptr<Program> encode, verticalRun, gatherNeighbor, updateColumn, scatterBack;
+    Ptr<Program> encode, verticalRun, gatherNeighbor, updateColumn, scatterBack, updateRoots, updateChildren;
+    Ptr<VertexBuffer> columnVertices;
+    Ptr<IndexBuffer>  lineIndices;
 };
 
 inline ConnectedComponentsFilter::ConnectedComponentsFilter(Ptr<Texture> input)

@@ -8,11 +8,12 @@
 
 #include "RenderBuffer.h"
 
-RenderBuffer::RenderBuffer(Type type, int width, int height)
+RenderBuffer::RenderBuffer(int width, int height, Type type)
 {
     Setup(glGenRenderbuffers, glDeleteRenderbuffers, glBindRenderbuffer, GL_RENDERBUFFER);
     Generate();
     
+    BufferType = type;
     GLenum storageFormat = GL_NONE;
     
     switch(type)

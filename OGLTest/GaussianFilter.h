@@ -22,13 +22,13 @@ public:
     
     void LoadShaderPrograms();
     
-    Ptr<Texture> PerformSteps();
+    void PerformSteps(Ptr<Texture> output);
     
 private:
     
-    Ptr<Texture> HorizontalPass(const Texture &input);
+    void HorizontalPass(const Texture &input, Ptr<Texture> output);
     
-    Ptr<Texture> VerticalPass(const Texture &input);
+    void VerticalPass(const Texture &input, Ptr<Texture> output);
     
 private:
     
@@ -44,9 +44,4 @@ inline void GaussianFilter::LoadShaderPrograms()
 {
     hor = LoadScreenSpaceProgram("GaussianBlurH");
     ver = LoadScreenSpaceProgram("GaussianBlurV");
-}
-
-inline Ptr<Texture> GaussianFilter::PerformSteps()
-{
-    return VerticalPass( *HorizontalPass(*Input) );
 }

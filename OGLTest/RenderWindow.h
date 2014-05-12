@@ -31,6 +31,8 @@ public:
     
     void AddTexture(Ptr<Texture> texture, const String &descriptor = "");
     
+    void AddFrameBufferSnapshot(const String &descriptor = "");
+    
 private:
     
     void SetWindowSize(const cv::Size &size, const cv::Size &max);

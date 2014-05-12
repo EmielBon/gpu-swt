@@ -10,8 +10,11 @@
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
 
-Ptr<VertexBuffer> GraphicsDevice::VertexBuffer = nullptr;
-Ptr<IndexBuffer>  GraphicsDevice::IndexBuffer  = nullptr;
+Ptr<::VertexBuffer> GraphicsDevice::VertexBuffer = nullptr;
+Ptr<::IndexBuffer>  GraphicsDevice::IndexBuffer  = nullptr;
+
+Ptr<::VertexBuffer> GraphicsDevice::DefaultVertexBuffer = nullptr;
+Ptr<::IndexBuffer>  GraphicsDevice::DefaultIndexBuffer  = nullptr;
 
 void GraphicsDevice::DrawPrimitives()
 {

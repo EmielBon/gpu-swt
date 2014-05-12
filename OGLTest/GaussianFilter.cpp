@@ -7,17 +7,27 @@
 //
 
 #include "GaussianFilter.h"
+#include "Texture.h"
 
-Ptr<Texture> GaussianFilter::HorizontalPass(const Texture &input)
+void GaussianFilter::PerformSteps(Ptr<Texture> output)
 {
-    hor->Use();
-    hor->Uniforms["Texture"].SetValue(input);
-    return Render();
+    ReserveColorBuffers(1);
+    HorizontalPass(*Input, ColorBuffers[0]);
+    VerticalPass(*ColorBuffers[0], output);
 }
 
-Ptr<Texture> GaussianFilter::VerticalPass(const Texture &input)
+void GaussianFilter::HorizontalPass(const Texture &input, Ptr<Texture> output)
 {
+    SetColorAttachment(output);
+    hor->Use();
+    hor->Uniforms["Texture"].SetValue(input);
+    Render();
+}
+
+void GaussianFilter::VerticalPass(const Texture &input, Ptr<Texture> output)
+{
+    SetColorAttachment(output);
     ver->Use();
     ver->Uniforms["Texture"].SetValue(input);
-    return Render();
+    Render();
 }

@@ -157,6 +157,8 @@
 		1710979418BF476200E54738 /* libopencv_videostab.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_videostab.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_videostab.2.4.8.dylib; sourceTree = "<group>"; };
 		1710979518BF476200E54738 /* libopencv_videostab.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_videostab.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_videostab.2.4.8.dylib; sourceTree = "<group>"; };
 		171097CE18BF48FB00E54738 /* libglfw.3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.0.dylib; path = OGLTest/thirdparty/GLFW/lib/libglfw.3.0.dylib; sourceTree = "<group>"; };
+		1713C5A51913D49800909BDB /* UpdateRoots.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = UpdateRoots.fs; sourceTree = "<group>"; };
+		1713C5A61913D4B000909BDB /* UpdateChildren.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = UpdateChildren.fs; sourceTree = "<group>"; };
 		171A02FB1899328C00A72B91 /* OGLTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = OGLTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		171A02FE1899328C00A72B91 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = OGLTest/main.cpp; sourceTree = "<group>"; usesTabs = 0; };
 		171A03001899328C00A72B91 /* OGLTest.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; name = OGLTest.1; path = OGLTest/OGLTest.1; sourceTree = "<group>"; };
@@ -249,7 +251,6 @@
 		17FDE318190E8F8A006652A6 /* ConnectedComponentsFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectedComponentsFilter.h; sourceTree = "<group>"; };
 		17FDE31A19124F42006652A6 /* TextureParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureParameters.h; sourceTree = "<group>"; };
 		17FDE31B19125D10006652A6 /* TextureUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureUtil.h; sourceTree = "<group>"; };
-		17FDE31C19139186006652A6 /* Texture2D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Texture2D.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -294,6 +295,8 @@
 				17ACBD7C18FFF1A70052244F /* ScatterBack.vs */,
 				17ACBD7B18FFC79F0052244F /* UpdateColumn.fs */,
 				1700061418F810A000B1D45C /* VerticalRuns.fs */,
+				1713C5A51913D49800909BDB /* UpdateRoots.fs */,
+				1713C5A61913D4B000909BDB /* UpdateChildren.fs */,
 			);
 			name = "Connected Components";
 			sourceTree = "<group>";
@@ -497,7 +500,6 @@
 				17658F2B189FA980003A8B11 /* Shader.h */,
 				17EED2DB18A396E80094A37D /* Texture.cpp */,
 				17EED2DC18A396E80094A37D /* Texture.h */,
-				17FDE31C19139186006652A6 /* Texture2D.h */,
 				17FDE31A19124F42006652A6 /* TextureParameters.h */,
 				17EED56F18A505910094A37D /* Uniform.cpp */,
 				17EED57018A505910094A37D /* Uniform.h */,

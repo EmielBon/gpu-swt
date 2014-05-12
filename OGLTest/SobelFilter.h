@@ -22,13 +22,13 @@ public:
     
     void LoadShaderPrograms();
     
-    Ptr<Texture> PerformSteps();
+    void PerformSteps(Ptr<Texture> output);
 
 private:
     
-    Ptr<Texture> ScharrAveraging(const Texture &input);
+    void ScharrAveraging(const Texture &input, Ptr<Texture> output);
     
-    Ptr<Texture> Differentiation(const Texture &input);
+    void Differentiation(const Texture &input, Ptr<Texture> output);
     
 private:
     
@@ -44,9 +44,4 @@ inline void SobelFilter::LoadShaderPrograms()
 {
     scharr = LoadScreenSpaceProgram("Sobel1");
     diff   = LoadScreenSpaceProgram("Sobel2");
-}
-
-inline Ptr<Texture> SobelFilter::PerformSteps()
-{
-    return Differentiation( *ScharrAveraging( *Input) );
 }

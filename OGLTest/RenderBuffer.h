@@ -25,5 +25,9 @@ public:
     
 public:
     
-    RenderBuffer(Type type, int width, int height);
+    RenderBuffer(int width, int height, Type type);
+    
+public:
+    
+    Type BufferType;
 };

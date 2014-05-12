@@ -18,12 +18,10 @@ private:
     
     using base = IOGLBindableResource<Texture>;
     
-protected:
-    
-    // Empty constructor, meant to be overridden by subclasses
-    Texture() = default;
-    
 public:
+    
+    // Empty constructor. Setup, Generate and Initialize need to be called manually
+    Texture() = default;
     
     Texture(int width, int height, GLenum format, GLenum type, GLenum filteringType, const GLvoid* pixels = NULL);
     
@@ -44,11 +42,23 @@ public:
     
     void SetData(const GLvoid* pixels);
     
+    void SetFilteringType(GLenum filteringType);
+    
+    static void glRecycleTexture(const TextureParameters &params, GLuint* textures);
+    
+    static void glDisposeTexture(const TextureParameters &params, GLuint* textures);
+    
 public:
     
     TextureParameters Parameters;
     static const GLenum INTERNAL_FORMAT = GL_RGBA;
     static const GLenum PREFERRED_TYPE  = GL_UNSIGNED_INT_8_8_8_8_REV;
+    static int ActiveTextureCount, PeakTextureCount;
+    
+private:
+    
+    static Map<Tuple<int, int, GLenum, GLenum>, Stack<GLuint>> freeTextures;
+    static const int MAX_RETAINED_TEXTURES = 100;
 };
 
 inline Texture::Texture(int width, int height, GLenum format, GLenum type, GLenum filteringType, const GLvoid *pixels /* = nullptr */)
@@ -65,9 +75,4 @@ inline int Texture::GetWidth() const
 inline int Texture::GetHeight() const
 {
     return Parameters.Height;
-}
-
-inline Ptr<Texture> Texture::GetEmptyClone() const
-{
-    return New<Texture>(Parameters);
 }

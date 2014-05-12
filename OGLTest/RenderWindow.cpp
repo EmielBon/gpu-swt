@@ -125,3 +125,11 @@ void RenderWindow::AddTexture(Ptr<Texture> texture, const String &descriptor)
     textures.push_back(texture);
     textureDescriptors.push_back(descriptor);
 }
+
+void RenderWindow::AddFrameBufferSnapshot(const String &descriptor)
+{
+    auto &frameBuffer = *FrameBuffer::GetCurrentlyBound();
+    auto dest = frameBuffer.ColorAttachment0->GetEmptyClone();
+    frameBuffer.CopyColorAttachment(*dest);
+    AddTexture(dest, descriptor);
+}

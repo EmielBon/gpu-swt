@@ -4,6 +4,7 @@
 #pragma include Codec.fsh
 
 uniform sampler2D Texture;
+uniform int       Column;
 
      in  vec3  Position;
      in  vec2  TexCoord;
@@ -12,7 +13,7 @@ flat out float ScatterID;
 
 void main()
 {
-    ivec2  current_xy = ivec2(Position.xy);
+    ivec2  current_xy = ivec2(Position.xy) + ivec2(Column, 0);
     ivec2 neighbor_xy = current_xy + ivec2(1, 0);
     
     float  current_root_id = fetch(Texture,  current_xy).z;

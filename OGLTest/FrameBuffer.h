@@ -16,26 +16,27 @@ class FrameBuffer : public IOGLBindableResource<FrameBuffer>
 {
 public:
     
-    FrameBuffer(int width, int height, GLenum format, GLenum type, RenderBuffer::Type attachment = RenderBuffer::Type::None);
+    FrameBuffer();
     
-    void SetColorAttachment0(Ptr<::Texture> texture);
-
+    FrameBuffer(Ptr<Texture> colorAttachment, Ptr<RenderBuffer> renderBufferAttachment);
+    
+    void Attach(Ptr<Texture> colorAttachment);
+    
+    void Attach(Ptr<RenderBuffer> renderBufferAttachment);
+    
     bool IsFrameBufferComplete() const;
 
-    void CreateNewColorAttachment0();
-    
-    Ptr<Texture> CopyColorAttachment(Ptr<::Texture> destination = nullptr) const;
+    // Warning! Clamps color values to [0,1]
+    void CopyColorAttachment(const Texture &destination) const;
     
 private:
-
-    void CreateNewColorAttachment0(int width, int height, GLenum format, GLenum type);
     
     void AssertFrameBufferComplete() const;
     
 public:
     
-    Ptr<::Texture> Texture;
-    Ptr<RenderBuffer> Attachment;
+    Ptr<Texture>      ColorAttachment0;
+    Ptr<RenderBuffer> RenderBufferAttachment;
 };
 
 inline bool FrameBuffer::IsFrameBufferComplete() const

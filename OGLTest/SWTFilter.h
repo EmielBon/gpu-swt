@@ -26,7 +26,7 @@ protected:
     
     void LoadShaderPrograms();
     
-    Ptr<Texture> PerformSteps();
+    void PerformSteps(Ptr<Texture> output);
     
 private:
     
@@ -36,13 +36,13 @@ private:
     
     void PrepareRayLines(const Texture &values);
     
-    Ptr<Texture> CastRays(bool darkOnLight);
+    void CastRays(bool darkOnLight, Ptr<Texture> output);
     
-    Ptr<Texture> WriteRayValues(const Texture &values, const Texture &lineLengths, bool darkOnLight);
+    void WriteRayValues(const Texture &values, const Texture &lineLengths, bool darkOnLight, Ptr<Texture> output);
     
-    Ptr<Texture> AverageRayValues(const Texture &values, bool darkOnLight);
+    void AverageRayValues(const Texture &values, bool darkOnLight, Ptr<Texture> output);
     
-    Ptr<Texture> ScaleResult(const Texture &input, float scaleFactor);
+    void ScaleResult(const Texture &input, float scaleFactor, Ptr<Texture> output);
     
 private:
     

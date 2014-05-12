@@ -77,7 +77,6 @@ class Program;
 class Shader;
 class StencilBuffer;
 class Texture;
-class TexturePool;
 class Uniform;
 class VertexArray;
 class VertexBuffer;

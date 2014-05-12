@@ -7,17 +7,25 @@
 //
 
 #include "SobelFilter.h"
+#include "Texture.h"
 
-Ptr<Texture> SobelFilter::ScharrAveraging(const Texture &input)
+void SobelFilter::PerformSteps(Ptr<Texture> output)
+{
+    ReserveColorBuffers(1);
+    ScharrAveraging(*Input, ColorBuffers[0]);
+    Differentiation(*ColorBuffers[0], output);
+}
+
+void SobelFilter::ScharrAveraging(const Texture &input, Ptr<Texture> output)
 {
     scharr->Use();
     scharr->Uniforms["Texture"].SetValue(input);
-    return Render();
+    RenderToTexture(output);
 }
 
-Ptr<Texture> SobelFilter::Differentiation(const Texture &input)
+void SobelFilter::Differentiation(const Texture &input, Ptr<Texture> output)
 {
     diff->Use();
     diff->Uniforms["Texture"].SetValue(input);
-    return Render();
+    RenderToTexture(output);
 }

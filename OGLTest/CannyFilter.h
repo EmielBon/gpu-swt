@@ -22,17 +22,17 @@ public:
     
     void LoadShaderPrograms();
     
-    Ptr<Texture> PerformSteps();
+    void Initialize();
+    
+    void PerformSteps(Ptr<Texture> output);
     
 private:
     
-    Ptr<Texture> DetectEdges(const Texture &gradients);
+    void DetectEdges(const Texture &gradients);
     
-    Ptr<Texture> Gradients(const Texture &input);
+    void ScharrAveraging(const Texture &input, Ptr<Texture> output);
     
-    Ptr<Texture> ScharrAveraging(const Texture &input);
-    
-    Ptr<Texture> Differentiation(const Texture &input);
+    void Differentiation(const Texture &input, Ptr<Texture> output);
     
     void PrepareStencilTest();
     
@@ -51,9 +51,4 @@ inline void CannyFilter::LoadShaderPrograms()
     canny     = LoadScreenSpaceProgram("Canny");
     scharr    = LoadScreenSpaceProgram("Sobel1");
     diffCanny = LoadScreenSpaceProgram("CannySobel2");
-}
-
-inline Ptr<Texture> CannyFilter::Gradients(const Texture &input)
-{
-    return Differentiation( *ScharrAveraging(input) );
 }

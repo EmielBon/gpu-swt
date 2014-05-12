@@ -9,7 +9,7 @@
 #include "FrameBuffer.h"
 #include "Texture.h"
 
-FrameBuffer::FrameBuffer(int width, int height, GLenum format, GLenum type, RenderBuffer::Type attachment)
+FrameBuffer::FrameBuffer()
 {
     Setup(glGenFramebuffers, glDeleteFramebuffers, glBindFramebuffer, GL_FRAMEBUFFER);
     Generate();
@@ -18,48 +18,43 @@ FrameBuffer::FrameBuffer(int width, int height, GLenum format, GLenum type, Rend
     
     check_gl_error();
     
-    if (attachment != RenderBuffer::Type::None)
-    {
-        Attachment = New<::RenderBuffer>(attachment, width, height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, (GLenum)attachment, GL_RENDERBUFFER, Attachment->GetHandle());
-    }
-    
     // OpenGL ES only allows COLOR_ATTACHMENT0!
     GLenum drawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
     glDrawBuffers(1, drawBuffers);
+}
+
+FrameBuffer::FrameBuffer(Ptr<Texture> colorAttachment, Ptr<RenderBuffer> renderBufferAttachment = nullptr) : FrameBuffer()
+{
+    Attach(colorAttachment);
+    if (renderBufferAttachment)
+        Attach(renderBufferAttachment);
+}
+
+void FrameBuffer::Attach(Ptr<Texture> colorAttachment)
+{
+    if (colorAttachment->Parameters.FilteringType != GL_NEAREST)
+        printf("Warning: Color attachment has filteringtype != GL_NEAREST");
     
-    CreateNewColorAttachment0(width, height, format, type);
-    AssertFrameBufferComplete();
-    
-    Unbind();
-}
-
-void FrameBuffer::SetColorAttachment0(Ptr<::Texture> texture)
-{
-    Texture = texture;
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, Texture->GetHandle(), 0);
+    ColorAttachment0 = colorAttachment;
+    Bind();
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, ColorAttachment0->GetHandle(), 0);
     AssertFrameBufferComplete();
 }
 
-void FrameBuffer::CreateNewColorAttachment0()
+void FrameBuffer::Attach(Ptr<RenderBuffer> renderBufferAttachment)
 {
-    CreateNewColorAttachment0(Texture->GetWidth(), Texture->GetHeight(), Texture->Parameters.Format, Texture->Parameters.Type);
+    RenderBufferAttachment = renderBufferAttachment;
+    Bind();
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, (GLenum)(RenderBufferAttachment->BufferType), GL_RENDERBUFFER, RenderBufferAttachment->GetHandle());
 }
 
-void FrameBuffer::CreateNewColorAttachment0(int width, int height, GLenum format, GLenum type)
+void FrameBuffer::CopyColorAttachment(const Texture &dest) const
 {
-    auto texture = New<::Texture>(width, height, format, type, GL_NEAREST);
-    SetColorAttachment0(texture);
-}
-
-Ptr<Texture> FrameBuffer::CopyColorAttachment(Ptr<::Texture> dest /* = nullptr */) const
-{
-    if (!dest)
-        dest = Texture->GetEmptyClone();
     auto prev = Texture::GetCurrentlyBound();
-    dest->Bind();
-        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, dest->GetWidth(), dest->GetHeight());
+    
+    dest.Bind();
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, dest.GetWidth(), dest.GetHeight());
+    
     if (prev)
         prev->Bind();
-    return dest;
 }
