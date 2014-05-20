@@ -23,6 +23,10 @@ public:
     
     virtual void Initialize() { }
     
+    void DoLoadShaderPrograms();
+    
+    void DoInitialize();
+    
 protected:
     
     virtual void PerformSteps(Ptr<Texture> output) = 0;
@@ -56,6 +60,7 @@ protected:
     
 private:
     
+    bool shadersLoaded;
     bool initialized;
     
 protected:
@@ -67,11 +72,11 @@ public:
     String Name;
     Ptr<Texture> Input;
     
-    unsigned long RenderTime, CopyTime, CompileTime, TotalTime;
+    std::chrono::high_resolution_clock::duration RenderTime, CopyTime, CompileTime, TotalTime;
 };
 
 inline Filter::Filter(const String &name, Ptr<Texture> input)
-    : initialized(false), Name(name), Input(input), RenderTime(0), CopyTime(0), CompileTime(0), TotalTime(0)
+    : shadersLoaded(false), initialized(false), Name(name), Input(input), RenderTime(0), CopyTime(0), CompileTime(0), TotalTime(0)
 {
     
 }

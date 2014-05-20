@@ -17,15 +17,25 @@
 
 #define DEBUG_FB(name) RenderWindow::Instance().AddFrameBufferSnapshot(name)
 
+void ConnectedComponentsFilter::Copy(Ptr<Texture> texture, Ptr<Texture> output)
+{
+    GraphicsDevice::UseDefaultBuffers();
+    
+    normal->Use();
+    normal->Uniforms["Texture"].SetValue(*texture);
+    RenderToTexture(output);
+}
+
 void ConnectedComponentsFilter::LoadShaderPrograms()
 {
     encode         = LoadScreenSpaceProgram("Encode");
     verticalRun    = LoadScreenSpaceProgram("VerticalRuns");
     gatherNeighbor = LoadProgram("GatherNeighbor", "GatherScatter");
-    updateColumn   = LoadScreenSpaceProgram("UpdateColumn");
+    updateColumn   = LoadProgram("UpdateColumn");
     scatterBack    = LoadProgram("ScatterBack", "GatherScatter");
     updateRoots    = LoadScreenSpaceProgram("UpdateRoots");
     updateChildren = LoadScreenSpaceProgram("UpdateChildren");
+    normal         = LoadScreenSpaceProgram("Normal");
 }
 
 void ConnectedComponentsFilter::Initialize()
@@ -33,6 +43,7 @@ void ConnectedComponentsFilter::Initialize()
     PrepareMaximizingDepthTest();
     PrepareColumnVertices();
     PrepareLineIndices();
+    glClearColor(0, 0, 0, 0);
 }
 
 void ConnectedComponentsFilter::PrepareMaximizingDepthTest()
@@ -45,7 +56,7 @@ void ConnectedComponentsFilter::PrepareColumnVertices()
 {
     int height = Input->GetHeight();
     
-    List<VertexPositionTexture> vertices(height);
+    List<VertexPositionTexture> vertices;
     for (int y = 0; y < height; ++y)
         vertices.push_back(VertexPositionTexture(Vector3(0, y, 0), Vector2(0, 0)));
     
@@ -65,59 +76,65 @@ void ConnectedComponentsFilter::PrepareLineIndices()
 
 void ConnectedComponentsFilter::PerformSteps(Ptr<Texture> output)
 {
-    int width  = Input->GetWidth();
-    //int height = Input->GetHeight();
-    
     ReserveColorBuffers(1);
     
-    Encode(Input, output); // Output contains encoded positions
+    int width = Input->GetWidth();
+
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_ALPHA_TEST);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    
+    Encode(Input, ColorBuffers[0]);
     DEBUG_FB("Encoded positions");
-    VerticalRuns(output, ColorBuffers[0]); // ColorBuffer[0] contains vertical runs
+    VerticalRuns(ColorBuffers[0], output);
     DEBUG_FB("Vertical runs");
     
-    auto input = ColorBuffers[0];
-    std::swap(input, output);
-    
-    glClear(GL_DEPTH_BUFFER_BIT);
+    auto tex1 = output;
+    auto tex2 = ColorBuffers[0];
     
     for(int column = width - 2; column >= 0; --column)
     {
-        std::swap(input, output);
-        GraphicsDevice::SetBuffers(columnVertices, nullptr);
         glEnable(GL_DEPTH_TEST);
-        GatherNeighbor(input, column, output);
+        GraphicsDevice::SetBuffers(columnVertices, nullptr);
+        GatherNeighbor(tex1, column, tex2);
         glDisable(GL_DEPTH_TEST);
         
-        std::swap(input, output);
-        GraphicsDevice::SetBuffers(columnVertices, lineIndices);
-        UpdateColumn(input, output);
+        Copy(tex2, tex1);
         
-        std::swap(input, output);
         GraphicsDevice::SetBuffers(columnVertices, nullptr);
+        UpdateColumn(tex1, column, tex2);
+        
+        Copy(tex2, tex1);
+        
         glEnable(GL_DEPTH_TEST);
-        ScatterBack(input, column, output);
+        GraphicsDevice::SetBuffers(columnVertices, nullptr);
+        ScatterBack(tex1, column, tex2);
         glDisable(GL_DEPTH_TEST);
+        
+        Copy(tex2, tex1);
     }
+    
+    DEBUG_FB("Myeah");
+    
+    GraphicsDevice::UseDefaultBuffers();
     
     DEBUG_FB("Column processing result");
     
-    GraphicsDevice::UseDefaultBuffers();
-    std::swap(input, output);
-    UpdateRoots(input, output);
+    UpdateRoots(tex1, tex2);
     
     DEBUG_FB("Update roots");
     
-    /*std::swap(input, output);
-    UpdateChildren(input, output);
+    UpdateChildren(tex2, tex1);
     
-    DEBUG_FB("Update children");*/
+    //DEBUG_FB("Update children");
 }
 
 void ConnectedComponentsFilter::Encode(Ptr<Texture> input, Ptr<Texture> output)
 {
     encode->Use();
     encode->Uniforms["Texture"].SetValue(*input);
-    encode->Uniforms["BackgroundColor"].SetValue(0.0f);
+    encode->Uniforms["BackgroundColor"].SetValue( Vector3(0, 0, 0) );
     RenderToTexture(output);
 }
 
@@ -148,11 +165,12 @@ void ConnectedComponentsFilter::GatherNeighbor(Ptr<Texture> input, int column, P
     RenderToTexture(output, PrimitiveType::Points);
 }
 
-void ConnectedComponentsFilter::UpdateColumn(Ptr<Texture> input, Ptr<Texture> output)
+void ConnectedComponentsFilter::UpdateColumn(Ptr<Texture> input, int column, Ptr<Texture> output)
 {
     updateColumn->Use();
     updateColumn->Uniforms["Texture"].SetValue(*input);
-    RenderToTexture(output, PrimitiveType::Lines);
+    updateColumn->Uniforms["Column"].SetValue(column);
+    RenderToTexture(output, PrimitiveType::Points);
 }
 
 void ConnectedComponentsFilter::ScatterBack(Ptr<Texture> input, int column, Ptr<Texture> output)

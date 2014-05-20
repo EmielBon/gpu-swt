@@ -15,6 +15,7 @@ flat out float Value;
 void main()
 {
     ivec2 pos        = ivec2(Position.xy);
+    // fetch not available on Mali GPU's T_T
     Value            = fetch(Values, pos).r;
     float lineLength = fetch(LineLengths, pos).r;
     vec2 gradient    = fetch(Gradients, pos).xy;

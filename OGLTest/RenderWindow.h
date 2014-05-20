@@ -33,6 +33,8 @@ public:
     
     void AddFrameBufferSnapshot(const String &descriptor = "");
     
+    void OnMousePositionChanged();
+    
 private:
     
     void SetWindowSize(const cv::Size &size, const cv::Size &max);

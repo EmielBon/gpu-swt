@@ -9,22 +9,25 @@
 #pragma once
 
 #include <time.h>
+#include <chrono>
 
 #define PROFILING
 
-#define now() clock()
+#define now() std::chrono::high_resolution_clock::now()
 
-static inline float GetTimeMsec(unsigned long clicks)
+using TimeSpan = std::chrono::high_resolution_clock::duration;
+
+static inline float GetTimeMsec(const TimeSpan &time)
 {
-    return (clicks * 1000.0f) / CLOCKS_PER_SEC;
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(time).count() / 1000000.0f;
 }
 
-static inline void PrintTime(const String &name, unsigned long clicks)
+static inline void PrintTime(const String &name, const TimeSpan &time)
 {
-    printf("%s (%.1fms)\n", name.c_str(), GetTimeMsec(clicks));
+    printf("%s (%.1fms)\n", name.c_str(), GetTimeMsec(time));
 }
 
-static inline void PrintTime2(const String &name, unsigned long clicks, unsigned long total)
+static inline void PrintTime2(const String &name, const TimeSpan &time, const TimeSpan &total)
 {
-    printf("%s: %.1fms (%.1f%%)\n", name.c_str(), GetTimeMsec(clicks), (clicks * 100.0f) / total);
+    printf("%s: %.1fms (%.1f%%)\n", name.c_str(), GetTimeMsec(time), (time * 100.0f) / total);
 }

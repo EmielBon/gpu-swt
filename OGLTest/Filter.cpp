@@ -20,23 +20,39 @@ void Filter::ReserveColorBuffers(int count)
         ColorBuffers.push_back( Input->GetEmptyClone() );
 }
 
+void Filter::DoLoadShaderPrograms()
+{
+    if (shadersLoaded)
+        return;
+    
+    //glFinish();
+    auto t = now();
+    LoadShaderPrograms();
+    //glFinish();
+    CompileTime += now() - t;
+    
+    shadersLoaded = true;
+}
+
+void Filter::DoInitialize()
+{
+    if (!initialized)
+        Initialize();
+    initialized = true;
+}
+
 void Filter::Apply(Ptr<Texture> output)
 {
-    TotalTime = RenderTime = CopyTime = CompileTime = 0;
+    TotalTime = RenderTime = CopyTime = CompileTime = TimeSpan(0);
     
     if (!Input)
         throw std::runtime_error(String("No input specified for filter: ") + Name);
-        
+    
+    //glFinish();
     auto t = now();
     
-    if (!initialized)
-    {
-        LoadShaderPrograms();
-        CompileTime += now() - t;
-        Initialize();
-        initialized = true;
-    }
-
+    DoLoadShaderPrograms();
+    DoInitialize();
     PerformSteps(output);
     ColorBuffers.clear();
     
@@ -48,7 +64,7 @@ void Filter::Apply(Ptr<Texture> output)
 
 void Filter::Render(PrimitiveType primitiveType /* = PrimitiveType::Unspecified */, GLenum clearOptions /* = GL_NONE */)
 {
-    glFinish();
+    //glFinish();
     auto f = now();
     if (clearOptions != GL_NONE);
         glClear(clearOptions);
@@ -56,7 +72,7 @@ void Filter::Render(PrimitiveType primitiveType /* = PrimitiveType::Unspecified 
         GraphicsDevice::DrawPrimitives();
     else
         GraphicsDevice::DrawArrays(primitiveType);
-    glFinish();
+    //glFinish();
     RenderTime += now() - f;
 }
 
@@ -68,10 +84,10 @@ void Filter::RenderToTexture(Ptr<Texture> destination, PrimitiveType primitiveTy
 
 void Filter::CopyFrameBufferColors(const Texture &dest)
 {
-    glFinish();
+    //glFinish();
     auto f = now();
     FrameBuffer::GetCurrentlyBound()->CopyColorAttachment(dest);
-    glFinish();
+    //glFinish();
     CopyTime += now() - f;
 }
 

@@ -49,32 +49,51 @@ Ptr<Program> LoadScreenSpaceProgram(const String &name);
 void StartAccumulatedRender();
 Ptr<Texture> Render(const String &name = "");
 void EndAccumulatedRender();
-Ptr<Texture> ApplyPass(Ptr<Filter> filter);
+Ptr<Texture> ApplyPass(Ptr<Filter> filter, Ptr<Texture> input = nullptr);
 void AddTexture(Ptr<Texture> texture);
 
-unsigned long renderTime  = 0;
-unsigned long copyTime    = 0;
-unsigned long compileTime = 0;
-unsigned long accumulated = 0;
+TimeSpan renderTime;
+TimeSpan copyTime;
+TimeSpan compileTime;
+TimeSpan accumulated;
 bool accumulate = false;
 Ptr<Texture> accumulatedTexture = nullptr;
 
 List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
 {
-    auto totalTime = now();
+    auto t = now();
     
     glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
-    glClampColor(GL_CLAMP_VERTEX_COLOR, GL_FALSE);
-    glClampColor(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
+    //glClampColor(GL_CLAMP_VERTEX_COLOR, GL_FALSE);
+    //glClampColor(GL_CLAMP_FRAGMENT_COLOR, GL_FALSE);
+    
+    glDisable(GL_DITHER);
+    glDisable(GL_ALPHA_TEST);
+    glDisable(GL_BLEND);
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_FOG);
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
+    glPixelZoom(1.0,1.0);
     
     int width  = input.size().width;
     int height = input.size().height;
     
+#ifdef USE_NEW_SYSTEM
+    auto grayFilter  = New<GrayFilter>();
+    auto swtFilter   = New<SWTFilter>();
+    auto connectedComponentsFilter = New<ConnectedComponentsFilter>();
+    
+    grayFilter->DoLoadShaderPrograms();
+    swtFilter->DoLoadShaderPrograms();
+    connectedComponentsFilter->DoLoadShaderPrograms();
+#endif
+    
     // Create a Texture from the input
-    Ptr<Texture> texture = textureFromImage<cv::Vec3b>(input);
+    Ptr<Texture> texture = textureFromImage<cv::Vec3f>(input);
     
     // Create the framebuffer attachments
-    Ptr<Texture>      colorf       = New<Texture     >(width, height, GL_BGRA, GL_FLOAT, GL_NEAREST);
+    Ptr<Texture>      colorf       = New<Texture     >(width, height, GL_RGBA, GL_FLOAT, GL_NEAREST);
     Ptr<RenderBuffer> depthStencil = New<RenderBuffer>(width, height, RenderBuffer::Type::DepthStencil);
     
     // Create and setup framebuffer
@@ -89,18 +108,16 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     frameBuffer.Bind();
 
 #ifdef USE_NEW_SYSTEM
-    auto grayFilter  = New<GrayFilter>(texture);
-    auto gray        = ApplyPass(grayFilter);
+    auto gray        = ApplyPass(grayFilter, texture);
     grayFilter.reset();
-    auto swtFilter   = New<SWTFilter>(gray);
+    swtFilter->Input = gray;
     swtFilter->GradientDirection = GradientDirection::With;
-    auto swt1        = ApplyPass(swtFilter);
+    auto swt1        = ApplyPass(swtFilter, gray);
     swtFilter->GradientDirection = GradientDirection::Against;
-    auto swt2        = ApplyPass(swtFilter);
+    auto swt2        = ApplyPass(swtFilter, gray);
     gray.reset();
     swtFilter.reset();
-    auto connectedComponentsFilter = New<ConnectedComponentsFilter>(swt1);
-    auto components1 = ApplyPass(connectedComponentsFilter);
+    auto components1 = ApplyPass(connectedComponentsFilter, swt2);
     swt1.reset();
     components1.reset();
 #else
@@ -110,11 +127,11 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     auto edges     = Canny(*blurred);
     auto swt1      = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::With);
     auto swt2      = ::StrokeWidthTransform(*edges, *gradients, GradientDirection::Against);
-#endif
     //auto connectedComponents = ConnectedComponents(*swt1);
     //RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)), "Edges (OpenCV Canny)");*/
+#endif
     
-    totalTime = now() - totalTime;
+    auto totalTime = now() - t;
     
     auto misc = totalTime - renderTime - copyTime - compileTime;
     
@@ -138,7 +155,7 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
 void StartAccumulatedRender()
 {
     accumulate = true;
-    accumulated = 0;
+    accumulated = TimeSpan(0);
 }
 
 #ifdef PROFILING
@@ -147,21 +164,21 @@ Ptr<Texture> Render(const String &name)
 {
     auto frameBuffer = FrameBuffer::GetCurrentlyBound();
     glFinish();
-    auto f = now();
+    auto t = now();
     GraphicsDevice::DrawPrimitives();
     glFinish();
-    f = now() - f;
+    auto f = now() - t;
     accumulated += f;
     if (!accumulate)
     {
         renderTime += f;
         PrintTime(name, f);
     }
-    f = now();
+    t = now();
     auto dest = frameBuffer->ColorAttachment0->GetEmptyClone();
     frameBuffer->CopyColorAttachment(*dest);
     glFinish();
-    copyTime += now() - f;
+    copyTime += now() - t;
     if (name != "")
         RenderWindow::Instance().AddTexture(dest, name);
     accumulatedTexture = dest;
@@ -191,10 +208,12 @@ void EndAccumulatedRender(const String& name)
     RenderWindow::Instance().AddTexture(accumulatedTexture, name);
 }
 
-Ptr<Texture> ApplyPass(Ptr<Filter> filter)
+Ptr<Texture> ApplyPass(Ptr<Filter> filter, Ptr<Texture> input)
 {
     auto output = FrameBuffer::GetCurrentlyBound()->ColorAttachment0->GetEmptyClone();
     
+    if (input)
+        filter->Input = input;
     filter->Apply(output);
     renderTime  += filter->RenderTime;
     copyTime    += filter->CopyTime;

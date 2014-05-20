@@ -10,8 +10,8 @@ out vec4 FragColor;
 void main()
 {
     ivec2 current_xy = ivec2(gl_FragCoord.xy);
-    float current_id = fetch(Texture, current_xy).z;
+    float current_id = fetch(Texture, current_xy).a;
     ivec2 root_xy    = decode(current_id);
-    float root_id    = fetch(Texture, root_xy).z;
-    FragColor        = vec4(decode(root_id) / vec2(textureSize(Texture, 0)), root_id, 1);
+    float root_id    = fetch(Texture, root_xy).a;
+    FragColor        = vec4(decode(root_id) / vec2(size(Texture)), 0, root_id);
 }

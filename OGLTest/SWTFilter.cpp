@@ -20,9 +20,13 @@
 
 void SWTFilter::LoadShaderPrograms()
 {
-    sobel    = New<SobelFilter>(Input);
-    gaussian = New<GaussianFilter>(Input);
+    sobel    = New<SobelFilter>();
+    gaussian = New<GaussianFilter>();
     canny    = New<CannyFilter>();
+    
+    sobel->DoLoadShaderPrograms();
+    gaussian->DoLoadShaderPrograms();
+    canny->DoLoadShaderPrograms();
     
     cast  = LoadScreenSpaceProgram("StrokeWidthTransform1");
     write =            LoadProgram("StrokeWidthTransform2");
@@ -36,6 +40,9 @@ void SWTFilter::Initialize()
     
     gradients = Input->GetEmptyClone();
     edges     = Input->GetEmptyClone();
+    
+    sobel->Input    = Input;
+    gaussian->Input = Input;
     
     ApplyFilter(*sobel, gradients);
     ApplyFilter(*gaussian, ColorBuffers[0]);

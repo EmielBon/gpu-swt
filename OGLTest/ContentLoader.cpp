@@ -49,7 +49,12 @@ Ptr<Program> ContentLoader::Load(const String &resourceName)
 template<>
 cv::Mat ContentLoader::LoadV(const String &resourceName)
 {
-    cv::Mat image = cvLoadImage((ContentPath + resourceName + ".jpg").c_str());
+    auto fileName = resourceName;
+    
+    if (resourceName.find_first_of(".") == String::npos)
+        fileName += ".jpg";
+    
+    cv::Mat image = cvLoadImage((ContentPath + fileName).c_str());
     if (image.data == NULL)
         throw std::runtime_error("Error reading file");
     return image;

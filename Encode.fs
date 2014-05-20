@@ -10,8 +10,9 @@ out vec4 FragColor;
 
 void main()
 {
-    vec3 color = fetch(Texture, gl_FragCoord.xy).rgb;
-    bool foreground = (color != BackgroundColor);
-    float value = int(foreground) * encode(gl_FragCoord.xy);
-    FragColor = vec4(decode(value) / vec2(textureSize(Texture, 0)), value, 1);
+    ivec2 current_xy = ivec2(gl_FragCoord.xy);
+    vec3  color      = fetch(Texture, current_xy).rgb;
+    bool  foreground = (color != BackgroundColor);
+    float value      = foreground ? encode(current_xy) : 0.0;
+    FragColor        = vec4(decode(value) / vec2( size(Texture) ), 0, value);
 }

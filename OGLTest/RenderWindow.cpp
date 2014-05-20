@@ -117,7 +117,7 @@ void RenderWindow::Draw()
 
 void RenderWindow::AddTexture(const cv::Mat &mat, const String &descriptor)
 {
-    AddTexture(textureFromImage<cv::Vec3b>(mat), descriptor);
+    AddTexture(textureFromImage<cv::Vec3f>(mat), descriptor);
 }
 
 void RenderWindow::AddTexture(Ptr<Texture> texture, const String &descriptor)

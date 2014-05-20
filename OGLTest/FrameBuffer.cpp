@@ -58,3 +58,10 @@ void FrameBuffer::CopyColorAttachment(const Texture &dest) const
     if (prev)
         prev->Bind();
 }
+
+cv::Vec4f FrameBuffer::ReadPixel(int x, int y) const
+{
+    cv::Vec4f pixel;
+    glReadPixels(x, y, 1, 1, GL_RGBA, GL_FLOAT, &pixel);
+    return pixel;
+}

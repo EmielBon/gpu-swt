@@ -12,8 +12,8 @@
 
 enum class PrimitiveType : GLenum
 {
-    Points = GL_POINTS,
-    Lines = GL_LINES,
-    Triangles = GL_TRIANGLES,
+    Points      = GL_POINTS,
+    Lines       = GL_LINES,
+    Triangles   = GL_TRIANGLES,
     Unspecified = GL_QUADS,
 };

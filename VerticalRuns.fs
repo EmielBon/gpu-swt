@@ -8,27 +8,23 @@ uniform int       PassIndex;
 
 out vec4 FragColor;
 
-float getId(ivec2 uv_coord)
-{
-    return fetch(Texture, uv_coord).z;
-}
-
 void main()
 {
-    ivec2 uv_coord = ivec2(gl_FragCoord.xy);
-    float pixel = getId(uv_coord);
+    ivec2 current_xy = ivec2(gl_FragCoord.xy);
+    float current_id = fetch(Texture, current_xy).a;
     float value;
     if (PassIndex == 0)
     {
-        ivec2 uv = uv_coord + ivec2(0, 1);
-        float neighbor = getId(uv);
+        ivec2 neighbor_xy = current_xy + ivec2(0, 1);
+        float neighbor_id = fetch(Texture, neighbor_xy).a;
         //value = neighbor * clamp(pixel, 0, 1); // I get the idea, neighbour = [value|0], pixel = [0|value], so clamp(pixel) is probably [0|1], but it doesn't work
-        value = (neighbor != 0 && pixel != 0) ? neighbor : pixel;
+        value = (neighbor_id != 0 && current_id != 0) ? neighbor_id : current_id;
     }
     else
     {
-        float next = getId( decode(pixel) );
+        float next = fetch(Texture, decode(current_id) ).a;
         value = next;
     }
-    FragColor = vec4(decode(value) / vec2(textureSize(Texture, 0)), value, 1);
+    
+    FragColor = vec4(decode(value) / vec2( size(Texture) ), 0, value);
 }

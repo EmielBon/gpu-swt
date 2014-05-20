@@ -10,19 +10,35 @@ out vec4 FragColor;
 void main()
 {
     ivec2 current_xy = ivec2(gl_FragCoord.xy);
+    float current_id  = 0.0;
+    float previous_id = 0.0;
     
-    float root_id = 0.0;
-    while(true)
+    int counter1 = 0;
+    int counter2 = 0;
+    
+    while(counter1++ < 10000)
     {
-        root_id = fetch(Texture, current_xy).z;
-        if (root_id == 0.0)
+        current_id = fetch(Texture, current_xy).a;
+
+        if (current_id == 0.0)
         {
-            discard;
+            FragColor = vec4(0, 0, 0, 1);
+            return;
         }
-        ivec2 root_xy = decode(root_id);
-        if (root_xy == current_xy)
+
+        if (current_id == previous_id && counter2++ > 1000)
+        {
+            FragColor = vec4(1, 0, 0, 1);
+            return;
+        }
+        
+        ivec2 root_xy = decode(current_id);
+        if (all(equal(root_xy, current_xy)))
             break;
         current_xy = root_xy;
+        
+        previous_id = current_id;
     }
-    FragColor = vec4(decode(root_id) / vec2(textureSize(Texture, 0)), root_id, 1);
+    
+    FragColor = vec4(decode(current_id) / vec2( size(Texture) ), 0, current_id);
 }

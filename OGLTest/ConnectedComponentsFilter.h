@@ -41,7 +41,7 @@ protected:
     
     void GatherNeighbor(Ptr<Texture> input, int column, Ptr<Texture> output);
     
-    void UpdateColumn(Ptr<Texture> input, Ptr<Texture> output);
+    void UpdateColumn(Ptr<Texture> input, int column, Ptr<Texture> output);
     
     void ScatterBack(Ptr<Texture> input, int column, Ptr<Texture> output);
     
@@ -49,9 +49,11 @@ protected:
     
     void UpdateChildren(Ptr<Texture> input, Ptr<Texture> output);
     
+    void Copy(Ptr<Texture> texture, Ptr<Texture> output);
+    
 private:
     
-    Ptr<Program> encode, verticalRun, gatherNeighbor, updateColumn, scatterBack, updateRoots, updateChildren;
+    Ptr<Program> encode, verticalRun, gatherNeighbor, updateColumn, scatterBack, updateRoots, updateChildren, normal;
     Ptr<VertexBuffer> columnVertices;
     Ptr<IndexBuffer>  lineIndices;
 };
