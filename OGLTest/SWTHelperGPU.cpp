@@ -131,6 +131,7 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     //RenderWindow::Instance().AddTexture(ImgProc::CalculateEdgeMap(ImgProc::ConvertToGrayscale(input)), "Edges (OpenCV Canny)");*/
 #endif
     
+    glFinish();
     auto totalTime = now() - t;
     
     auto misc = totalTime - renderTime - copyTime - compileTime;

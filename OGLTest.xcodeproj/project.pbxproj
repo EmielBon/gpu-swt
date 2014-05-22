@@ -94,6 +94,8 @@
 		1700061218F8062700B1D45C /* Codec.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Codec.fsh; sourceTree = "<group>"; };
 		1700061318F8069B00B1D45C /* Encode.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Encode.fs; sourceTree = "<group>"; };
 		1700061418F810A000B1D45C /* VerticalRuns.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = VerticalRuns.fs; sourceTree = "<group>"; };
+		17005B44192E1D7F0052C611 /* ComputeBoundingBoxes.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ComputeBoundingBoxes.vs; sourceTree = "<group>"; };
+		17005B45192E20980052C611 /* ComputeBoundingBoxes.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ComputeBoundingBoxes.fs; sourceTree = "<group>"; };
 		1700DFC718E03B8D004112B6 /* SobelVer1.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer1.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		1700DFC818E03C81004112B6 /* SobelVer2.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer2.fs; sourceTree = "<group>"; };
 		1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = GradientsFromSobel.fs; sourceTree = "<group>"; };
@@ -299,6 +301,8 @@
 				177261181924D2E300E58ED5 /* UpdateColumn.vs */,
 				1713C5A51913D49800909BDB /* UpdateRoots.fs */,
 				1700061418F810A000B1D45C /* VerticalRuns.fs */,
+				17005B44192E1D7F0052C611 /* ComputeBoundingBoxes.vs */,
+				17005B45192E20980052C611 /* ComputeBoundingBoxes.fs */,
 			);
 			name = "Connected Components";
 			sourceTree = "<group>";

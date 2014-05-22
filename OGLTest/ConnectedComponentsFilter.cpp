@@ -85,14 +85,14 @@ void ConnectedComponentsFilter::PerformSteps(Ptr<Texture> output)
     glDisable(GL_ALPHA_TEST);
     glClear(GL_DEPTH_BUFFER_BIT);
     
+    // Compute vertical runs
     Encode(Input, ColorBuffers[0]);
-    DEBUG_FB("Encoded positions");
     VerticalRuns(ColorBuffers[0], output);
-    DEBUG_FB("Vertical runs");
     
     auto tex1 = output;
     auto tex2 = ColorBuffers[0];
     
+    // Column processing
     for(int column = width - 2; column >= 0; --column)
     {
         glEnable(GL_DEPTH_TEST);
@@ -102,7 +102,7 @@ void ConnectedComponentsFilter::PerformSteps(Ptr<Texture> output)
         
         Copy(tex2, tex1);
         
-        GraphicsDevice::SetBuffers(columnVertices, nullptr);
+        GraphicsDevice::SetBuffers(columnVertices, lineIndices);
         UpdateColumn(tex1, column, tex2);
         
         Copy(tex2, tex1);
@@ -115,19 +115,15 @@ void ConnectedComponentsFilter::PerformSteps(Ptr<Texture> output)
         Copy(tex2, tex1);
     }
     
-    DEBUG_FB("Myeah");
-    
+    // Post column processing
     GraphicsDevice::UseDefaultBuffers();
-    
-    DEBUG_FB("Column processing result");
-    
     UpdateRoots(tex1, tex2);
-    
-    DEBUG_FB("Update roots");
-    
     UpdateChildren(tex2, tex1);
     
-    //DEBUG_FB("Update children");
+    // Compute bounding boxes
+    
+    
+    // Retrieve results
 }
 
 void ConnectedComponentsFilter::Encode(Ptr<Texture> input, Ptr<Texture> output)
