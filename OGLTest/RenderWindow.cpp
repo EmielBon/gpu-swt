@@ -36,7 +36,7 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     currentTextureIndex = 0;
     
     // Load the input image as a cv::Mat
-    cv::Mat input = ContentLoader::LoadV<cv::Mat>("sign800x600"); AddTexture(input, "Input image");
+    cv::Mat input = ContentLoader::LoadV<cv::Mat>("sign800x600"); //AddTexture(input, "Input image");
     SetWindowSize(input.size(), {1024, 1024});
 
     check_gl_error();
@@ -72,10 +72,10 @@ void RenderWindow::DrawRect(const DrawableRect &rect)
 {
     GraphicsDevice::SetBuffers(rect.VertexBuffer, rect.IndexBuffer);
     
-    auto &texture = *textures[currentTextureIndex];
+    auto texture = textures[currentTextureIndex];
     
     program->Use();
-    program->Uniforms["Texture"].SetValue(texture);
+    program->Uniforms["Texture"].SetValue(*texture);
     
     GraphicsDevice::DrawPrimitives();
 }
@@ -84,7 +84,7 @@ void RenderWindow::Draw()
 {
     check_gl_error();
     
-    static bool keyPressed = false; // to make it draw the first time
+    static bool keyPressed = false;
     
     if (glfwGetKey(window, GLFW_KEY_RIGHT) && !keyPressed)
     {
@@ -102,10 +102,7 @@ void RenderWindow::Draw()
     }
     if (keyPressed)
     {
-        FrameBuffer::BindDefault();
-        glClearColor(0, 0, 0, 1);
-        glClear(GL_COLOR_BUFFER_BIT);
-        DrawRect(*rect1);
+        DrawCurrentTexture();
     }
     if (!glfwGetKey(window, GLFW_KEY_RIGHT) && !glfwGetKey(window, GLFW_KEY_LEFT))
     {
@@ -128,8 +125,16 @@ void RenderWindow::AddTexture(Ptr<Texture> texture, const String &descriptor)
 
 void RenderWindow::AddFrameBufferSnapshot(const String &descriptor)
 {
-    auto &frameBuffer = *FrameBuffer::GetCurrentlyBound();
-    auto dest = frameBuffer.ColorAttachment0->GetEmptyClone();
-    frameBuffer.CopyColorAttachment(*dest);
+    auto frameBuffer = FrameBuffer::GetCurrentlyBound();
+    auto dest = frameBuffer->ColorAttachment0->GetEmptyClone();
+    frameBuffer->CopyColorAttachment(*dest);
     AddTexture(dest, descriptor);
+}
+
+void RenderWindow::DrawCurrentTexture()
+{
+    FrameBuffer::BindDefault();
+    //glClearColor(0, 0, 0, 1);
+    //glClear(GL_COLOR_BUFFER_BIT);
+    DrawRect(*rect1);
 }

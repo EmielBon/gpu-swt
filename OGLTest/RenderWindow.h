@@ -35,6 +35,8 @@ public:
     
     void OnMousePositionChanged();
     
+    void DrawCurrentTexture();
+    
 private:
     
     void SetWindowSize(const cv::Size &size, const cv::Size &max);

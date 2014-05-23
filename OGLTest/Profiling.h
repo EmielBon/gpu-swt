@@ -8,14 +8,11 @@
 
 #pragma once
 
-#include <time.h>
-#include <chrono>
+#include "types.h"
 
 #define PROFILING
 
 #define now() std::chrono::high_resolution_clock::now()
-
-using TimeSpan = std::chrono::high_resolution_clock::duration;
 
 static inline float GetTimeMsec(const TimeSpan &time)
 {

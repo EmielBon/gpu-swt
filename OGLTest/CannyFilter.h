@@ -45,10 +45,3 @@ inline CannyFilter::CannyFilter(Ptr<Texture> input) : base("Canny", input)
 {
     
 }
-
-inline void CannyFilter::LoadShaderPrograms()
-{
-    canny     = LoadScreenSpaceProgram("Canny");
-    scharr    = LoadScreenSpaceProgram("Sobel1");
-    diffCanny = LoadScreenSpaceProgram("CannySobel2");
-}

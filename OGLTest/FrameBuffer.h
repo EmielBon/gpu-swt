@@ -45,9 +45,3 @@ inline bool FrameBuffer::IsFrameBufferComplete() const
 {
     return (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 }
-
-inline void FrameBuffer::AssertFrameBufferComplete() const
-{
-    if (!IsFrameBufferComplete())
-        throw std::runtime_error("Framebuffer initialization failed");
-}

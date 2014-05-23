@@ -8,6 +8,7 @@
 
 #include "FrameBuffer.h"
 #include "Texture.h"
+#include "GLError.h"
 
 FrameBuffer::FrameBuffer()
 {
@@ -30,11 +31,21 @@ FrameBuffer::FrameBuffer(Ptr<Texture> colorAttachment, Ptr<RenderBuffer> renderB
         Attach(renderBufferAttachment);
 }
 
+
+void FrameBuffer::AssertFrameBufferComplete() const
+{
+    if (!IsFrameBufferComplete())
+    {
+        check_gl_error();
+        throw std::runtime_error("Framebuffer initialization failed");
+    }
+}
+
 void FrameBuffer::Attach(Ptr<Texture> colorAttachment)
 {
-    if (colorAttachment->Parameters.FilteringType != GL_NEAREST)
-        printf("Warning: Color attachment has filteringtype != GL_NEAREST");
-    
+    if (!colorAttachment)
+        throw std::runtime_error("Attempt to attach nullptr color attachment");
+        
     ColorAttachment0 = colorAttachment;
     Bind();
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, ColorAttachment0->GetHandle(), 0);
@@ -43,6 +54,9 @@ void FrameBuffer::Attach(Ptr<Texture> colorAttachment)
 
 void FrameBuffer::Attach(Ptr<RenderBuffer> renderBufferAttachment)
 {
+    if (!renderBufferAttachment)
+        throw std::runtime_error("Attempt to attach nullptr renderbuffer attachment");
+    
     RenderBufferAttachment = renderBufferAttachment;
     Bind();
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, (GLenum)(RenderBufferAttachment->BufferType), GL_RENDERBUFFER, RenderBufferAttachment->GetHandle());

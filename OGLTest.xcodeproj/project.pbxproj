@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1700060A18F297B400B1D45C /* RenderBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1700060818F297B400B1D45C /* RenderBuffer.cpp */; };
+		17005B48192F3A500052C611 /* TextRegionsFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17005B46192F3A500052C611 /* TextRegionsFilter.cpp */; };
 		1700DFC918E03C81004112B6 /* SobelVer2.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFC818E03C81004112B6 /* SobelVer2.fs */; };
 		1700DFCB18E063AC004112B6 /* GradientsFromSobel.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */; };
 		1700DFCE18E1B2B3004112B6 /* GaussianBlurV.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFCD18E1B2B3004112B6 /* GaussianBlurV.fs */; };
@@ -96,6 +97,8 @@
 		1700061418F810A000B1D45C /* VerticalRuns.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = VerticalRuns.fs; sourceTree = "<group>"; };
 		17005B44192E1D7F0052C611 /* ComputeBoundingBoxes.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ComputeBoundingBoxes.vs; sourceTree = "<group>"; };
 		17005B45192E20980052C611 /* ComputeBoundingBoxes.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ComputeBoundingBoxes.fs; sourceTree = "<group>"; };
+		17005B46192F3A500052C611 /* TextRegionsFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextRegionsFilter.cpp; sourceTree = "<group>"; };
+		17005B47192F3A500052C611 /* TextRegionsFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextRegionsFilter.h; sourceTree = "<group>"; };
 		1700DFC718E03B8D004112B6 /* SobelVer1.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer1.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		1700DFC818E03C81004112B6 /* SobelVer2.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer2.fs; sourceTree = "<group>"; };
 		1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = GradientsFromSobel.fs; sourceTree = "<group>"; };
@@ -569,6 +572,8 @@
 			children = (
 				17F1D14B1909567000C75B9C /* CannyFilter.cpp */,
 				17F1D14C1909567000C75B9C /* CannyFilter.h */,
+				17FDE317190E8F8A006652A6 /* ConnectedComponentsFilter.cpp */,
+				17FDE318190E8F8A006652A6 /* ConnectedComponentsFilter.h */,
 				17ACBD861906A2BF0052244F /* Filter.cpp */,
 				17ACBD871906A2BF0052244F /* Filter.h */,
 				17F1D145190950DB00C75B9C /* GaussianFilter.cpp */,
@@ -579,8 +584,8 @@
 				17F1D1431909484B00C75B9C /* SobelFilter.h */,
 				17F1D14F190A6EED00C75B9C /* SWTFilter.cpp */,
 				17F1D150190A6EED00C75B9C /* SWTFilter.h */,
-				17FDE317190E8F8A006652A6 /* ConnectedComponentsFilter.cpp */,
-				17FDE318190E8F8A006652A6 /* ConnectedComponentsFilter.h */,
+				17005B46192F3A500052C611 /* TextRegionsFilter.cpp */,
+				17005B47192F3A500052C611 /* TextRegionsFilter.h */,
 			);
 			name = Filters;
 			sourceTree = "<group>";
@@ -644,6 +649,7 @@
 				1744D95E18C0B193004605D1 /* Chain.cpp in Sources */,
 				171A02FF1899328C00A72B91 /* main.cpp in Sources */,
 				17F1D1441909484B00C75B9C /* SobelFilter.cpp in Sources */,
+				17005B48192F3A500052C611 /* TextRegionsFilter.cpp in Sources */,
 				17F1D14D1909567000C75B9C /* CannyFilter.cpp in Sources */,
 				17658F2F189FB5F4003A8B11 /* Program.cpp in Sources */,
 				1700DFCE18E1B2B3004112B6 /* GaussianBlurV.fs in Sources */,

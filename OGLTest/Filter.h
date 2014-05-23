@@ -49,9 +49,6 @@ protected:
 
     void RenderToTexture(Ptr<Texture> destination, PrimitiveType primitiveType = PrimitiveType::Unspecified, GLenum clearOptions = GL_NONE);
     
-    // Warning! Clamps values in destination texture between 0 and 1!
-    void CopyFrameBufferColors(const Texture &destination);
-    
     Ptr<Texture> GetColorAttachment();
     
     void SetColorAttachment(Ptr<Texture> colorAttachment);
@@ -72,11 +69,11 @@ public:
     String Name;
     Ptr<Texture> Input;
     
-    std::chrono::high_resolution_clock::duration RenderTime, CopyTime, CompileTime, TotalTime;
+    TimeSpan RenderTime, CompileTime, TotalTime;
 };
 
 inline Filter::Filter(const String &name, Ptr<Texture> input)
-    : shadersLoaded(false), initialized(false), Name(name), Input(input), RenderTime(0), CopyTime(0), CompileTime(0), TotalTime(0)
+    : shadersLoaded(false), initialized(false), Name(name), Input(input), RenderTime(0), CompileTime(0), TotalTime(0)
 {
     
 }

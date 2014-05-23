@@ -23,14 +23,11 @@ public:
     // Empty constructor. Setup, Generate and Initialize need to be called manually
     Texture() = default;
     
-    Texture(int width, int height, GLenum format, GLenum type, GLenum filteringType, const GLvoid* pixels = NULL);
+    Texture(int width, int height, GLenum format, GLenum type, const GLvoid* pixels = NULL);
     
     Texture(const TextureParameters &params, const GLvoid* pixels = nullptr);
     
     virtual ~Texture() = default;
-    
-    // Initialize this texture with parameters and data. Parameters have to be set before calling this function
-    void Initialize(const TextureParameters &params, const GLvoid *pixels = nullptr);
     
     int GetWidth() const;
     
@@ -42,8 +39,6 @@ public:
     
     void SetData(const GLvoid* pixels);
     
-    void SetFilteringType(GLenum filteringType);
-    
     static void glRecycleTexture(const TextureParameters &params, GLuint* textures);
     
     static void glDisposeTexture(const TextureParameters &params, GLuint* textures);
@@ -53,7 +48,7 @@ public:
     TextureParameters Parameters;
     static const GLenum INTERNAL_FORMAT = GL_RGBA;
     static const GLenum PREFERRED_TYPE  = GL_UNSIGNED_INT_8_8_8_8_REV;
-    static int ActiveTextureCount, PeakTextureCount;
+    static int ActiveTextureCount, PeakTextureCount, RecycledTextureCount;
     
 private:
     
@@ -61,8 +56,8 @@ private:
     static const int MAX_RETAINED_TEXTURES = 100;
 };
 
-inline Texture::Texture(int width, int height, GLenum format, GLenum type, GLenum filteringType, const GLvoid *pixels /* = nullptr */)
-    : Texture( TextureParameters(width, height, format, type, filteringType), pixels )
+inline Texture::Texture(int width, int height, GLenum format, GLenum type, const GLvoid *pixels /* = nullptr */)
+    : Texture( TextureParameters(width, height, format, type), pixels )
 {
     
 }

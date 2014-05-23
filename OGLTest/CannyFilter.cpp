@@ -9,6 +9,13 @@
 #include "CannyFilter.h"
 #include "Texture.h"
 
+void CannyFilter::LoadShaderPrograms()
+{
+    canny     = LoadScreenSpaceProgram("Canny");
+    scharr    = LoadScreenSpaceProgram("Sobel1");
+    diffCanny = LoadScreenSpaceProgram("CannySobel2");
+}
+
 void CannyFilter::Initialize()
 {
     glClearColor(0, 0, 0, 1);

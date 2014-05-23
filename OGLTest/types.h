@@ -23,6 +23,7 @@
 #include <set>
 #include <list>
 #include <functional>
+#include <chrono>
 
 // Third party libraries
 #include <GL/glew.h>
@@ -45,6 +46,7 @@ using InputFileStream = std::ifstream;
 using Vector2 = cv::Vec2f;
 using Vector3 = cv::Vec3f;
 using Point = cv::Vec2i;
+using TimeSpan = std::chrono::high_resolution_clock::duration;
 
 template<class T> using Ptr = std::shared_ptr<T>;
 template<class T> using Set = std::set<T>;
@@ -87,3 +89,6 @@ class VertexShader;
 class  Chain;
 struct Component;
 struct Ray;
+// Filters
+class Filter;
+class SWTFilter;

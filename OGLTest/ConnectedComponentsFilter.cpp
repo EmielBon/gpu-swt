@@ -82,7 +82,6 @@ void ConnectedComponentsFilter::PerformSteps(Ptr<Texture> output)
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_STENCIL_TEST);
-    glDisable(GL_ALPHA_TEST);
     glClear(GL_DEPTH_BUFFER_BIT);
     
     // Compute vertical runs

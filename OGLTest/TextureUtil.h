@@ -40,5 +40,5 @@ Ptr<Texture> textureFromImage(const cv::Mat &image)
     
     // todo: make GL_NEAREST? Will that break gaussian blur & stuff?
     // Also, is the fact that integer pixels are fetched, and the fact that the real value lies in the pixel center the reason why averaging fails?
-    return New<Texture>(width, height, format, type, GL_NEAREST, pixelData.data());
+    return New<Texture>(width, height, format, type, pixelData.data());
 }

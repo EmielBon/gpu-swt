@@ -43,7 +43,7 @@ void Filter::DoInitialize()
 
 void Filter::Apply(Ptr<Texture> output)
 {
-    TotalTime = RenderTime = CopyTime = CompileTime = TimeSpan(0);
+    TotalTime = RenderTime = CompileTime = TimeSpan(0);
     
     if (!Input)
         throw std::runtime_error(String("No input specified for filter: ") + Name);
@@ -82,15 +82,6 @@ void Filter::RenderToTexture(Ptr<Texture> destination, PrimitiveType primitiveTy
     Render(primitiveType, clearOptions);
 }
 
-void Filter::CopyFrameBufferColors(const Texture &dest)
-{
-    //glFinish();
-    auto f = now();
-    FrameBuffer::GetCurrentlyBound()->CopyColorAttachment(dest);
-    //glFinish();
-    CopyTime += now() - f;
-}
-
 Ptr<Texture> Filter::GetColorAttachment()
 {
     return FrameBuffer::GetCurrentlyBound()->ColorAttachment0;
@@ -110,21 +101,18 @@ void Filter::ApplyFilter(Filter &filter, Ptr<Texture> output)
 {
     filter.Apply(output);
     RenderTime  += filter.RenderTime;
-    CopyTime    += filter.CopyTime;
     CompileTime += filter.CompileTime;
 }
 
 void Filter::PrintProfilingInfo() const
 {
-    auto misc = TotalTime - RenderTime - CopyTime - CompileTime;
+    auto misc = TotalTime - RenderTime - CompileTime;
     
-    printf("%s: T(%.1fms) R(%.1fms=%.1f%%) Cpy(%.1fms=%.1f%%) Cpl(%.1fms=%.1f%%) M(%.1fms=%.1f%%)\n",
+    printf("%s: T(%.1fms) R(%.1fms=%.1f%%) Cpl(%.1fms=%.1f%%) M(%.1fms=%.1f%%)\n",
            Name.c_str(),
            GetTimeMsec(TotalTime),
            GetTimeMsec(RenderTime),
            RenderTime * 100.0f / TotalTime,
-           GetTimeMsec(CopyTime),
-           CopyTime * 100.0f / TotalTime,
            GetTimeMsec(CompileTime),
            CompileTime * 100.0f / TotalTime,
            GetTimeMsec(misc),

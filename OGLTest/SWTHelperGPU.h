@@ -15,4 +15,10 @@ class SWTHelperGPU
 public:
     
     static List<BoundingBox> StrokeWidthTransform(const cv::Mat &input);
+    
+private:
+    
+    static Ptr<Texture> ApplyPass(Ptr<Filter> filter, Ptr<Texture> input = nullptr);
+    
+    static void DisableIrrelvantState();
 };
