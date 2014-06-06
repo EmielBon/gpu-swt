@@ -15,8 +15,8 @@
 
 void TextRegionsFilter::LoadShaderPrograms()
 {
-    grayFilter  = New<GrayFilter>(Input);
-    swtFilter   = New<SWTFilter>();
+    grayFilter = New<GrayFilter>(Input);
+    swtFilter  = New<SWTFilter>();
     connectedComponentsFilter = New<ConnectedComponentsFilter>();
     
     grayFilter->DoLoadShaderPrograms();
@@ -26,7 +26,7 @@ void TextRegionsFilter::LoadShaderPrograms()
 
 void TextRegionsFilter::Initialize()
 {
-    gray = FrameBuffer::GetCurrentlyBound()->ColorAttachment0->GetEmptyClone();
+    gray = GetColorAttachment()->GetEmptyClone();
     ApplyFilter(*grayFilter, gray);
     swtFilter->Input = gray;
     

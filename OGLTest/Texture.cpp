@@ -25,8 +25,6 @@ Texture::Texture(const TextureParameters &params, const GLvoid *pixels /* = null
         glDisposeTexture(params, textures);
     };
     
-    PeakTextureCount = MAX(PeakTextureCount, ActiveTextureCount);
-    
     Setup(generateFunction, deleteFunction, glBindTexture, GL_TEXTURE_2D);
     Generate();
     SetData(pixels);
@@ -40,7 +38,8 @@ void Texture::glRecycleTexture(const TextureParameters &params, GLuint* textures
     if (freeHandles.empty())
     {
         glGenTextures(1, textures);
-        ActiveTextureCount++;
+        ActiveTextureCount = (int)freeHandles.size();
+        PeakTextureCount = MAX(PeakTextureCount, ActiveTextureCount);
     }
     else
     {
@@ -60,7 +59,7 @@ void Texture::glDisposeTexture(const TextureParameters &params, GLuint *textures
     else
     {
         glDeleteTextures(1, textures);
-        ActiveTextureCount--;
+        ActiveTextureCount = (int)freeHandles.size();
     }
 }
 

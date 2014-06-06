@@ -45,12 +45,8 @@ void ImgProc::Plot(int x, int y, cv::Mat &input)
 cv::Mat ImgProc::ConvertToGrayscale(const cv::Mat &image)
 {
     cv::Mat luv, grayImage;
-    clock_t f;
-    f = clock();
     cv::cvtColor(image, luv, CV_BGR2Luv);
     cv::extractChannel(luv, grayImage, 0);
-    f = clock() - f;
-    printf("OpenCV grayscale timer: %lu\n", f);
     return grayImage;
 }
 
@@ -60,7 +56,7 @@ cv::Mat ImgProc::Sharpen(const cv::Mat &image)
     clock_t f;
     f = clock();
     cv::GaussianBlur(image, blurred, cv::Size(7, 7), 5);
-    //cv::addWeighted(image, 1.5, blurred, -0.5, 0, sharper);
+    cv::addWeighted(image, 1.5, blurred, -0.5, 0, sharper);
     f = clock() - f;
     printf("OpenCV gaussian timer: %lu\n", f);
     

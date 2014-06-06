@@ -40,7 +40,7 @@ Window::Window(int width, int height, const String &title)
     std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
     
-    glewExperimental = GL_TRUE; //stops glew crashing on OSX :-/s
+    glewExperimental = GL_TRUE; //stops glew crashing on OSX :-/
     if(glewInit() != GLEW_OK)
         throw std::runtime_error("glewInit failed");
     

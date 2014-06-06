@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <stdio.h>
 
+#include "types.h"
 #include "BoundingBox.h"
 #include "ContentLoader.h"
 #include "DrawableRect.h"
@@ -18,7 +19,6 @@
 #include "SWTHelper.h"
 #include "SWTHelperGPU.h"
 #include "Texture.h"
-#include "types.h"
 #include "VertexShader.h"
 #include "FragmentShader.h"
 #include "GLError.h"
@@ -28,15 +28,15 @@
 RenderWindow* RenderWindow::instance = nullptr;
 
 RenderWindow::RenderWindow(int width, int height, const String &title)
-    : base(width, height, title)
+: base(width, height, title), currentTextureIndex(0), oldTextureIndex(-1)
 {
     instance = this;
     
     ContentLoader::ContentPath = "/Users/emiel/Desktop/OGLTest/OGLTest/";
-    currentTextureIndex = 0;
     
     // Load the input image as a cv::Mat
-    cv::Mat input = ContentLoader::LoadV<cv::Mat>("sign800x600"); //AddTexture(input, "Input image");
+    cv::Mat input = ContentLoader::LoadV<cv::Mat>("sign800x600");
+    AddTexture(input, "Input image");
     SetWindowSize(input.size(), {1024, 1024});
 
     check_gl_error();
@@ -54,7 +54,7 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     
     program = New<Program>(shaders);
     
-    List<BoundingBox> boundingBoxes = SWTHelperGPU::StrokeWidthTransform(input);
+    List<BoundingBox> boundingBoxes = SWTHelper::StrokeWidthTransform(input);
     cv::Mat output = ImgProc::DrawBoundingBoxes(input, boundingBoxes, {0, 255, 255, 255});
     AddTexture(output, "Detected text regions");
 }
@@ -84,29 +84,30 @@ void RenderWindow::Draw()
 {
     check_gl_error();
     
-    static bool keyPressed = false;
-    
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) && !keyPressed)
+    if (!textures.empty())
     {
-        currentTextureIndex = (currentTextureIndex + 1) % textures.size();
-        keyPressed = true;
-        glfwSetWindowTitle(window, textureDescriptors[currentTextureIndex].c_str());
-    }
-    if (glfwGetKey(window, GLFW_KEY_LEFT) && !keyPressed)
-    {
-        currentTextureIndex--;
-        if (currentTextureIndex < 0)
-            currentTextureIndex += textures.size();
-        keyPressed = true;
-        glfwSetWindowTitle(window, textureDescriptors[currentTextureIndex].c_str());
-    }
-    if (keyPressed)
-    {
+        static bool keyPressed = false;
+        
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) && !keyPressed)
+        {
+            currentTextureIndex = (currentTextureIndex + 1) % textures.size();
+            keyPressed = true;
+            glfwSetWindowTitle(window, textureDescriptors[currentTextureIndex].c_str());
+        }
+        if (glfwGetKey(window, GLFW_KEY_LEFT) && !keyPressed)
+        {
+            currentTextureIndex--;
+            if (currentTextureIndex < 0)
+                currentTextureIndex += textures.size();
+            keyPressed = true;
+            glfwSetWindowTitle(window, textureDescriptors[currentTextureIndex].c_str());
+        }
+        if (!glfwGetKey(window, GLFW_KEY_RIGHT) && !glfwGetKey(window, GLFW_KEY_LEFT))
+        {
+            keyPressed = false;
+        }
+        
         DrawCurrentTexture();
-    }
-    if (!glfwGetKey(window, GLFW_KEY_RIGHT) && !glfwGetKey(window, GLFW_KEY_LEFT))
-    {
-        keyPressed = false;
     }
     
     base::Draw();
@@ -133,7 +134,7 @@ void RenderWindow::AddFrameBufferSnapshot(const String &descriptor)
 
 void RenderWindow::DrawCurrentTexture()
 {
-    FrameBuffer::BindDefault();
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //glClearColor(0, 0, 0, 1);
     //glClear(GL_COLOR_BUFFER_BIT);
     DrawRect(*rect1);

@@ -47,7 +47,7 @@ private:
     Ptr<DrawableRect>  rect1;
     List<Ptr<Texture>> textures;
     List<String>       textureDescriptors;
-    int                currentTextureIndex;
+    int                currentTextureIndex, oldTextureIndex;
     
     static RenderWindow* instance;
 };

@@ -33,6 +33,14 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     // Create a Texture from the input
     Ptr<Texture> texture = textureFromImage<cv::Vec3f>(input);
     
+    List< Ptr<Texture> > textures;
+    
+    for(int i = 0; i < 14; ++i)
+        textures.push_back( New<Texture>(width, height, GL_RGBA, GL_FLOAT) );
+    
+    for(int i = 0; i < 14; ++i)
+        textures[i].reset();
+    
     // Create the framebuffer attachments
     Ptr<Texture>      colorf       = New<Texture     >(width, height, GL_RGBA, GL_FLOAT);
     Ptr<RenderBuffer> depthStencil = New<RenderBuffer>(width, height, RenderBuffer::Type::DepthStencil);
@@ -53,7 +61,6 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     
     glFinish();
     auto setupTime = now() - startTime;
-    auto startCalcTime = now();
     
     textRegionsFilter->GradientDirection = GradientDirection::With;
     ApplyPass(textRegionsFilter);
@@ -100,4 +107,5 @@ void SWTHelperGPU::DisableIrrelvantState()
     glDisable(GL_DEPTH_TEST);
     glPixelZoom(1.0,1.0);*/
     // todo: more?
+    // todo: some state disabeling makes OpenGL Profiler crash T_T
 }

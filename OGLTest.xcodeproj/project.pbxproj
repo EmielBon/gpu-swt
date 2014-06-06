@@ -108,6 +108,7 @@
 		1700DFD118E1B37F004112B6 /* SWTHelperGPU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTHelperGPU.h; sourceTree = "<group>"; };
 		1700DFD418E1CA23004112B6 /* Sobel1.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Sobel1.fs; sourceTree = "<group>"; };
 		1700DFD618E1CE9F004112B6 /* Sobel2.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Sobel2.fs; sourceTree = "<group>"; };
+		1708D98719335746005BAB4C /* Histogram.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Histogram.vs; sourceTree = "<group>"; };
 		1710975E18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_calib3d.2.4.8.dylib; sourceTree = "<group>"; };
 		1710975F18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_calib3d.2.4.8.dylib; sourceTree = "<group>"; };
 		1710976018BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_calib3d.2.4.8.dylib; sourceTree = "<group>"; };
@@ -334,6 +335,16 @@
 			name = "Gaussian Blur";
 			sourceTree = "<group>";
 		};
+		1708D98619334D12005BAB4C /* SWT-GPU */ = {
+			isa = PBXGroup;
+			children = (
+				17F1D14E190A6EBE00C75B9C /* Filters */,
+				1700DFD018E1B37F004112B6 /* SWTHelperGPU.cpp */,
+				1700DFD118E1B37F004112B6 /* SWTHelperGPU.h */,
+			);
+			name = "SWT-GPU";
+			sourceTree = "<group>";
+		};
 		171A02F21899328C00A72B91 = {
 			isa = PBXGroup;
 			children = (
@@ -358,8 +369,9 @@
 		171A02FD1899328C00A72B91 /* source */ = {
 			isa = PBXGroup;
 			children = (
+				1708D98619334D12005BAB4C /* SWT-GPU */,
 				171A0316189BD73900A72B91 /* Framework */,
-				1776532A18C87659004553B6 /* Graphics */,
+				1776532A18C87659004553B6 /* OpenGL */,
 				171A031A189BD9F500A72B91 /* OCR Application */,
 				17EED57818ACFA680094A37D /* SWT */,
 				171A031B189BDD1700A72B91 /* Util */,
@@ -482,11 +494,12 @@
 				17B473AD18EAD9C70012148E /* Stroke Width Transform */,
 				17B473AF18EAEE250012148E /* TextureUtil.fsh */,
 				17658F27189FA6AC003A8B11 /* Trivial.vs */,
+				1708D98719335746005BAB4C /* Histogram.vs */,
 			);
 			name = shaders;
 			sourceTree = "<group>";
 		};
-		1776532A18C87659004553B6 /* Graphics */ = {
+		1776532A18C87659004553B6 /* OpenGL */ = {
 			isa = PBXGroup;
 			children = (
 				17658F38189FC8BF003A8B11 /* FragmentShader.h */,
@@ -520,7 +533,7 @@
 				17EED2DF18A398350094A37D /* VertexPositionTexture.h */,
 				17658F35189FC8B2003A8B11 /* VertexShader.h */,
 			);
-			name = Graphics;
+			name = OpenGL;
 			sourceTree = "<group>";
 		};
 		17B473A718E445020012148E /* Canny */ = {
@@ -549,7 +562,6 @@
 		17EED57818ACFA680094A37D /* SWT */ = {
 			isa = PBXGroup;
 			children = (
-				17F1D14E190A6EBE00C75B9C /* Filters */,
 				1744D95C18C0B193004605D1 /* Chain.cpp */,
 				1744D95D18C0B193004605D1 /* Chain.h */,
 				17F3F9DF18BBAE0900C78815 /* Component.cpp */,
@@ -560,8 +572,6 @@
 				17EED57D18AD205B0094A37D /* Ray.h */,
 				17EED57918AD16340094A37D /* SWTHelper.cpp */,
 				17EED57A18AD16340094A37D /* SWTHelper.h */,
-				1700DFD018E1B37F004112B6 /* SWTHelperGPU.cpp */,
-				1700DFD118E1B37F004112B6 /* SWTHelperGPU.h */,
 				1739564418CDE7DE003BF7D0 /* SWTParameters.h */,
 			);
 			name = SWT;

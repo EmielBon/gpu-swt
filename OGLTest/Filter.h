@@ -27,6 +27,8 @@ public:
     
     void DoInitialize();
     
+    void DoPerformSteps();
+    
 protected:
     
     virtual void PerformSteps(Ptr<Texture> output) = 0;
