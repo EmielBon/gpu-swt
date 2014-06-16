@@ -35,12 +35,12 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     
     List< Ptr<Texture> > textures;
     
-    for(int i = 0; i < 14; ++i)
+    /*for(int i = 0; i < 14; ++i)
         textures.push_back( New<Texture>(width, height, GL_RGBA, GL_FLOAT) );
     
     for(int i = 0; i < 14; ++i)
         textures[i].reset();
-    
+    */
     // Create the framebuffer attachments
     Ptr<Texture>      colorf       = New<Texture     >(width, height, GL_RGBA, GL_FLOAT);
     Ptr<RenderBuffer> depthStencil = New<RenderBuffer>(width, height, RenderBuffer::Type::DepthStencil);
@@ -79,7 +79,7 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     printf("Misc time: %.1fms (%.1f%%)\n", GetTimeMsec(misc), misc * 100.0f / totalTime);
     printf("Textures: Active %i Peak %i\n", Texture::ActiveTextureCount, Texture::PeakTextureCount);
     
-    return List<BoundingBox>();
+    return textRegionsFilter->GetExtractedBoundingBoxes();
 }
 
 Ptr<Texture> SWTHelperGPU::ApplyPass(Ptr<Filter> filter, Ptr<Texture> input)

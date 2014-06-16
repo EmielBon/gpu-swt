@@ -54,7 +54,7 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     
     program = New<Program>(shaders);
     
-    List<BoundingBox> boundingBoxes = SWTHelper::StrokeWidthTransform(input);
+    List<BoundingBox> boundingBoxes = SWTHelperGPU::StrokeWidthTransform(input);
     cv::Mat output = ImgProc::DrawBoundingBoxes(input, boundingBoxes, {0, 255, 255, 255});
     AddTexture(output, "Detected text regions");
 }

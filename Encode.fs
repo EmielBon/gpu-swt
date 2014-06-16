@@ -14,5 +14,5 @@ void main()
     vec3  color      = fetch(Texture, current_xy).rgb;
     bool  foreground = (color != BackgroundColor);
     float value      = foreground ? encode(current_xy) : 0.0;
-    FragColor        = vec4(decode(value) / vec2( size(Texture) ), 0, value);
+    FragColor        = vec4(0, 0, 0, value);
 }

@@ -13,6 +13,10 @@
 #include "Texture.h"
 #include "FrameBuffer.h"
 
+#include "VertexPositionTexture.h"
+#include "VertexBuffer.h"
+#include "GraphicsDevice.h"
+
 void TextRegionsFilter::LoadShaderPrograms()
 {
     grayFilter = New<GrayFilter>(Input);
@@ -22,6 +26,8 @@ void TextRegionsFilter::LoadShaderPrograms()
     grayFilter->DoLoadShaderPrograms();
     swtFilter->DoLoadShaderPrograms();
     connectedComponentsFilter->DoLoadShaderPrograms();
+    
+    //vertexTexture = LoadProgram("VertexTexture");
 }
 
 void TextRegionsFilter::Initialize()
@@ -35,9 +41,33 @@ void TextRegionsFilter::Initialize()
 
 void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
 {
+    /*int width  = Input->GetWidth();
+    int height = Input->GetHeight();
+    
+    List<VertexPositionTexture> vertices;
+    for (int x = 0; x < width;  ++x)
+        for (int y = 0; y < height; ++y)
+            vertices.push_back(VertexPositionTexture(Vector3(x, y, 0), Vector2(0, 0)));
+    
+    auto pixelVertices = New<VertexBuffer>();
+    pixelVertices->SetData(vertices);
+    
+    GraphicsDevice::SetBuffers(pixelVertices, nullptr);
+    
+    vertexTexture->Use();
+    vertexTexture->Uniforms["Texture"].SetValue(*Input);
+    RenderToTexture(output, PrimitiveType::Points, GL_COLOR_BUFFER_BIT);
+    
+    GraphicsDevice::UseDefaultBuffers();*/
+    
     swtFilter->GradientDirection = GradientDirection;
     ApplyFilter(*swtFilter, ColorBuffers[0]);
     swtFilter->GradientDirection = GradientDirection::Against;
     connectedComponentsFilter->Input = ColorBuffers[0];
     ApplyFilter(*connectedComponentsFilter, output);
+}
+
+List<BoundingBox> TextRegionsFilter::GetExtractedBoundingBoxes() const
+{
+    return connectedComponentsFilter->ExtractedBoundingBoxes;
 }

@@ -18,11 +18,11 @@ private:
     
 public:
     
-    FragmentShader(const String &sourceText);
+    FragmentShader(const String &name, const String &sourceText);
 };
 
-inline FragmentShader::FragmentShader(const String &sourceText)
-    : base(sourceText, GL_FRAGMENT_SHADER)
+inline FragmentShader::FragmentShader(const String &name, const String &sourceText)
+    : base(name, sourceText, GL_FRAGMENT_SHADER)
 {
     
 }

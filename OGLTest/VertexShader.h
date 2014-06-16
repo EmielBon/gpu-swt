@@ -18,11 +18,11 @@ private:
     
 public:
     
-    VertexShader(const String &sourceText);
+    VertexShader(const String &name, const String &sourceText);
 };
 
-inline VertexShader::VertexShader(const String &sourceText)
-    : base(sourceText, GL_VERTEX_SHADER)
+inline VertexShader::VertexShader(const String &name, const String &sourceText)
+    : base(name, sourceText, GL_VERTEX_SHADER)
 {
     
 }

@@ -26,15 +26,19 @@ public:
     
     void PerformSteps(Ptr<Texture> output);
     
+    List<BoundingBox> GetExtractedBoundingBoxes() const;
+    
 public:
     
     ::GradientDirection GradientDirection;
     
 private:
     
-    Ptr<Filter> grayFilter, connectedComponentsFilter;
+    Ptr<Filter> grayFilter;
     Ptr<SWTFilter> swtFilter;
+    Ptr<ConnectedComponentsFilter> connectedComponentsFilter;
     Ptr<Texture> gray;
+    Ptr<Program> vertexTexture;
 };
 
 inline TextRegionsFilter::TextRegionsFilter(Ptr<Texture> input)

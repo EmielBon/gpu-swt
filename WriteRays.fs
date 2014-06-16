@@ -5,5 +5,7 @@ flat in  float Value;
 
 void main()
 {
-    FragColor = vec4( vec3(Value), 1);
+    if (Value == 0.0)
+        discard;
+    FragColor = vec4(Value, 0, 0, 1);
 }

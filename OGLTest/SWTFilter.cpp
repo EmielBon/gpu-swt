@@ -28,10 +28,11 @@ void SWTFilter::LoadShaderPrograms()
     gaussian->DoLoadShaderPrograms();
     canny->DoLoadShaderPrograms();
     
-    cast  = LoadScreenSpaceProgram("StrokeWidthTransform1");
-    write =            LoadProgram("StrokeWidthTransform2");
-    avg   = LoadScreenSpaceProgram("StrokeWidthTransform3");
-    scale = LoadScreenSpaceProgram("ScaleColor");
+    cast     = LoadScreenSpaceProgram("CastRays");
+    write    =            LoadProgram("WriteRays");
+    avg      = LoadScreenSpaceProgram("AverageRays");
+    writeAvg = LoadProgram("WriteAverageRays", "WriteRays");
+    scale    = LoadScreenSpaceProgram("ScaleColor");
 }
 
 void SWTFilter::Initialize()
@@ -48,7 +49,7 @@ void SWTFilter::Initialize()
     ApplyFilter(*gaussian, ColorBuffers[0]);
     
     canny->Input = ColorBuffers[0];
-    ApplyFilter(*canny, edges); // Builds a edge-only stencil buffer
+    ApplyFilter(*canny, edges); // Builds an edge-only stencil buffer
     
     PrepareEdgeOnlyStencil();
     PrepareMaximizingDepthTest();
@@ -107,74 +108,70 @@ void SWTFilter::PerformSteps(Ptr<Texture> output)
     
     ReserveColorBuffers(2);
     
-    auto swt       = output;
-    auto values    = ColorBuffers[0];
-    auto valuesAvg = ColorBuffers[1];
+    auto swt               = output;
+    auto oppositePositions = ColorBuffers[0];
+    auto averageValues     = ColorBuffers[1];
     
     glEnable(GL_STENCIL_TEST);
-    CastRays(darkOnLight, values);
+    CastRays(darkOnLight, oppositePositions);
     glDisable(GL_STENCIL_TEST);
-    
+    DEBUG_FB("SWT 1");
     GraphicsDevice::SetBuffers(linesVertices, nullptr);
     glEnable(GL_DEPTH_TEST);
-    WriteRayValues(*values, *values, darkOnLight, swt);
+    WriteRayValues(*oppositePositions, swt);
     glDisable(GL_DEPTH_TEST);
     GraphicsDevice::UseDefaultBuffers();
-    
+    DEBUG_FB("SWT 2");
     glEnable(GL_STENCIL_TEST);
-    AverageRayValues(*swt, darkOnLight, valuesAvg);
+    AverageRayValues(*oppositePositions, *swt, averageValues);
     glDisable(GL_STENCIL_TEST);
-    
+    DEBUG_FB("SWT 3");
     GraphicsDevice::SetBuffers(linesVertices, nullptr);
     glEnable(GL_DEPTH_TEST);
-    WriteRayValues(*valuesAvg, *values, darkOnLight, output);
+    WriteAverageRayValues(*oppositePositions, *averageValues, output);
     glDisable(GL_DEPTH_TEST);
+    
+    DEBUG_FB("SWT 4");
+    
     GraphicsDevice::UseDefaultBuffers();
 }
 
 void SWTFilter::CastRays(bool darkOnLight, Ptr<Texture> output)
 {
-    SetColorAttachment(output);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
     cast->Use();
     cast->Uniforms["Edges"].SetValue(*edges);
     cast->Uniforms["Gradients"].SetValue(*gradients);
     cast->Uniforms["DarkOnLight"].SetValue(darkOnLight);
-    Render();
+    RenderToTexture(output, PrimitiveType::Unspecified, GL_COLOR_BUFFER_BIT);
 }
 
-void SWTFilter::WriteRayValues(const Texture &values, const Texture &lineLengths, bool darkOnLight, Ptr<Texture> output)
+void SWTFilter::WriteRayValues(const Texture &oppositePositions, Ptr<Texture> output)
 {
-    SetColorAttachment(output);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
     write->Use();
-    // todo: need not pass x,y gradients, only direction matters
-    write->Uniforms["Gradients"].SetValue(*gradients);
-    write->Uniforms["LineLengths"].SetValue(lineLengths);
-    write->Uniforms["Values"].SetValue(values);
-    write->Uniforms["DarkOnLight"].SetValue(darkOnLight);
-    Render(PrimitiveType::Lines);
+    write->Uniforms["OppositePositions"].SetValue(oppositePositions);
+    RenderToTexture(output, PrimitiveType::Lines, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void SWTFilter::AverageRayValues(const Texture &values, bool darkOnLight, Ptr<Texture> output)
+void SWTFilter::AverageRayValues(const Texture &oppositePositions, const Texture &values, Ptr<Texture> output)
 {
-    SetColorAttachment(output);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
     avg->Use();
-    avg->Uniforms["Gradients"].SetValue(*gradients);
-    avg->Uniforms["LineLengths"].SetValue(values);
-    avg->Uniforms["DarkOnLight"].SetValue(darkOnLight);
-    Render();
+    avg->Uniforms["OppositePositions"].SetValue(oppositePositions);
+    avg->Uniforms["Values"].SetValue(values);
+    RenderToTexture(output, PrimitiveType::Unspecified, GL_COLOR_BUFFER_BIT);
+}
+
+void SWTFilter::WriteAverageRayValues(const Texture &oppositePositions, const Texture &averageValues, Ptr<Texture> output)
+{
+    writeAvg->Use();
+    writeAvg->Uniforms["OppositePositions"].SetValue(oppositePositions);
+    writeAvg->Uniforms["AverageValues"].SetValue(averageValues);
+    RenderToTexture(output, PrimitiveType::Lines, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void SWTFilter::ScaleResult(const Texture &input, float scaleFactor, Ptr<Texture> output)
 {
-    SetColorAttachment(output);
     scale->Use();
     scale->Uniforms["Texture"].SetValue(input);
     scale->Uniforms["Scale"].SetValue(scaleFactor);
-    Render();
+    RenderToTexture(output);
 }

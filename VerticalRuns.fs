@@ -26,5 +26,5 @@ void main()
         value = next;
     }
     
-    FragColor = vec4(decode(value) / vec2( size(Texture) ), 0, value);
+    FragColor = vec4(0, 0, 0, value);
 }

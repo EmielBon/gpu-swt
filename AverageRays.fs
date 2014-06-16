@@ -1,11 +1,12 @@
 #version 150
 
+#pragma include Codec.fsh
 #pragma include TextureUtil.fsh
 
-uniform sampler2D Gradients;
-uniform sampler2D LineLengths;
+//uniform sampler2D Gradients;
+uniform sampler2D OppositePositions;
 uniform sampler2D Values;
-uniform bool      DarkOnLight;
+//uniform bool      DarkOnLight;
 
 out vec4 FragColor;
 
@@ -13,9 +14,11 @@ void main()
 {
     ivec2 pos0 = ivec2(gl_FragCoord.xy);
     
-    vec2 gradient = normalize( fetch(Gradients, pos0).xy );
-    float lineLength = fetch(LineLengths, pos0).r;
-    ivec2 pos1 = ivec2(pos0 + gradient * (lineLength * (DarkOnLight ? 1 : -1)));
+    //vec2 gradient = normalize( fetch(Gradients, pos0).xy );
+    float pos1_id = fetch(OppositePositions, pos0).r;
+    if (pos1_id == 0.0)
+        discard;
+    ivec2 pos1 = decode(pos1_id);//ivec2(pos0 + gradient * (lineLength * (DarkOnLight ? 1 : -1)));
     
     bool steep = abs(pos1.y - pos0.y) > abs(pos1.x - pos0.x);
     
@@ -53,10 +56,10 @@ void main()
         err = err - dy;
         
         if (oldSum == sum)
-            debug = 1;
+            debug += 1;
         
         if (err < 0) { y += ystep; err += dx; }
     }
     
-    FragColor = vec4(sum / dx, debug, 0, 1);
+    FragColor = vec4(sum / dx, debug / 10, 0, 1);
 }

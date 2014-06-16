@@ -86,19 +86,20 @@
 
 /* Begin PBXFileReference section */
 		170005FF18ED869800B1D45C /* AlphaTest.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = AlphaTest.fs; sourceTree = "<group>"; };
-		1700060418EEEE8800B1D45C /* StrokeWidthTransform2.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StrokeWidthTransform2.fs; sourceTree = "<group>"; };
-		1700060718EEEF1400B1D45C /* StrokeWidthTransform2.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StrokeWidthTransform2.vs; sourceTree = "<group>"; };
+		1700060418EEEE8800B1D45C /* WriteRays.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = WriteRays.fs; sourceTree = "<group>"; };
+		1700060718EEEF1400B1D45C /* WriteRays.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = WriteRays.vs; sourceTree = "<group>"; };
 		1700060818F297B400B1D45C /* RenderBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderBuffer.cpp; sourceTree = "<group>"; };
 		1700060918F297B400B1D45C /* RenderBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderBuffer.h; sourceTree = "<group>"; };
-		1700060B18F4399B00B1D45C /* StrokeWidthTransform3.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StrokeWidthTransform3.fs; sourceTree = "<group>"; };
+		1700060B18F4399B00B1D45C /* AverageRays.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = AverageRays.fs; sourceTree = "<group>"; };
 		1700060C18F6884100B1D45C /* ScaleColor.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ScaleColor.fs; sourceTree = "<group>"; };
 		1700061218F8062700B1D45C /* Codec.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Codec.fsh; sourceTree = "<group>"; };
 		1700061318F8069B00B1D45C /* Encode.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Encode.fs; sourceTree = "<group>"; };
 		1700061418F810A000B1D45C /* VerticalRuns.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = VerticalRuns.fs; sourceTree = "<group>"; };
-		17005B44192E1D7F0052C611 /* ComputeBoundingBoxes.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ComputeBoundingBoxes.vs; sourceTree = "<group>"; };
-		17005B45192E20980052C611 /* ComputeBoundingBoxes.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ComputeBoundingBoxes.fs; sourceTree = "<group>"; };
+		17005B44192E1D7F0052C611 /* BoundingBoxes.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BoundingBoxes.vs; sourceTree = "<group>"; };
+		17005B45192E20980052C611 /* BoundingBoxes.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BoundingBoxes.fs; sourceTree = "<group>"; };
 		17005B46192F3A500052C611 /* TextRegionsFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextRegionsFilter.cpp; sourceTree = "<group>"; };
 		17005B47192F3A500052C611 /* TextRegionsFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextRegionsFilter.h; sourceTree = "<group>"; };
+		1700A2A7194B182200FE8EDC /* FilterInvalidComponents.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = FilterInvalidComponents.fs; sourceTree = "<group>"; };
 		1700DFC718E03B8D004112B6 /* SobelVer1.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer1.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		1700DFC818E03C81004112B6 /* SobelVer2.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SobelVer2.fs; sourceTree = "<group>"; };
 		1700DFCA18E063AC004112B6 /* GradientsFromSobel.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = GradientsFromSobel.fs; sourceTree = "<group>"; };
@@ -109,6 +110,11 @@
 		1700DFD418E1CA23004112B6 /* Sobel1.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Sobel1.fs; sourceTree = "<group>"; };
 		1700DFD618E1CE9F004112B6 /* Sobel2.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Sobel2.fs; sourceTree = "<group>"; };
 		1708D98719335746005BAB4C /* Histogram.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Histogram.vs; sourceTree = "<group>"; };
+		170B021F194730AE00E45664 /* Decode.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Decode.fs; sourceTree = "<group>"; };
+		170B02201949BBC600E45664 /* CountComponents.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CountComponents.vs; sourceTree = "<group>"; };
+		170B02211949BC5100E45664 /* CountComponents.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CountComponents.fs; sourceTree = "<group>"; };
+		170B02221949D6B600E45664 /* VertexTexture.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = VertexTexture.vs; sourceTree = "<group>"; };
+		170B02231949DC6A00E45664 /* VertexTexture.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = VertexTexture.fs; sourceTree = "<group>"; };
 		1710975E18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_calib3d.2.4.8.dylib; sourceTree = "<group>"; };
 		1710975F18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_calib3d.2.4.8.dylib; sourceTree = "<group>"; };
 		1710976018BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.8.dylib; path = OGLTest/thirdparty/opencv/lib/libopencv_calib3d.2.4.8.dylib; sourceTree = "<group>"; };
@@ -212,7 +218,7 @@
 		17B473AA18EACA5B0012148E /* NonMaximumSuppression.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = NonMaximumSuppression.fs; sourceTree = "<group>"; };
 		17B473AB18EACDBA0012148E /* NeighbourSum1.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = NeighbourSum1.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		17B473AC18EAD8610012148E /* NeighbourSum2.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = NeighbourSum2.fs; sourceTree = "<group>"; };
-		17B473AE18EAD9DC0012148E /* StrokeWidthTransform1.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StrokeWidthTransform1.fs; sourceTree = "<group>"; };
+		17B473AE18EAD9DC0012148E /* CastRays.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CastRays.fs; sourceTree = "<group>"; };
 		17B473AF18EAEE250012148E /* TextureUtil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TextureUtil.fsh; sourceTree = "<group>"; };
 		17EED2D818A392280094A37D /* DrawableRect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DrawableRect.cpp; sourceTree = "<group>"; };
 		17EED2D918A392280094A37D /* DrawableRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawableRect.h; sourceTree = "<group>"; };
@@ -258,6 +264,7 @@
 		17FDE318190E8F8A006652A6 /* ConnectedComponentsFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectedComponentsFilter.h; sourceTree = "<group>"; };
 		17FDE31A19124F42006652A6 /* TextureParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureParameters.h; sourceTree = "<group>"; };
 		17FDE31B19125D10006652A6 /* TextureUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureUtil.h; sourceTree = "<group>"; };
+		17FE531A194ADBBB00F6D8FE /* WriteAverageRays.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = WriteAverageRays.vs; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -295,8 +302,14 @@
 		1700061118F7E0A300B1D45C /* Connected Components */ = {
 			isa = PBXGroup;
 			children = (
+				17005B45192E20980052C611 /* BoundingBoxes.fs */,
+				17005B44192E1D7F0052C611 /* BoundingBoxes.vs */,
 				1700061218F8062700B1D45C /* Codec.fsh */,
+				170B02211949BC5100E45664 /* CountComponents.fs */,
+				170B02201949BBC600E45664 /* CountComponents.vs */,
+				170B021F194730AE00E45664 /* Decode.fs */,
 				1700061318F8069B00B1D45C /* Encode.fs */,
+				1700A2A7194B182200FE8EDC /* FilterInvalidComponents.fs */,
 				17ACBD7718FC1DA40052244F /* GatherNeighbor.vs */,
 				17ACBD7A18FD3A020052244F /* GatherScatter.fs */,
 				17ACBD7C18FFF1A70052244F /* ScatterBack.vs */,
@@ -305,8 +318,6 @@
 				177261181924D2E300E58ED5 /* UpdateColumn.vs */,
 				1713C5A51913D49800909BDB /* UpdateRoots.fs */,
 				1700061418F810A000B1D45C /* VerticalRuns.fs */,
-				17005B44192E1D7F0052C611 /* ComputeBoundingBoxes.vs */,
-				17005B45192E20980052C611 /* ComputeBoundingBoxes.fs */,
 			);
 			name = "Connected Components";
 			sourceTree = "<group>";
@@ -488,13 +499,15 @@
 				1700061118F7E0A300B1D45C /* Connected Components */,
 				1700DFD318E1C403004112B6 /* Gaussian Blur */,
 				17F5945118DB3CB800B1C3C7 /* Grayscale.fs */,
+				1708D98719335746005BAB4C /* Histogram.vs */,
 				17658F28189FA824003A8B11 /* Normal.fs */,
 				1700060C18F6884100B1D45C /* ScaleColor.fs */,
 				1700DFC618E03B74004112B6 /* Sobel */,
 				17B473AD18EAD9C70012148E /* Stroke Width Transform */,
 				17B473AF18EAEE250012148E /* TextureUtil.fsh */,
+				170B02231949DC6A00E45664 /* VertexTexture.fs */,
+				170B02221949D6B600E45664 /* VertexTexture.vs */,
 				17658F27189FA6AC003A8B11 /* Trivial.vs */,
-				1708D98719335746005BAB4C /* Histogram.vs */,
 			);
 			name = shaders;
 			sourceTree = "<group>";
@@ -551,10 +564,11 @@
 		17B473AD18EAD9C70012148E /* Stroke Width Transform */ = {
 			isa = PBXGroup;
 			children = (
-				17B473AE18EAD9DC0012148E /* StrokeWidthTransform1.fs */,
-				1700060418EEEE8800B1D45C /* StrokeWidthTransform2.fs */,
-				1700060718EEEF1400B1D45C /* StrokeWidthTransform2.vs */,
-				1700060B18F4399B00B1D45C /* StrokeWidthTransform3.fs */,
+				1700060B18F4399B00B1D45C /* AverageRays.fs */,
+				17B473AE18EAD9DC0012148E /* CastRays.fs */,
+				17FE531A194ADBBB00F6D8FE /* WriteAverageRays.vs */,
+				1700060418EEEE8800B1D45C /* WriteRays.fs */,
+				1700060718EEEF1400B1D45C /* WriteRays.vs */,
 			);
 			name = "Stroke Width Transform";
 			sourceTree = "<group>";

@@ -22,14 +22,14 @@ template<>
 Ptr<VertexShader> ContentLoader::Load(const String &resourceName)
 {
     String sourceText = FileReadAll(ContentPath + resourceName + ".vs");
-    return New<VertexShader>(sourceText);
+    return New<VertexShader>(resourceName, sourceText);
 }
 
 template<>
 Ptr<FragmentShader> ContentLoader::Load(const String &resourceName)
 {
     String sourceText = FileReadAll(ContentPath + resourceName + ".fs");
-    return New<FragmentShader>(sourceText);
+    return New<FragmentShader>(resourceName, sourceText);
 }
 
 template<>

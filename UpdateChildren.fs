@@ -13,5 +13,5 @@ void main()
     float current_id = fetch(Texture, current_xy).a;
     ivec2 root_xy    = decode(current_id);
     float root_id    = fetch(Texture, root_xy).a;
-    FragColor        = vec4(decode(root_id) / vec2(size(Texture)), 0, root_id);
+    FragColor        = vec4(0, 0, 0, root_id);
 }

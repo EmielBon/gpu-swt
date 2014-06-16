@@ -63,6 +63,8 @@ using OGLBindFunction = void(*)(GLenum, GLuint);
 #define New   std::make_shared
 #define Tuple std::tuple
 
+#define DEBUG_FB(name) RenderWindow::Instance().AddFrameBufferSnapshot(name)
+
 // Forward declarations
 // Framework
 class BoundingBox;
@@ -91,4 +93,5 @@ struct Component;
 struct Ray;
 // Filters
 class Filter;
+class ConnectedComponentsFilter;
 class SWTFilter;

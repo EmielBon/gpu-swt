@@ -1,3 +1,6 @@
+// Het gebruikt de volledige 22-bit range van de mantissa, omdat indices buiten 2047 * 2047 niet meer 1 uit elkaar liggen, binnen die range nog wel.
+// Met andere woorden, 2^22 = 2048 * 2048
+
 float encode(ivec2 position)
 {
     int ret = (position.x + 1) | ((position.y + 1) << 11);

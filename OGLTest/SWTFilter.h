@@ -38,15 +38,17 @@ private:
     
     void CastRays(bool darkOnLight, Ptr<Texture> output);
     
-    void WriteRayValues(const Texture &values, const Texture &lineLengths, bool darkOnLight, Ptr<Texture> output);
+    void WriteRayValues(const Texture &oppositePositions, Ptr<Texture> output);
     
-    void AverageRayValues(const Texture &values, bool darkOnLight, Ptr<Texture> output);
+    void AverageRayValues(const Texture &oppositePositions, const Texture &values, Ptr<Texture> output);
+    
+    void WriteAverageRayValues(const Texture &oppositePositions, const Texture &averageValues, Ptr<Texture> output);
     
     void ScaleResult(const Texture &input, float scaleFactor, Ptr<Texture> output);
     
 private:
     
-    Ptr<Program> cast, write, avg, scale;
+    Ptr<Program> cast, write, avg, writeAvg, scale;
     Ptr<Filter> sobel, gaussian, canny;
     Ptr<Texture> edges, gradients;
     Ptr<VertexBuffer> linesVertices;

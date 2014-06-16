@@ -17,23 +17,22 @@ class Shader
 {
 public:
     
-    Shader(const String &sourceText, GLenum shaderType);
-    
-    static Ptr<Shader> CreateFromFile(const String &filePath, GLenum shaderType);
+    Shader(const String &name, const String &sourceText, GLenum shaderType);
     
     GLuint GetHandle() const;
     
     void Dispose();
     
-    String GetSource() const;
+    const String& GetSource() const;
     
-    String GetFullSource() const;
+    const String& GetFullSource() const;
+    
+    String ResolveIncludes(const String &source);
     
 private:
     
     GLuint shaderId;
-    String source;
-    String fullSource;
+    String name, source, fullSource;
 };
 
 inline GLuint Shader::GetHandle() const
@@ -47,12 +46,12 @@ inline void Shader::Dispose()
     shaderId = 0;
 }
 
-inline String Shader::GetSource() const
+inline const String& Shader::GetSource() const
 {
     return source;
 }
 
-inline String Shader::GetFullSource() const
+inline const String& Shader::GetFullSource() const
 {
     return fullSource;
 }

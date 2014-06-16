@@ -29,7 +29,7 @@ public:
     // Warning! Clamps color values to [0,1]
     void CopyColorAttachment(const Texture &destination) const;
     
-    cv::Vec4f ReadPixel(int x, int y) const;
+    static cv::Vec4f ReadPixel(int x, int y);
     
 private:
     

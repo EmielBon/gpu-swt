@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Filter.h"
+#include "BoundingBox.h"
 
 class ConnectedComponentsFilter : public Filter
 {
@@ -49,11 +50,24 @@ protected:
     
     void UpdateChildren(Ptr<Texture> input, Ptr<Texture> output);
     
+    void BoundingBoxes(Ptr<Texture> input, Ptr<Texture> output);
+    
+    void FilterInvalidComponents(Ptr<Texture> input, Ptr<Texture> output);
+    
+    void CountComponents(Ptr<Texture> input, Ptr<Texture> output);
+    
+    void Decode(Ptr<Texture> input, Ptr<Texture> output);
+    
     void Copy(Ptr<Texture> texture, Ptr<Texture> output);
+    
+public:
+    
+    List<BoundingBox> ExtractedBoundingBoxes;
     
 private:
     
-    Ptr<Program> encode, verticalRun, gatherNeighbor, updateColumn, scatterBack, updateRoots, updateChildren, normal;
+    Ptr<Program> encode, verticalRun, gatherNeighbor, updateColumn, scatterBack, updateRoots, updateChildren, boundingBoxes, filterInvalidComponents, countComponents;
+    Ptr<Program> normal, decode;
     Ptr<VertexBuffer> columnVertices;
     Ptr<IndexBuffer>  lineIndices;
 };
