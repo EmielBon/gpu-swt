@@ -52,10 +52,10 @@ void SWTFilter::Initialize()
     ApplyFilter(*canny, edges); // Builds an edge-only stencil buffer
     
     PrepareEdgeOnlyStencil();
-    PrepareMaximizingDepthTest();
+    //PrepareMaximizingDepthTest();
     PrepareRayLines(*edges);
     
-    glClearColor(0, 0, 0, 1);
+    glClearColor(0, 0, 0, 0);
 }
 
 void SWTFilter::PrepareEdgeOnlyStencil()
@@ -65,22 +65,32 @@ void SWTFilter::PrepareEdgeOnlyStencil()
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 }
 
-void SWTFilter::PrepareMaximizingDepthTest()
+/*void SWTFilter::PrepareMaximizingDepthTest()
 {
     glDepthMask(GL_TRUE);
     glDepthFunc(GL_LESS);
     glDepthRange(0.0f, 1.0f);
     glClearDepth(1.0f);
-}
+}*/
 
 void SWTFilter::PrepareRayLines(const Texture &input)
 {
     int width  = input.GetWidth();
     int height = input.GetHeight();
     
-    List<VertexPositionTexture> vertices(1024);
     GLfloat buffer[width * height];
     input.GetTextureImage(GL_RED, GL_FLOAT, buffer);
+    
+    int count = 0;
+    for(int i = 0; i < width;  ++i)
+    for(int j = 0; j < height; ++j)
+    {
+        if (buffer[i + j * width] != 0.0f)
+            count++;
+    }
+    
+    List<VertexPositionTexture> vertices;
+    vertices.reserve(count);
     
     for(int i = 0; i < width;  ++i)
     for(int j = 0; j < height; ++j)
@@ -104,7 +114,7 @@ void SWTFilter::PerformSteps(Ptr<Texture> output)
     if (GradientDirection == GradientDirection::Unspecified)
         throw std::runtime_error("Unspecified gradient direction in SWT step");
     
-    bool darkOnLight  = (GradientDirection == GradientDirection::With);
+    bool darkOnLight = (GradientDirection == GradientDirection::With);
     
     ReserveColorBuffers(2);
     
@@ -113,13 +123,16 @@ void SWTFilter::PerformSteps(Ptr<Texture> output)
     auto averageValues     = ColorBuffers[1];
     
     glEnable(GL_STENCIL_TEST);
+    PrepareEdgeOnlyStencil();
     CastRays(darkOnLight, oppositePositions);
     glDisable(GL_STENCIL_TEST);
     DEBUG_FB("SWT 1");
     GraphicsDevice::SetBuffers(linesVertices, nullptr);
-    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glBlendEquation(GL_MAX);
     WriteRayValues(*oppositePositions, swt);
-    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
     GraphicsDevice::UseDefaultBuffers();
     DEBUG_FB("SWT 2");
     glEnable(GL_STENCIL_TEST);
@@ -127,10 +140,9 @@ void SWTFilter::PerformSteps(Ptr<Texture> output)
     glDisable(GL_STENCIL_TEST);
     DEBUG_FB("SWT 3");
     GraphicsDevice::SetBuffers(linesVertices, nullptr);
-    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
     WriteAverageRayValues(*oppositePositions, *averageValues, output);
-    glDisable(GL_DEPTH_TEST);
-    
+    glDisable(GL_BLEND);
     DEBUG_FB("SWT 4");
     
     GraphicsDevice::UseDefaultBuffers();
@@ -149,7 +161,7 @@ void SWTFilter::WriteRayValues(const Texture &oppositePositions, Ptr<Texture> ou
 {
     write->Use();
     write->Uniforms["OppositePositions"].SetValue(oppositePositions);
-    RenderToTexture(output, PrimitiveType::Lines, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    RenderToTexture(output, PrimitiveType::Lines, GL_COLOR_BUFFER_BIT/* | GL_DEPTH_BUFFER_BIT*/);
 }
 
 void SWTFilter::AverageRayValues(const Texture &oppositePositions, const Texture &values, Ptr<Texture> output)
@@ -165,7 +177,7 @@ void SWTFilter::WriteAverageRayValues(const Texture &oppositePositions, const Te
     writeAvg->Use();
     writeAvg->Uniforms["OppositePositions"].SetValue(oppositePositions);
     writeAvg->Uniforms["AverageValues"].SetValue(averageValues);
-    RenderToTexture(output, PrimitiveType::Lines, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    RenderToTexture(output, PrimitiveType::Lines, GL_COLOR_BUFFER_BIT/* | GL_DEPTH_BUFFER_BIT*/);
 }
 
 void SWTFilter::ScaleResult(const Texture &input, float scaleFactor, Ptr<Texture> output)

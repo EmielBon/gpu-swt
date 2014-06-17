@@ -28,7 +28,7 @@ public:
     
 private:
     
-    void DetectEdges(const Texture &gradients);
+    void DetectEdges(const Texture &gradients, Ptr<Texture> output);
     
     void ScharrAveraging(const Texture &input, Ptr<Texture> output);
     

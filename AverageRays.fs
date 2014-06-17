@@ -3,10 +3,8 @@
 #pragma include Codec.fsh
 #pragma include TextureUtil.fsh
 
-//uniform sampler2D Gradients;
 uniform sampler2D OppositePositions;
 uniform sampler2D Values;
-//uniform bool      DarkOnLight;
 
 out vec4 FragColor;
 
@@ -14,11 +12,10 @@ void main()
 {
     ivec2 pos0 = ivec2(gl_FragCoord.xy);
     
-    //vec2 gradient = normalize( fetch(Gradients, pos0).xy );
     float pos1_id = fetch(OppositePositions, pos0).r;
     if (pos1_id == 0.0)
         discard;
-    ivec2 pos1 = decode(pos1_id);//ivec2(pos0 + gradient * (lineLength * (DarkOnLight ? 1 : -1)));
+    ivec2 pos1 = decode(pos1_id);
     
     bool steep = abs(pos1.y - pos0.y) > abs(pos1.x - pos0.x);
     

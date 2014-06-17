@@ -28,14 +28,14 @@
 RenderWindow* RenderWindow::instance = nullptr;
 
 RenderWindow::RenderWindow(int width, int height, const String &title)
-: base(width, height, title), currentTextureIndex(0), oldTextureIndex(-1)
+    : base(width, height, title), currentTextureIndex(0), oldTextureIndex(-1)
 {
     instance = this;
     
     ContentLoader::ContentPath = "/Users/emiel/Desktop/OGLTest/OGLTest/";
     
     // Load the input image as a cv::Mat
-    cv::Mat input = ContentLoader::LoadV<cv::Mat>("sign800x600");
+    cv::Mat input = ContentLoader::LoadV<cv::Mat>("chep2");
     AddTexture(input, "Input image");
     SetWindowSize(input.size(), {1024, 1024});
 
@@ -54,7 +54,7 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     
     program = New<Program>(shaders);
     
-    List<BoundingBox> boundingBoxes = SWTHelperGPU::StrokeWidthTransform(input);
+    List<BoundingBox> boundingBoxes = SWTHelper::StrokeWidthTransform(input);
     cv::Mat output = ImgProc::DrawBoundingBoxes(input, boundingBoxes, {0, 255, 255, 255});
     AddTexture(output, "Detected text regions");
 }

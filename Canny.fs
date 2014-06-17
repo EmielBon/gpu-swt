@@ -49,6 +49,6 @@ void main()
     
     if (!isEdgePixel)
         discard; // used to directly build the stencil buffer
-    else
-        FragColor = vec4( vec3(isEdgePixel ? 1 : 0), 0 );
+    
+    FragColor = vec4(1, 1, 1, 1);
 }

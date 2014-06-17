@@ -32,7 +32,7 @@ private:
     
     void PrepareEdgeOnlyStencil();
     
-    void PrepareMaximizingDepthTest();
+    //void PrepareMaximizingDepthTest();
     
     void PrepareRayLines(const Texture &values);
     
