@@ -3,7 +3,6 @@
 uniform sampler2D SobelHor;
 uniform sampler2D SobelVer;
 
-in  vec2 FragTexCoord;
 out vec4 FragColor;
 
 void main()

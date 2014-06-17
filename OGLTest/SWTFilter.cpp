@@ -7,7 +7,7 @@
 //
 
 #include "SWTFilter.h"
-#include "VertexPositionTexture.h"
+#include "VertexPosition.h"
 #include "Texture.h"
 #include "GraphicsDevice.h"
 #include "VertexBuffer.h"
@@ -89,7 +89,7 @@ void SWTFilter::PrepareRayLines(const Texture &input)
             count++;
     }
     
-    List<VertexPositionTexture> vertices;
+    List<VertexPosition> vertices;
     vertices.reserve(count);
     
     for(int i = 0; i < width;  ++i)
@@ -98,7 +98,7 @@ void SWTFilter::PrepareRayLines(const Texture &input)
         if (buffer[i + j * width] == 0.0f)
             continue;
         
-        VertexPositionTexture v1, v2;
+        VertexPosition v1, v2;
         v1.Position = Vector3(i, j, 0); // z == 0 = Use directly
         v2.Position = Vector3(i, j, 1); // z == 1 = Scatter position to end point
         vertices.push_back(v1);

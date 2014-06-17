@@ -9,7 +9,7 @@
 #include "ConnectedComponentsFilter.h"
 #include "Texture.h"
 #include "GraphicsDevice.h"
-#include "VertexPositionTexture.h"
+#include "VertexPosition.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "FrameBuffer.h"
@@ -69,9 +69,9 @@ void ConnectedComponentsFilter::PrepareColumnVertices()
 {
     int height = Input->GetHeight();
     
-    List<VertexPositionTexture> vertices;
+    List<VertexPosition> vertices;
     for (int y = 0; y < height; ++y)
-        vertices.push_back(VertexPositionTexture(Vector3(0, y, 0), Vector2(0, 0)));
+        vertices.push_back(VertexPosition(Vector3(0, y, 0)));
     
     columnVertices = New<VertexBuffer>();
     columnVertices->SetData(vertices);
@@ -141,10 +141,10 @@ void ConnectedComponentsFilter::PerformSteps(Ptr<Texture> output)
     // Compute bounding boxes
     int height = Input->GetHeight();
     
-    List<VertexPositionTexture> vertices;
+    List<VertexPosition> vertices;
     for (int x = 0; x < width;  ++x)
     for (int y = 0; y < height; ++y)
-        vertices.push_back(VertexPositionTexture(Vector3(x, y, 0), Vector2(0, 0)));
+        vertices.push_back(VertexPosition(Vector3(x, y, 0)));
     
     auto pixelVertices = New<VertexBuffer>();
     pixelVertices->SetData(vertices);

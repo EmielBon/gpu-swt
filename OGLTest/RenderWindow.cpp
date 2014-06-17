@@ -35,26 +35,18 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     ContentLoader::ContentPath = "/Users/emiel/Desktop/OGLTest/OGLTest/";
     
     // Load the input image as a cv::Mat
-    cv::Mat input = ContentLoader::LoadV<cv::Mat>("chep2");
+    cv::Mat input = ContentLoader::LoadV<cv::Mat>("sign800x600");
+    cv::flip(input, input, 0);
     AddTexture(input, "Input image");
     SetWindowSize(input.size(), {1024, 1024});
 
     check_gl_error();
     
-    rect1 = New<DrawableRect>(-1, 1, 1, -1);
+    rect1 = New<DrawableRect>(-1, -1, 1, 1);
     
-    // Load the shader program
-    List< Ptr<Shader> > shaders;
+    program = ContentLoader::Load<Program>("Trivial", "Normal");
     
-    auto vs = ContentLoader::Load<VertexShader>("Trivial");
-    auto fs = ContentLoader::Load<FragmentShader>("Normal");
-    
-    shaders.push_back(std::dynamic_pointer_cast<Shader>(vs));
-    shaders.push_back(std::dynamic_pointer_cast<Shader>(fs));
-    
-    program = New<Program>(shaders);
-    
-    List<BoundingBox> boundingBoxes = SWTHelper::StrokeWidthTransform(input);
+    List<BoundingBox> boundingBoxes = SWTHelperGPU::StrokeWidthTransform(input);
     cv::Mat output = ImgProc::DrawBoundingBoxes(input, boundingBoxes, {0, 255, 255, 255});
     AddTexture(output, "Detected text regions");
 }

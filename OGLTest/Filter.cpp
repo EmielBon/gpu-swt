@@ -12,6 +12,7 @@
 #include "FrameBuffer.h"
 #include "GraphicsDevice.h"
 #include "Texture.h"
+#include "ContentLoader.h"
 
 void Filter::ReserveColorBuffers(int count)
 {
@@ -94,7 +95,7 @@ void Filter::SetColorAttachment(Ptr<Texture> colorAttachment)
 
 Ptr<Program> Filter::LoadProgram(const String &vertexShaderSource, const String &fragmentShaderSource)
 {
-    return Program::LoadFromSources(vertexShaderSource, fragmentShaderSource);
+    return ContentLoader::Load<Program>(vertexShaderSource, fragmentShaderSource);
 }
 
 void Filter::ApplyFilter(Filter &filter, Ptr<Texture> output)

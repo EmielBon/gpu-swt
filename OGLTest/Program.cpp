@@ -126,15 +126,7 @@ void Program::Use()
     glUseProgram(programId);
 }
 
-Ptr<Program> Program::LoadFromSources(const String &vertexShaderSource, const String &fragmentShaderSource)
+Ptr<Program> Program::LoadScreenSpaceProgram(const String &fragmentShaderSource)
 {
-    List< Ptr<Shader> > shaders;
-    
-    auto vs = ContentLoader::Load<VertexShader>(vertexShaderSource);
-    auto fs = ContentLoader::Load<FragmentShader>(fragmentShaderSource);
-    
-    shaders.push_back(std::dynamic_pointer_cast<Shader>(vs));
-    shaders.push_back(std::dynamic_pointer_cast<Shader>(fs));
-    
-    return New<Program>(shaders);
+    return ContentLoader::Load<Program>("Trivial", fragmentShaderSource);
 }

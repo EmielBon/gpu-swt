@@ -1,12 +1,14 @@
 #version 150
 
+#pragma include TextureUtil.fsh
+
 uniform sampler2D Texture;
 uniform float     Scale;
 
-in  vec2 FragTexCoord;
 out vec4 FragColor;
 
 void main()
 {
-    FragColor = vec4(texture(Texture, FragTexCoord).rgb * Scale, 1);
+    vec3 color = fetch(Texture, gl_FragCoord.xy).rgb;
+    FragColor = vec4(color * Scale, 1);
 }

@@ -5,7 +5,6 @@ uniform vec2 TextureSize = vec2(1, 1);
 uniform float LowerThreshold = 0.10;
 uniform float UpperThreshold = 0.30;
 
-in  vec2 FragTexCoord;
 out vec4 FragColor;
 
 const float Pi = 3.14159265359;

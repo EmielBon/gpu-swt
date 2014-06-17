@@ -18,6 +18,9 @@ public:
     static Ptr<T> Load(const String &resourceName);
     
     template<class T>
+    static Ptr<T> Load(const String &resource1, const String &resource2);
+    
+    template<class T>
     static T LoadV(const String &resourceName);
     
     static void SetContentPath(const String &contentPath);

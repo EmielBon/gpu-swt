@@ -29,7 +29,6 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     
     int width  = input.size().width;
     int height = input.size().height;
-    
     // Create a Texture from the input
     Ptr<Texture> texture = textureFromImage<cv::Vec3f>(input);
     
@@ -92,7 +91,7 @@ Ptr<Texture> SWTHelperGPU::ApplyPass(Ptr<Filter> filter, Ptr<Texture> input)
     renderTime  += filter->RenderTime;
     compileTime += filter->CompileTime;
     
-    RenderWindow::Instance().AddFrameBufferSnapshot(filter->Name);
+    DEBUG_FB(filter->Name);
     return output;
 }
 

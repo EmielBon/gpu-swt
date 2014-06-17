@@ -18,7 +18,6 @@ void main()
     hResult[0] = fetch(Texture, uv - offset.xy).r;
     vResult[0] = fetch(Texture, uv - offset.yx).r;
     
-    // Can probably prefetch this one if not using normal FragTexCoord, not gl_FragCoord + conversion
     hResult[1] = vResult[1] = fetch(Texture, uv).r;
     
     hResult[2] = fetch(Texture, uv + offset.xy).r;

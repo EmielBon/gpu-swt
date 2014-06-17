@@ -6,7 +6,6 @@ uniform sampler2D Gradients;
 uniform float LowerThreshold = 0.08;
 uniform float UpperThreshold = 0.16;
 
-in  vec2 FragTexCoord;
 out vec4 FragColor;
 
 const float Pi = 3.14159265359;

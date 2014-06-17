@@ -4,9 +4,8 @@
 
 uniform sampler2D Texture;
 
-in  vec3 Position;
-in  vec2 TexCoord;
-out vec2 FragTexCoord;
+in vec3 Position;
+in vec2 TexCoord;
 
 void main()
 {

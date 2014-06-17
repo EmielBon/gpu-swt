@@ -5,7 +5,6 @@
 
 uniform sampler2D Texture;
 
-in  vec2 FragTexCoord;
 out vec4 FragColor;
 
 flat in ivec2 PixelPosition;

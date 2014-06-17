@@ -15,6 +15,7 @@
 		1700DFD218E1B37F004112B6 /* SWTHelperGPU.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFD018E1B37F004112B6 /* SWTHelperGPU.cpp */; };
 		1700DFD518E1CA23004112B6 /* Sobel1.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFD418E1CA23004112B6 /* Sobel1.fs */; };
 		1700DFD718E1CE9F004112B6 /* Sobel2.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFD618E1CE9F004112B6 /* Sobel2.fs */; };
+		17096C8B1950513700F7933A /* VertexPosition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17096C891950513700F7933A /* VertexPosition.cpp */; };
 		1710979718BF476200E54738 /* libopencv_calib3d.2.4.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1710975F18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */; };
 		1710979B18BF476200E54738 /* libopencv_contrib.2.4.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1710976318BF476200E54738 /* libopencv_contrib.2.4.8.dylib */; };
 		1710979D18BF476200E54738 /* libopencv_core.2.4.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1710976518BF476200E54738 /* libopencv_core.2.4.8.dylib */; };
@@ -85,7 +86,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		170005FF18ED869800B1D45C /* AlphaTest.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = AlphaTest.fs; sourceTree = "<group>"; };
 		1700060418EEEE8800B1D45C /* WriteRays.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = WriteRays.fs; sourceTree = "<group>"; };
 		1700060718EEEF1400B1D45C /* WriteRays.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = WriteRays.vs; sourceTree = "<group>"; };
 		1700060818F297B400B1D45C /* RenderBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderBuffer.cpp; sourceTree = "<group>"; };
@@ -110,6 +110,8 @@
 		1700DFD418E1CA23004112B6 /* Sobel1.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Sobel1.fs; sourceTree = "<group>"; };
 		1700DFD618E1CE9F004112B6 /* Sobel2.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Sobel2.fs; sourceTree = "<group>"; };
 		1708D98719335746005BAB4C /* Histogram.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Histogram.vs; sourceTree = "<group>"; };
+		17096C891950513700F7933A /* VertexPosition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexPosition.cpp; sourceTree = "<group>"; };
+		17096C8A1950513700F7933A /* VertexPosition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexPosition.h; sourceTree = "<group>"; };
 		170B021F194730AE00E45664 /* Decode.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Decode.fs; sourceTree = "<group>"; };
 		170B02201949BBC600E45664 /* CountComponents.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CountComponents.vs; sourceTree = "<group>"; };
 		170B02211949BC5100E45664 /* CountComponents.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CountComponents.fs; sourceTree = "<group>"; };
@@ -493,7 +495,6 @@
 		17658F26189FA645003A8B11 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
-				170005FF18ED869800B1D45C /* AlphaTest.fs */,
 				17B473A718E445020012148E /* Canny */,
 				17ACBD7918FC20E90052244F /* Color.fs */,
 				1700061118F7E0A300B1D45C /* Connected Components */,
@@ -542,6 +543,8 @@
 				17658F3E18A0EF5F003A8B11 /* VertexBuffer.h */,
 				17EED2E518A3B6480094A37D /* VertexDeclaration.h */,
 				17EED2E818A3B67A0094A37D /* VertexDeclarationElement.h */,
+				17096C891950513700F7933A /* VertexPosition.cpp */,
+				17096C8A1950513700F7933A /* VertexPosition.h */,
 				17EED2DE18A398350094A37D /* VertexPositionTexture.cpp */,
 				17EED2DF18A398350094A37D /* VertexPositionTexture.h */,
 				17658F35189FC8B2003A8B11 /* VertexShader.h */,
@@ -668,6 +671,7 @@
 				17EED2EC18A3C6240094A37D /* GraphicsDevice.cpp in Sources */,
 				1700DFD718E1CE9F004112B6 /* Sobel2.fs in Sources */,
 				17EED2DD18A396E80094A37D /* Texture.cpp in Sources */,
+				17096C8B1950513700F7933A /* VertexPosition.cpp in Sources */,
 				17ACBD881906A2BF0052244F /* Filter.cpp in Sources */,
 				171A0319189BD85A00A72B91 /* RenderWindow.cpp in Sources */,
 				1744D95E18C0B193004605D1 /* Chain.cpp in Sources */,

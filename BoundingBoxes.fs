@@ -4,7 +4,6 @@
 
 uniform sampler2D Texture;
 
-in  vec2 FragTexCoord;
 out vec4 FragColor;
 
 flat in vec2 CurrentRootXY;

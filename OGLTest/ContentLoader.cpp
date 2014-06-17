@@ -33,17 +33,23 @@ Ptr<FragmentShader> ContentLoader::Load(const String &resourceName)
 }
 
 template<>
-Ptr<Program> ContentLoader::Load(const String &resourceName)
+Ptr<Program> ContentLoader::Load(const String &vertexShaderSource, const String &fragmentShaderSource)
 {
     List< Ptr<Shader> > shaders;
     
-    auto vs = Load<VertexShader>(resourceName);
-    auto fs = Load<FragmentShader>(resourceName);
+    auto vs = Load<VertexShader>(vertexShaderSource);
+    auto fs = Load<FragmentShader>(fragmentShaderSource);
     
     shaders.push_back(std::dynamic_pointer_cast<Shader>(vs));
     shaders.push_back(std::dynamic_pointer_cast<Shader>(fs));
     
     return New<Program>(shaders);
+}
+
+template<>
+Ptr<Program> ContentLoader::Load(const String &resourceName)
+{
+    return Load<Program>(resourceName, resourceName);
 }
 
 template<>

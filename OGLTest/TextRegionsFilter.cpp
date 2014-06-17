@@ -13,7 +13,7 @@
 #include "Texture.h"
 #include "FrameBuffer.h"
 
-#include "VertexPositionTexture.h"
+#include "VertexPosition.h"
 #include "VertexBuffer.h"
 #include "GraphicsDevice.h"
 
@@ -44,10 +44,10 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     /*int width  = Input->GetWidth();
     int height = Input->GetHeight();
     
-    List<VertexPositionTexture> vertices;
+    List<VertexPosition> vertices;
     for (int x = 0; x < width;  ++x)
         for (int y = 0; y < height; ++y)
-            vertices.push_back(VertexPositionTexture(Vector3(x, y, 0), Vector2(0, 0)));
+            vertices.push_back(VertexPosition(Vector3(x, y, 0)));
     
     auto pixelVertices = New<VertexBuffer>();
     pixelVertices->SetData(vertices);

@@ -8,7 +8,6 @@ uniform float MaxAspectRatio;
 uniform float MinSizeRatio;
 uniform float MaxSizeRatio;
 
-in  vec2 FragTexCoord;
 out vec4 FragColor;
 
 float area(vec2 dimensions)

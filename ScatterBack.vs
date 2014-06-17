@@ -8,7 +8,6 @@ uniform int       Column;
 
      in  vec3  Position;
      in  vec2  TexCoord;
-     out vec2  FragTexCoord;
 flat out float ScatterID;
 
 void main()
@@ -21,7 +20,6 @@ void main()
     ivec2 neighbor_root_xy = decode(neighbor_root_id);
     
     ScatterID    = current_root_id;
-    FragTexCoord = TexCoord;
     
     gl_Position = vec4(getScreenSpaceCoord(Texture, neighbor_root_xy), 1, 1); // note the 1 for depth
 }

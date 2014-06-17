@@ -9,8 +9,6 @@ out vec4 FragColor;
 const float offsets[3] = float[](0.0, 1.3846153846, 3.2307692308);
 const float weights[3] = float[](0.2270270270, 0.3162162162, 0.0702702703);
 
-// todo: redeclare gl_FragCoord with pixel_center_integer to make pos an ivec2
-
 void main()
 {
     vec2 pos = vec2(gl_FragCoord.xy);

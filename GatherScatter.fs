@@ -6,7 +6,6 @@
 uniform sampler2D Texture;
 
 flat in  float ScatterID;
-     in  vec2  FragTexCoord;
      out vec4  FragColor;
 
 void main()

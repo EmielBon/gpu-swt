@@ -9,7 +9,6 @@
 #pragma once
 
 #include "types.h"
-#include "VertexPositionTexture.h"
 
 class DrawableRect
 {

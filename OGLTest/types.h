@@ -63,7 +63,13 @@ using OGLBindFunction = void(*)(GLenum, GLuint);
 #define New   std::make_shared
 #define Tuple std::tuple
 
-#define DEBUG_FB(name) RenderWindow::Instance().AddFrameBufferSnapshot(name)
+#define DEBUG_STEPS
+
+#ifdef DEBUG_STEPS
+    #define DEBUG_FB(name) RenderWindow::Instance().AddFrameBufferSnapshot(name)
+#else
+    #define DEBUG_FB(name)
+#endif
 
 // Forward declarations
 // Framework
