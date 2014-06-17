@@ -20,11 +20,9 @@ vec4 sample(sampler2D sampler, vec2 xy)
 
 vec2 getScreenSpaceCoord(sampler2D sampler, vec2 screenCoord)
 {
-    vec2 pos = vec2(0, 0);
-    pos.x = screenCoord.x + 0.5;
-    pos.y = screenCoord.y;
+    // todo: no idea why the +0.5 only with x and not with y
+    vec2 pos = screenCoord + vec2(0.5, 0);
     return (pos / (size(sampler) - vec2(0.5))) * 2 - vec2(1);
-    
     //return ((screenTexCoord + vec2(0.5, 0))) / (size(sampler) - vec2(0.5)) * 2 - vec2(1);
 }
 

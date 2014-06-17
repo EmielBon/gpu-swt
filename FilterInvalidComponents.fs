@@ -1,5 +1,6 @@
 #version 150
 
+#pragma include Util.fsh
 #pragma include TextureUtil.fsh
 
 uniform sampler2D Texture;
@@ -27,14 +28,14 @@ void main()
     
     vec2 dims = vec2(x2 - x1, y2 - y1);
     
-    float aspectRatio = dims.x / dims.y;
     //float mean = GetMeanStrokeWidth();
     //float occupancy = GetOccupancy();
     //float variance = GetStrokeWidthVariance();
     
-    float sizeRatio = area(dims) / area( size(Texture) );
-    if (aspectRatio >= MinAspectRatio && aspectRatio <= MaxAspectRatio && sizeRatio >= MinSizeRatio && sizeRatio <= MaxSizeRatio)
-        FragColor = bbox;
-    else
-        FragColor = vec4(0, 0, 0, 0);
+    float aspectRatio = dims.x / dims.y;
+    float sizeRatio   = area(dims) / area( size(Texture) );
+    bool  goodAspect  = aspectRatio >= MinAspectRatio && aspectRatio <= MaxAspectRatio;
+    bool  goodSize    = sizeRatio >= MinSizeRatio && sizeRatio <= MaxSizeRatio;
+    
+    FragColor = ifelse(goodAspect && goodSize, bbox, vec4(0));
 }

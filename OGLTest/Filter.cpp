@@ -26,10 +26,10 @@ void Filter::DoLoadShaderPrograms()
     if (shadersLoaded)
         return;
     
-    //glFinish();
+    glFinish();
     auto t = now();
     LoadShaderPrograms();
-    //glFinish();
+    glFinish();
     CompileTime += now() - t;
     
     shadersLoaded = true;
@@ -49,7 +49,7 @@ void Filter::Apply(Ptr<Texture> output)
     if (!Input)
         throw std::runtime_error(String("No input specified for filter: ") + Name);
     
-    //glFinish();
+    glFinish();
     auto t = now();
     
     DoLoadShaderPrograms();
@@ -65,7 +65,7 @@ void Filter::Apply(Ptr<Texture> output)
 
 void Filter::Render(PrimitiveType primitiveType /* = PrimitiveType::Unspecified */, GLenum clearOptions /* = GL_NONE */)
 {
-    //glFinish();
+    glFinish();
     auto f = now();
     if (clearOptions != GL_NONE);
         glClear(clearOptions);
@@ -73,7 +73,7 @@ void Filter::Render(PrimitiveType primitiveType /* = PrimitiveType::Unspecified 
         GraphicsDevice::DrawPrimitives();
     else
         GraphicsDevice::DrawArrays(primitiveType);
-    //glFinish();
+    glFinish();
     RenderTime += now() - f;
 }
 

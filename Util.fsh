@@ -17,3 +17,8 @@ ivec2 ifelse(bool condition, ivec2 a, ivec2 b)
 {
     return ivec2(mix(a, b, int(!condition)));
 }
+
+vec4 ifelse(bool condition, vec4 a, vec4 b)
+{
+    return mix(a, b, int(!condition));
+}

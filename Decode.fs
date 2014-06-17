@@ -11,5 +11,6 @@ void main()
 {
     ivec2 current_xy = ivec2(gl_FragCoord.xy);
     float value      = fetch(Texture, current_xy).a;
-    FragColor        = vec4(decode(value) / vec2( size(Texture) ), 0, value);
+    vec2  xy         = decode(value) / vec2( size(Texture) );
+    FragColor        = vec4(xy, 0, value);
 }
