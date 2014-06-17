@@ -1,5 +1,6 @@
 #version 150
 
+#pragma include Util.fsh
 #pragma include Codec.fsh
 #pragma include TextureUtil.fsh
 
@@ -13,8 +14,6 @@ const float MaxOppositeEdgeGradientDifference = Pi / 2;
 const int   MaxRayLength = 50;
 const vec4  Black = vec4(0, 0, 0, 1);
 const int   MaxIterations = int(MaxRayLength / prec);
-
-#define ditch { FragColor = Black; return; }
 
 out vec4 FragColor;
 
@@ -31,12 +30,15 @@ bool isEdgePixel(ivec2 xy)
 void main()
 {
     ivec2 pos0 = ivec2(gl_FragCoord.xy);
-    int   dir  = DarkOnLight ? 1 : -1;
+    int   dir  = ifelse(DarkOnLight, 1, -1);
     float meh  = dir * prec;
     
     // todo: should not be needed with stencil test, but removing it does not function as expected
     if (!isEdgePixel(pos0))
-        ditch;
+    {
+        FragColor = Black;
+        return;
+    }
     
     vec2 gradient0 = fetch(Gradients, pos0).xy;
     vec2 dp = normalize(gradient0) * meh;

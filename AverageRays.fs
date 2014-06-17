@@ -1,5 +1,6 @@
 #version 150
 
+#pragma include Util.fsh
 #pragma include Codec.fsh
 #pragma include TextureUtil.fsh
 
@@ -19,23 +20,19 @@ void main()
     
     bool steep = abs(pos1.y - pos0.y) > abs(pos1.x - pos0.x);
     
-    if (steep)
-    {
-        pos0.xy = pos0.yx;
-        pos1.xy = pos1.yx;
-    }
-    if (pos0.x > pos1.x)
-    {
-        ivec2 temp = pos0;
-        pos0 = pos1;
-        pos1 = temp;
-    }
+    pos0 = swizzleIf(steep, pos0);
+    pos1 = swizzleIf(steep, pos1);
     
-    int dx = pos1.x - pos0.x;
-    int dy = abs(pos1.y - pos0.y);
-    int err = dx / 2;
-    int ystep = (pos0.y < pos1.y ? 1 : -1);
-    int y = pos0.y;
+    ivec2 temp = pos0;
+    bool rightToLeft = pos0.x > pos1.x;
+    pos0 = ifelse(rightToLeft, pos1, pos0);
+    pos1 = ifelse(rightToLeft, temp, pos1);
+    
+    int dx    = pos1.x - pos0.x;
+    int dy    = abs(pos1.y - pos0.y);
+    int err   = dx / 2;
+    int ystep = ifelse(pos0.y < pos1.y, 1, -1);
+    int y     = pos0.y;
     
     float sum = 0;
     float debug = 0;
@@ -44,18 +41,15 @@ void main()
     {
         ivec2 pos = ivec2(x, y);
         
-        float oldSum = sum;
+        float dSum = fetch(Values, swizzleIf(steep, pos)).r;
+        sum += dSum;
         
-        if (steep)
-            sum += fetch(Values, pos.yx).r;
-        else
-            sum += fetch(Values, pos.xy).r;
         err = err - dy;
         
-        if (oldSum == sum)
-            debug += 1;
+        debug += ifelse(dSum == 0, 1, 0);
         
-        if (err < 0) { y += ystep; err += dx; }
+        y   += ifelse(err < 0, ystep, 0);
+        err += ifelse(err < 0,    dx, 0);
     }
     
     FragColor = vec4(sum / dx, debug / 10, 0, 1);

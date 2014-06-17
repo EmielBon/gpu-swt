@@ -112,6 +112,7 @@
 		1708D98719335746005BAB4C /* Histogram.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Histogram.vs; sourceTree = "<group>"; };
 		17096C891950513700F7933A /* VertexPosition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexPosition.cpp; sourceTree = "<group>"; };
 		17096C8A1950513700F7933A /* VertexPosition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexPosition.h; sourceTree = "<group>"; };
+		17096C8C1950804A00F7933A /* Util.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Util.fsh; sourceTree = "<group>"; };
 		170B021F194730AE00E45664 /* Decode.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Decode.fs; sourceTree = "<group>"; };
 		170B02201949BBC600E45664 /* CountComponents.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CountComponents.vs; sourceTree = "<group>"; };
 		170B02211949BC5100E45664 /* CountComponents.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CountComponents.fs; sourceTree = "<group>"; };
@@ -506,9 +507,10 @@
 				1700DFC618E03B74004112B6 /* Sobel */,
 				17B473AD18EAD9C70012148E /* Stroke Width Transform */,
 				17B473AF18EAEE250012148E /* TextureUtil.fsh */,
+				17658F27189FA6AC003A8B11 /* Trivial.vs */,
+				17096C8C1950804A00F7933A /* Util.fsh */,
 				170B02231949DC6A00E45664 /* VertexTexture.fs */,
 				170B02221949D6B600E45664 /* VertexTexture.vs */,
-				17658F27189FA6AC003A8B11 /* Trivial.vs */,
 			);
 			name = shaders;
 			sourceTree = "<group>";

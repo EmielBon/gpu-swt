@@ -161,7 +161,7 @@ void SWTFilter::WriteRayValues(const Texture &oppositePositions, Ptr<Texture> ou
 {
     write->Use();
     write->Uniforms["OppositePositions"].SetValue(oppositePositions);
-    RenderToTexture(output, PrimitiveType::Lines, GL_COLOR_BUFFER_BIT/* | GL_DEPTH_BUFFER_BIT*/);
+    RenderToTexture(output, PrimitiveType::Lines, GL_COLOR_BUFFER_BIT);
 }
 
 void SWTFilter::AverageRayValues(const Texture &oppositePositions, const Texture &values, Ptr<Texture> output)
@@ -177,7 +177,7 @@ void SWTFilter::WriteAverageRayValues(const Texture &oppositePositions, const Te
     writeAvg->Use();
     writeAvg->Uniforms["OppositePositions"].SetValue(oppositePositions);
     writeAvg->Uniforms["AverageValues"].SetValue(averageValues);
-    RenderToTexture(output, PrimitiveType::Lines, GL_COLOR_BUFFER_BIT/* | GL_DEPTH_BUFFER_BIT*/);
+    RenderToTexture(output, PrimitiveType::Lines, GL_COLOR_BUFFER_BIT);
 }
 
 void SWTFilter::ScaleResult(const Texture &input, float scaleFactor, Ptr<Texture> output)
