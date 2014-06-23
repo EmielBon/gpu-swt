@@ -21,11 +21,9 @@
 void SWTFilter::LoadShaderPrograms()
 {
     sobel    = New<SobelFilter>();
-    gaussian = New<GaussianFilter>();
     canny    = New<CannyFilter>();
     
     sobel->DoLoadShaderPrograms();
-    gaussian->DoLoadShaderPrograms();
     canny->DoLoadShaderPrograms();
     
     cast     = LoadScreenSpaceProgram("CastRays");
@@ -37,22 +35,18 @@ void SWTFilter::LoadShaderPrograms()
 
 void SWTFilter::Initialize()
 {
-    ReserveColorBuffers(1);
+    ReserveColorBuffers(2);
     
-    gradients = Input->GetEmptyClone();
-    edges     = Input->GetEmptyClone();
+    gradients = ColorBuffers[0];
+    edges     = ColorBuffers[1];
     
-    sobel->Input    = Input;
-    gaussian->Input = Input;
+    sobel->Input = Input;
+    canny->Input = Input;
     
     ApplyFilter(*sobel, gradients);
-    ApplyFilter(*gaussian, ColorBuffers[0]);
-    
-    canny->Input = ColorBuffers[0];
     ApplyFilter(*canny, edges); // Builds an edge-only stencil buffer
     
     PrepareEdgeOnlyStencil();
-    //PrepareMaximizingDepthTest();
     PrepareRayLines(*edges);
     
     glClearColor(0, 0, 0, 0);
@@ -64,14 +58,6 @@ void SWTFilter::PrepareEdgeOnlyStencil()
     glStencilFunc(GL_EQUAL, 2, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 }
-
-/*void SWTFilter::PrepareMaximizingDepthTest()
-{
-    glDepthMask(GL_TRUE);
-    glDepthFunc(GL_LESS);
-    glDepthRange(0.0f, 1.0f);
-    glClearDepth(1.0f);
-}*/
 
 void SWTFilter::PrepareRayLines(const Texture &input)
 {

@@ -28,14 +28,17 @@ void main()
     pos0 = ifelse(rightToLeft, pos1, pos0);
     pos1 = ifelse(rightToLeft, temp, pos1);
     
-    int dx    = pos1.x - pos0.x;
-    int dy    = abs(pos1.y - pos0.y);
-    int err   = dx / 2;
-    int ystep = ifelse(pos0.y < pos1.y, 1, -1);
-    int y     = pos0.y;
+    pos0.x += 1;
+    pos1 -= ivec2(1);
+    
+    lowp int dx    = pos1.x - pos0.x;
+    lowp int dy    = abs(pos1.y - pos0.y);
+    lowp int err   = dx / 2;
+    lowp int ystep = ifelse(pos0.y < pos1.y, 1, -1);
+         int y     = pos0.y;
     
     float sum = 0;
-    float debug = 0;
+    lowp float debug = 0;
     
     for (int x = pos0.x; x <= pos1.x; ++x)
     {

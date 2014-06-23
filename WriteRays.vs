@@ -12,8 +12,12 @@ void main()
 {
     ivec2 pos0    = ivec2(Position.xy);
     float pos1_id = fetch(OppositePositions, pos0).r;
-    ivec2 pos1    = decode(pos1_id);
-    Value         = 50 - distance(pos0, pos1);
+    ivec2 pos1    = decode(pos1_id);// - ivec2(1, 1);
+    
+    if (pos1_id == 0)
+        Value = 0;
+    else
+        Value = 100 - distance(pos0, pos1);
     
     vec2 p1 = getScreenSpaceCoord(OppositePositions, pos0);
     vec2 p2 = getScreenSpaceCoord(OppositePositions, pos1);

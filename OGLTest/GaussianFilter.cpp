@@ -18,16 +18,14 @@ void GaussianFilter::PerformSteps(Ptr<Texture> output)
 
 void GaussianFilter::HorizontalPass(const Texture &input, Ptr<Texture> output)
 {
-    SetColorAttachment(output);
     hor->Use();
     hor->Uniforms["Texture"].SetValue(input);
-    Render();
+    RenderToTexture(output);
 }
 
 void GaussianFilter::VerticalPass(const Texture &input, Ptr<Texture> output)
 {
-    SetColorAttachment(output);
     ver->Use();
     ver->Uniforms["Texture"].SetValue(input);
-    Render();
+    RenderToTexture(output);
 }

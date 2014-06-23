@@ -16,6 +16,7 @@
 #include "VertexPosition.h"
 #include "VertexBuffer.h"
 #include "GraphicsDevice.h"
+#include "RenderWindow.h"
 
 void TextRegionsFilter::LoadShaderPrograms()
 {
@@ -34,13 +35,14 @@ void TextRegionsFilter::Initialize()
 {
     gray = GetColorAttachment()->GetEmptyClone();
     ApplyFilter(*grayFilter, gray);
+    //DEBUG_FB("Line");
     swtFilter->Input = gray;
-    
-    ReserveColorBuffers(1);
 }
 
 void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
 {
+    ReserveColorBuffers(1);
+    
     /*int width  = Input->GetWidth();
     int height = Input->GetHeight();
     

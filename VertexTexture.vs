@@ -5,14 +5,13 @@
 
 uniform sampler2D Texture;
 
-in  vec3 Position;
-in  vec2 TexCoord;
+in vec3 Position;
 
-flat out vec4 Color;
+//flat out vec4 Color;
 
 void main()
 {
     vec2 pos     = getScreenSpaceCoord(Texture, Position.xy);
-    Color        = fetch(Texture, Position.xy);
+    //Color        = fetch(Texture, Position.xy);
     gl_Position  = vec4(pos, 0, 1);
 }

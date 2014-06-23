@@ -36,8 +36,13 @@ private:
     
     void PrepareStencilTest();
     
+public:
+    
+    Ptr<Texture> Gradients;
+    
 private:
     
+    Ptr<Filter> gaussian;
     Ptr<Program> canny, scharr, diffCanny;
 };
 

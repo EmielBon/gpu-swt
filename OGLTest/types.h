@@ -98,6 +98,7 @@ class  Chain;
 struct Component;
 struct Ray;
 // Filters
-class Filter;
+class CannyFilter;
 class ConnectedComponentsFilter;
+class Filter;
 class SWTFilter;

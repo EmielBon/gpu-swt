@@ -38,7 +38,10 @@ void Filter::DoLoadShaderPrograms()
 void Filter::DoInitialize()
 {
     if (!initialized)
+    {
         Initialize();
+        ColorBuffers.clear();
+    }
     initialized = true;
 }
 

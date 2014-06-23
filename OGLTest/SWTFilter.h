@@ -32,8 +32,6 @@ private:
     
     void PrepareEdgeOnlyStencil();
     
-    //void PrepareMaximizingDepthTest();
-    
     void PrepareRayLines(const Texture &values);
     
     void CastRays(bool darkOnLight, Ptr<Texture> output);
@@ -49,7 +47,8 @@ private:
 private:
     
     Ptr<Program> cast, write, avg, writeAvg, scale;
-    Ptr<Filter> sobel, gaussian, canny;
+    Ptr<Filter> sobel;
+    Ptr<CannyFilter> canny;
     Ptr<Texture> edges, gradients;
     Ptr<VertexBuffer> linesVertices;
     

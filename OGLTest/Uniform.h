@@ -30,6 +30,8 @@ public:
     
     void SetValue(const Vector3 &value);
     
+    void SetValue(const cv::Vec4f &value);
+    
     void SetValue(const Texture &texture);
     
 private:
@@ -78,4 +80,9 @@ inline void Uniform::SetValue(const Vector2 &value)
 inline void Uniform::SetValue(const Vector3 &value)
 {
     glUniform3f(location, value[0], value[1], value[2]);
+}
+
+inline void Uniform::SetValue(const cv::Vec4f &value)
+{
+    glUniform4f(location, value[0], value[1], value[2], value[3]);
 }

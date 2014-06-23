@@ -20,6 +20,10 @@ void ImgProc::DrawBresenhamLine(int x0, int y0, int x1, int y1, cv::Mat &input)
     if (steep)   { std::swap(x0, y0); std::swap(x1, y1); }
     if (x0 > x1) { std::swap(x0, x1); std::swap(y0, y1); }
     
+    x0 += 1;
+    x1 -= 1;
+    y1 -= 1;
+    
     int dx = x1 - x0;
     int dy = abs(y1 - y0);
     int err = dx / 2;
@@ -39,7 +43,8 @@ void ImgProc::DrawBresenhamLine(int x0, int y0, int x1, int y1, cv::Mat &input)
 
 void ImgProc::Plot(int x, int y, cv::Mat &input)
 {
-    input.at<GLubyte>(y, x) = 255;
+    //input.at<GLubyte>(y, x) = 255;
+    input.at<cv::Vec3f>(y, x) = cv::Vec3f(255, 255, 255);
 }
 
 cv::Mat ImgProc::ConvertToGrayscale(const cv::Mat &image)

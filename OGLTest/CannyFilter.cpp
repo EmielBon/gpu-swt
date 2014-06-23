@@ -8,9 +8,13 @@
 
 #include "CannyFilter.h"
 #include "Texture.h"
+#include "GaussianFilter.h"
 
 void CannyFilter::LoadShaderPrograms()
 {
+    gaussian = New<GaussianFilter>();
+    gaussian->DoLoadShaderPrograms();
+    
     canny     = LoadScreenSpaceProgram("Canny");
     scharr    = LoadScreenSpaceProgram("Sobel1");
     diffCanny = LoadScreenSpaceProgram("CannySobel2");
@@ -33,7 +37,10 @@ void CannyFilter::PerformSteps(Ptr<Texture> output)
 {
     ReserveColorBuffers(1);
     
-    ScharrAveraging(*Input, output);
+    gaussian->Input = Input;
+    ApplyFilter(*gaussian, ColorBuffers[0]);
+    
+    ScharrAveraging(*ColorBuffers[0], output);
     Differentiation(*output, ColorBuffers[0]);
     
     glEnable(GL_STENCIL_TEST);

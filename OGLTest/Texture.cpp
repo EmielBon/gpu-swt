@@ -46,6 +46,7 @@ void Texture::glRecycleTexture(const TextureParameters &params, GLuint* textures
         textures[0] = freeHandles.top();
         freeHandles.pop();
         RecycledTextureCount++;
+        printf("Recycled\n");
     }
 }
 

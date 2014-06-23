@@ -44,9 +44,17 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     
     rect1 = New<DrawableRect>(-1, -1, 1, 1);
     
-    program = ContentLoader::Load<Program>("Trivial", "Normal");
+    program = Program::LoadScreenSpaceProgram("Normal");
     
     List<BoundingBox> boundingBoxes = SWTHelperGPU::StrokeWidthTransform(input);
+    cv::Mat line(800, 600, CV_32FC3);
+    
+    for (int x = 0; x < input.cols; x++)
+    for (int y = 0; y < input.rows; y++)
+        line.at<cv::Vec3f>(y, x) = 0.0f;
+    ImgProc::DrawBresenhamLine(10, 10, 500, 400, line);
+    
+    AddTexture(line);
     cv::Mat output = ImgProc::DrawBoundingBoxes(input, boundingBoxes, {0, 255, 255, 255});
     AddTexture(output, "Detected text regions");
 }

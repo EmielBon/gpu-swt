@@ -8,12 +8,12 @@ uniform sampler2D Edges;
 uniform sampler2D Gradients;
 uniform bool      DarkOnLight;
 
-const float prec = 0.2;
-const float Pi = 3.14159265359;
-const float MaxOppositeEdgeGradientDifference = Pi / 2;
-const int   MaxRayLength = 50;
-const vec4  Black = vec4(0, 0, 0, 1);
-const int   MaxIterations = int(MaxRayLength / prec);
+const lowp    float prec = 0.2;
+const mediump float Pi   = 3.14159265359;
+const mediump float MaxOppositeEdgeGradientDifference = Pi / 2;
+const lowp    int   MaxRayLength = 100;
+const lowp    vec4  Black = vec4(0, 0, 0, 1);
+const lowp    int   MaxIterations = int(MaxRayLength / prec); // misschien beter mediump als dit nog groter wordt
 
 out vec4 FragColor;
 
@@ -30,8 +30,8 @@ bool isEdgePixel(ivec2 xy)
 void main()
 {
     ivec2 pos0 = ivec2(gl_FragCoord.xy);
-    int   dir  = ifelse(DarkOnLight, 1, -1);
-    float meh  = dir * prec;
+    // todo: choose better variable name
+    lowp int bla  = ifelse(DarkOnLight, 1, -1);
     
     // todo: should not be needed with stencil test, but removing it does not function as expected
     if (!isEdgePixel(pos0))
@@ -41,10 +41,11 @@ void main()
     }
     
     vec2 gradient0 = fetch(Gradients, pos0).xy;
-    vec2 dp = normalize(gradient0) * meh;
+    vec2 dir       = normalize(gradient0) * bla;
+    vec2 dp        = dir * prec;
     
-    vec2 realPos1 = pos0 + vec2(0.5) + (dp * 5);
-    ivec2 pos1 = ivec2(realPos1);
+    vec2  realPos1 = pos0 + vec2(0.5) + dir;
+    ivec2 pos1     = ivec2(realPos1);
     
     bool found = false;
     
@@ -56,7 +57,7 @@ void main()
     }
     
     //vec2 gradient1 = fetch(Gradients, pos1).xy;
-    //vec2 dq = normalize(gradient1) * dir;
+    //vec2 dq = normalize(gradient1) * bla;
     //int keep = int(acos(dot(dp, -dq)) < MaxOppositeEdgeGradientDifference);
     // todo: include above
     bool keep = found && inRange(pos1);

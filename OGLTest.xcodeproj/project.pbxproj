@@ -15,6 +15,7 @@
 		1700DFD218E1B37F004112B6 /* SWTHelperGPU.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFD018E1B37F004112B6 /* SWTHelperGPU.cpp */; };
 		1700DFD518E1CA23004112B6 /* Sobel1.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFD418E1CA23004112B6 /* Sobel1.fs */; };
 		1700DFD718E1CE9F004112B6 /* Sobel2.fs in Sources */ = {isa = PBXBuildFile; fileRef = 1700DFD618E1CE9F004112B6 /* Sobel2.fs */; };
+		17015B6C1952DE6600D8B268 /* VertexPosition2DCompressed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17015B6A1952DE6600D8B268 /* VertexPosition2DCompressed.cpp */; };
 		17096C8B1950513700F7933A /* VertexPosition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17096C891950513700F7933A /* VertexPosition.cpp */; };
 		1710979718BF476200E54738 /* libopencv_calib3d.2.4.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1710975F18BF476200E54738 /* libopencv_calib3d.2.4.8.dylib */; };
 		1710979B18BF476200E54738 /* libopencv_contrib.2.4.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1710976318BF476200E54738 /* libopencv_contrib.2.4.8.dylib */; };
@@ -109,6 +110,8 @@
 		1700DFD118E1B37F004112B6 /* SWTHelperGPU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTHelperGPU.h; sourceTree = "<group>"; };
 		1700DFD418E1CA23004112B6 /* Sobel1.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Sobel1.fs; sourceTree = "<group>"; };
 		1700DFD618E1CE9F004112B6 /* Sobel2.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Sobel2.fs; sourceTree = "<group>"; };
+		17015B6A1952DE6600D8B268 /* VertexPosition2DCompressed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexPosition2DCompressed.cpp; sourceTree = "<group>"; };
+		17015B6B1952DE6600D8B268 /* VertexPosition2DCompressed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexPosition2DCompressed.h; sourceTree = "<group>"; };
 		1708D98719335746005BAB4C /* Histogram.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Histogram.vs; sourceTree = "<group>"; };
 		17096C891950513700F7933A /* VertexPosition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexPosition.cpp; sourceTree = "<group>"; };
 		17096C8A1950513700F7933A /* VertexPosition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexPosition.h; sourceTree = "<group>"; };
@@ -547,6 +550,8 @@
 				17EED2E818A3B67A0094A37D /* VertexDeclarationElement.h */,
 				17096C891950513700F7933A /* VertexPosition.cpp */,
 				17096C8A1950513700F7933A /* VertexPosition.h */,
+				17015B6A1952DE6600D8B268 /* VertexPosition2DCompressed.cpp */,
+				17015B6B1952DE6600D8B268 /* VertexPosition2DCompressed.h */,
 				17EED2DE18A398350094A37D /* VertexPositionTexture.cpp */,
 				17EED2DF18A398350094A37D /* VertexPositionTexture.h */,
 				17658F35189FC8B2003A8B11 /* VertexShader.h */,
@@ -703,6 +708,7 @@
 				17658F2C189FA980003A8B11 /* Shader.cpp in Sources */,
 				17EED57E18AD205B0094A37D /* Ray.cpp in Sources */,
 				17ACBD82190695130052244F /* GLError.cpp in Sources */,
+				17015B6C1952DE6600D8B268 /* VertexPosition2DCompressed.cpp in Sources */,
 				1700DFCB18E063AC004112B6 /* GradientsFromSobel.fs in Sources */,
 				17EED57118A505910094A37D /* Uniform.cpp in Sources */,
 				17EEEF1818AE6D7000B5A290 /* ImgProc.cpp in Sources */,

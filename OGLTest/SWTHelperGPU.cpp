@@ -16,6 +16,7 @@
 #include "Profiling.h"
 #include "TextureUtil.h"
 #include "TextRegionsFilter.h"
+#include "VertexPosition.h"
 
 TimeSpan renderTime, copyTime, compileTime;
 
