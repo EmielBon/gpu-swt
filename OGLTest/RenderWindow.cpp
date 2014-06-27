@@ -19,8 +19,6 @@
 #include "SWTHelper.h"
 #include "SWTHelperGPU.h"
 #include "Texture.h"
-#include "VertexShader.h"
-#include "FragmentShader.h"
 #include "GLError.h"
 #include "FrameBuffer.h"
 #include "TextureUtil.h"

@@ -31,6 +31,14 @@ protected:
     
     void PrepareLineIndices();
     
+    void PrepareVerticalRuns();
+    
+    void PrepareBoundingBoxCalculation();
+    
+    void PrepareComponentCounting();
+    
+    void PreparePerPixelVertices();
+    
     void LoadShaderPrograms();
     
     void PerformSteps(Ptr<Texture> output);
@@ -56,6 +64,8 @@ protected:
     
     void CountComponents(Ptr<Texture> input, Ptr<Texture> output);
     
+    void ExtractBoundingBoxes();
+    
     void Decode(Ptr<Texture> input, Ptr<Texture> output);
     
     void Copy(Ptr<Texture> texture, Ptr<Texture> output);
@@ -70,6 +80,7 @@ private:
     Ptr<Program> normal, decode;
     Ptr<VertexBuffer> columnVertices;
     Ptr<IndexBuffer>  lineIndices;
+    Ptr<VertexBuffer> perPixelVertices;
 };
 
 inline ConnectedComponentsFilter::ConnectedComponentsFilter(Ptr<Texture> input)

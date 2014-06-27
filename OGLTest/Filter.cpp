@@ -93,7 +93,7 @@ Ptr<Texture> Filter::GetColorAttachment()
 
 void Filter::SetColorAttachment(Ptr<Texture> colorAttachment)
 {
-    FrameBuffer::GetCurrentlyBound()->Attach(colorAttachment);
+    FrameBuffer::GetCurrentlyBound()->SetColorAttachment(colorAttachment);
 }
 
 Ptr<Program> Filter::LoadProgram(const String &vertexShaderSource, const String &fragmentShaderSource)

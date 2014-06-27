@@ -17,6 +17,8 @@
 #include "TextureUtil.h"
 #include "TextRegionsFilter.h"
 #include "VertexPosition.h"
+#include "RenderBuffer.h"
+#include "RenderBufferType.h"
 
 TimeSpan renderTime, copyTime, compileTime;
 
@@ -41,13 +43,22 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     for(int i = 0; i < 14; ++i)
         textures[i].reset();
     */
+    
+    List<GLuint> pixels(width * height, 0);
+    for(int i = 1; i < width * height; ++i)
+        pixels[i] = 10;
+    
     // Create the framebuffer attachments
-    Ptr<Texture>      colorf       = New<Texture     >(width, height, GL_RGBA, GL_FLOAT);
-    Ptr<RenderBuffer> depthStencil = New<RenderBuffer>(width, height, RenderBuffer::Type::DepthStencil);
+    auto colorf       = New<Texture>(GL_RGBA,          width, height, GL_RGBA,          GL_FLOAT);
+    auto depthStencil = New<Texture>(GL_DEPTH_STENCIL, width, height, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, pixels.data());
+    //Ptr<RenderBuffer> depthStencil = New<RenderBuffer>(width, height, RenderBufferType::DepthStencil);
     
     // Create and setup framebuffer
-    FrameBuffer frameBuffer;
-    frameBuffer.Attach(colorf);
+    FrameBuffer frameBuffer(colorf);
+    frameBuffer.SetDepthStencil(depthStencil);
+    
+    GLubyte pix = frameBuffer.ReadDepth(0, 10, 1, 1)[0];
+    printf("Stencil value: %u\n", pix);
     
     // Create a full-screen rect
     DrawableRect rect(-1, -1, 1, 1, 1, 1);

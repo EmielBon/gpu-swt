@@ -23,7 +23,7 @@ public:
     // Empty constructor. Setup, Generate and Initialize need to be called manually
     Texture() = default;
     
-    Texture(int width, int height, GLenum format, GLenum type, const GLvoid* pixels = NULL);
+    Texture(GLenum internalFormat, int width, int height, GLenum format, GLenum type, const GLvoid* pixels = nullptr);
     
     Texture(const TextureParameters &params, const GLvoid* pixels = nullptr);
     
@@ -46,8 +46,7 @@ public:
 public:
     
     TextureParameters Parameters;
-    static const GLenum INTERNAL_FORMAT = GL_RGBA;
-    static const GLenum PREFERRED_TYPE  = GL_UNSIGNED_INT_8_8_8_8_REV;
+    static const GLenum PREFERRED_TYPE = GL_UNSIGNED_INT_8_8_8_8_REV;
     static int ActiveTextureCount, PeakTextureCount, RecycledTextureCount;
     
 private:
@@ -56,8 +55,8 @@ private:
     static const int MAX_RETAINED_TEXTURES = 100;
 };
 
-inline Texture::Texture(int width, int height, GLenum format, GLenum type, const GLvoid *pixels /* = nullptr */)
-    : Texture( TextureParameters(width, height, format, type), pixels )
+inline Texture::Texture(GLenum internalFormat, int width, int height, GLenum format, GLenum type, const GLvoid *pixels /* = nullptr */)
+    : Texture( TextureParameters(internalFormat, width, height, format, type), pixels )
 {
     
 }

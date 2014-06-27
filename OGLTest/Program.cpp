@@ -7,13 +7,14 @@
 //
 
 #include "Program.h"
-#include "VertexShader.h"
-#include "FragmentShader.h"
-#include "GraphicsDevice.h"
-#include "VertexBuffer.h"
-#include "VertexArray.h"
-#include "VertexDeclaration.h"
+
 #include "ContentLoader.h"
+#include "GraphicsDevice.h"
+#include "Shader.h"
+#include "VertexArray.h"
+#include "VertexBuffer.h"
+#include "VertexDeclaration.h"
+
 #include <GL/glew.h>
 
 Program::Program(const List< Ptr<Shader>> &shaders) : programId(0)

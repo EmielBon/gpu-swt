@@ -8,8 +8,7 @@
 
 #include "ContentLoader.h"
 #include "Program.h"
-#include "VertexShader.h"
-#include "FragmentShader.h"
+#include "Shader.h"
 #include "Texture.h"
 #include "TextureUtil.h"
 #include <opencv2/highgui/highgui.hpp>
@@ -18,7 +17,7 @@ using namespace std;
 
 String ContentLoader::ContentPath = "";
 
-template<>
+/*template<>
 Ptr<VertexShader> ContentLoader::Load(const String &resourceName)
 {
     String sourceText = FileReadAll(ContentPath + resourceName + ".vs");
@@ -30,18 +29,24 @@ Ptr<FragmentShader> ContentLoader::Load(const String &resourceName)
 {
     String sourceText = FileReadAll(ContentPath + resourceName + ".fs");
     return New<FragmentShader>(resourceName, sourceText);
-}
+}*/
 
 template<>
 Ptr<Program> ContentLoader::Load(const String &vertexShaderSource, const String &fragmentShaderSource)
 {
     List< Ptr<Shader> > shaders;
     
-    auto vs = Load<VertexShader>(vertexShaderSource);
-    auto fs = Load<FragmentShader>(fragmentShaderSource);
+    auto vsSourceText = FileReadAll(ContentPath + vertexShaderSource   + ".vs");
+    auto fsSourceText = FileReadAll(ContentPath + fragmentShaderSource + ".fs");
     
-    shaders.push_back(std::dynamic_pointer_cast<Shader>(vs));
-    shaders.push_back(std::dynamic_pointer_cast<Shader>(fs));
+    auto vs = New<Shader>(vertexShaderSource,   vsSourceText, GL_VERTEX_SHADER);
+    auto fs = New<Shader>(fragmentShaderSource, fsSourceText, GL_FRAGMENT_SHADER);
+    
+    //shaders.push_back(std::dynamic_pointer_cast<Shader>(vs));
+    //shaders.push_back(std::dynamic_pointer_cast<Shader>(fs));
+    
+    shaders.push_back(vs);
+    shaders.push_back(fs);
     
     return New<Program>(shaders);
 }

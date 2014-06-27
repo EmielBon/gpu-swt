@@ -16,10 +16,10 @@ DrawableRect::DrawableRect(float x1, float y1, float x2, float y2, float width, 
 {
     List<VertexPosition> vertices(4);
     
-    vertices[0].Position = Vector3(x1, y1, 0);
-    vertices[1].Position = Vector3(x2, y1, 0);
-    vertices[2].Position = Vector3(x1, y2, 0);
-    vertices[3].Position = Vector3(x2, y2, 0);
+    vertices[0].Position = Vector3(x1, y1, 1);
+    vertices[1].Position = Vector3(x2, y1, 1);
+    vertices[2].Position = Vector3(x1, y2, 1);
+    vertices[3].Position = Vector3(x2, y2, 1);
     
     List<GLuint> indices = { 0, 1, 2, 1, 2, 3 };
     

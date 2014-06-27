@@ -79,11 +79,11 @@ class Image;
 class Window;
 // Graphics
 class DepthBuffer;
-class FragmentShader;
 class FrameBuffer;
 class GraphicsDevice;
 class IndexBuffer;
 class Program;
+class RenderBuffer;
 class Shader;
 class StencilBuffer;
 class Texture;
@@ -92,7 +92,6 @@ class VertexArray;
 class VertexBuffer;
 class VertexDeclaration;
 class VertexDeclarationElement;
-class VertexShader;
 // SWT specific
 class  Chain;
 struct Component;

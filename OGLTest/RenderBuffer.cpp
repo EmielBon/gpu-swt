@@ -8,7 +8,7 @@
 
 #include "RenderBuffer.h"
 
-RenderBuffer::RenderBuffer(int width, int height, Type type)
+RenderBuffer::RenderBuffer(int width, int height, RenderBufferType type)
 {
     Setup(glGenRenderbuffers, glDeleteRenderbuffers, glBindRenderbuffer, GL_RENDERBUFFER);
     Generate();
@@ -18,9 +18,9 @@ RenderBuffer::RenderBuffer(int width, int height, Type type)
     
     switch(type)
     {
-        case Type::Depth:        storageFormat = GL_DEPTH_COMPONENT24; break;
-        case Type::Stencil:      storageFormat = GL_STENCIL_INDEX8;    break;
-        case Type::DepthStencil: storageFormat = GL_DEPTH24_STENCIL8;  break;
+        case RenderBufferType::Depth:        storageFormat = GL_DEPTH_COMPONENT24; break;
+        case RenderBufferType::Stencil:      storageFormat = GL_STENCIL_INDEX8;    break;
+        case RenderBufferType::DepthStencil: storageFormat = GL_DEPTH24_STENCIL8;  break;
         default: break;
     }
     

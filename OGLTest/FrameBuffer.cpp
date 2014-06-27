@@ -9,6 +9,7 @@
 #include "FrameBuffer.h"
 #include "Texture.h"
 #include "GLError.h"
+#include "RenderBuffer.h"
 
 FrameBuffer::FrameBuffer()
 {
@@ -24,13 +25,12 @@ FrameBuffer::FrameBuffer()
     glDrawBuffers(1, drawBuffers);
 }
 
-FrameBuffer::FrameBuffer(Ptr<Texture> colorAttachment, Ptr<RenderBuffer> renderBufferAttachment = nullptr) : FrameBuffer()
+FrameBuffer::FrameBuffer(Ptr<Texture> colorAttachment, Ptr<RenderBuffer> depthStencil) : FrameBuffer()
 {
-    Attach(colorAttachment);
-    if (renderBufferAttachment)
-        Attach(renderBufferAttachment);
+    SetColorAttachment(colorAttachment);
+    if (depthStencil)
+        SetDepthStencil(depthStencil);
 }
-
 
 void FrameBuffer::AssertFrameBufferComplete() const
 {
@@ -41,7 +41,7 @@ void FrameBuffer::AssertFrameBufferComplete() const
     }
 }
 
-void FrameBuffer::Attach(Ptr<Texture> colorAttachment)
+void FrameBuffer::SetColorAttachment(Ptr<Texture> colorAttachment)
 {
     if (!colorAttachment)
         throw std::runtime_error("Attempt to attach nullptr color attachment");
@@ -52,7 +52,18 @@ void FrameBuffer::Attach(Ptr<Texture> colorAttachment)
     AssertFrameBufferComplete();
 }
 
-void FrameBuffer::Attach(Ptr<RenderBuffer> renderBufferAttachment)
+void FrameBuffer::SetDepthStencil(Ptr<Texture> depthStencil)
+{
+    if (!depthStencil)
+        throw std::runtime_error("Attempt to attach nullptr color attachment");
+    
+    DepthStencil = depthStencil;
+    Bind();
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, depthStencil->GetHandle(), 0);
+    AssertFrameBufferComplete();
+}
+
+void FrameBuffer::SetDepthStencil(Ptr<RenderBuffer> renderBufferAttachment)
 {
     if (!renderBufferAttachment)
         throw std::runtime_error("Attempt to attach nullptr renderbuffer attachment");
@@ -73,9 +84,28 @@ void FrameBuffer::CopyColorAttachment(const Texture &dest) const
         prev->Bind();
 }
 
-cv::Vec4f FrameBuffer::ReadPixel(int x, int y)
+void FrameBuffer::Print()
 {
-    cv::Vec4f pixel;
-    glReadPixels(x, y, 1, 1, GL_RGBA, GL_FLOAT, &pixel);
-    return pixel;
+    auto pixels = ReadPixels(0, 0, ColorAttachment0->GetWidth(), ColorAttachment0->GetHeight());
+    for(auto pixel : pixels)
+        printf("(%.2f,%.2f,%.2f,%.2f)", pixel[0], pixel[1], pixel[2], pixel[3]);
+}
+
+void FrameBuffer::Print(RenderBufferType renderBuffer, int rowCount)
+{
+    int width  = ColorAttachment0->GetWidth();
+    int height = (rowCount == 0) ? ColorAttachment0->GetHeight() : rowCount;
+    
+    if (renderBuffer == RenderBufferType::Depth)
+    {
+        auto pixels = ReadDepth(0, 0, width, height);
+        for(auto pixel : pixels)
+            printf("%f ", pixel);
+    }
+    if (renderBuffer == RenderBufferType::Stencil)
+    {
+        auto pixels = ReadStencil(0, 0, width, height);
+        for(auto pixel : pixels)
+            printf("%u ", pixel);
+    }
 }

@@ -9,25 +9,16 @@
 #pragma once
 
 #include "IOGLBindableResource.h"
+#include "RenderBufferType.h"
 #include "types.h"
 
 class RenderBuffer : public IOGLBindableResource<RenderBuffer>
 {
 public:
     
-    enum class Type : GLenum
-    {
-        None = GL_NONE,
-        Depth = GL_DEPTH_ATTACHMENT,
-        Stencil = GL_STENCIL_ATTACHMENT,
-        DepthStencil = GL_DEPTH_STENCIL_ATTACHMENT,
-    };
+    RenderBuffer(int width, int height, RenderBufferType type);
     
 public:
     
-    RenderBuffer(int width, int height, Type type);
-    
-public:
-    
-    Type BufferType;
+    RenderBufferType BufferType;
 };
