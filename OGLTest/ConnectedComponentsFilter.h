@@ -33,12 +33,6 @@ protected:
     
     void PrepareVerticalRuns();
     
-    void PrepareBoundingBoxCalculation();
-    
-    void PrepareComponentCounting();
-    
-    void PreparePerPixelVertices();
-    
     void LoadShaderPrograms();
     
     void PerformSteps(Ptr<Texture> output);
@@ -58,29 +52,16 @@ protected:
     
     void UpdateChildren(Ptr<Texture> input, Ptr<Texture> output);
     
-    void BoundingBoxes(Ptr<Texture> input, Ptr<Texture> output);
-    
-    void FilterInvalidComponents(Ptr<Texture> input, Ptr<Texture> output);
-    
-    void CountComponents(Ptr<Texture> input, Ptr<Texture> output);
-    
-    void ExtractBoundingBoxes();
-    
     void Decode(Ptr<Texture> input, Ptr<Texture> output);
     
     void Copy(Ptr<Texture> texture, Ptr<Texture> output);
     
-public:
-    
-    List<BoundingBox> ExtractedBoundingBoxes;
-    
 private:
     
-    Ptr<Program> encode, verticalRun, gatherNeighbor, updateColumn, scatterBack, updateRoots, updateChildren, boundingBoxes, filterInvalidComponents, countComponents;
+    Ptr<Program> encode, verticalRun, gatherNeighbor, updateColumn, scatterBack, updateRoots, updateChildren;
     Ptr<Program> normal, decode;
     Ptr<VertexBuffer> columnVertices;
     Ptr<IndexBuffer>  lineIndices;
-    Ptr<VertexBuffer> perPixelVertices;
 };
 
 inline ConnectedComponentsFilter::ConnectedComponentsFilter(Ptr<Texture> input)

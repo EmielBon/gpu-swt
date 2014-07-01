@@ -35,9 +35,6 @@ void ConnectedComponentsFilter::LoadShaderPrograms()
     scatterBack    = LoadProgram("ScatterBack", "GatherScatter");
     updateRoots    = LoadScreenSpaceProgram("UpdateRoots");
     updateChildren = LoadScreenSpaceProgram("UpdateChildren");
-    boundingBoxes  = LoadProgram("BoundingBoxes");
-    filterInvalidComponents = LoadScreenSpaceProgram("FilterInvalidComponents");
-    countComponents = LoadProgram("CountComponents");
     
     // todo: for debug purposes
     normal         = LoadScreenSpaceProgram("Normal");
@@ -49,7 +46,6 @@ void ConnectedComponentsFilter::Initialize()
     //PrepareMaximizingDepthTest();
     PrepareColumnVertices();
     PrepareLineIndices();
-    PreparePerPixelVertices();
     
     glClearColor(0, 0, 0, 0);
 }
@@ -82,45 +78,23 @@ void ConnectedComponentsFilter::PrepareLineIndices()
     lineIndices->SetData(indices);
 }
 
-void ConnectedComponentsFilter::PrepareBoundingBoxCalculation()
-{
-    glBlendEquation(GL_MAX);
-    glBlendFunc(GL_ONE, GL_ONE);
-}
-void ConnectedComponentsFilter::PrepareComponentCounting()
-{
-    glBlendEquation(GL_FUNC_ADD);
-    glBlendFunc(GL_ONE, GL_ONE);
-}
-
-void ConnectedComponentsFilter::PreparePerPixelVertices()
-{
-    int width  = Input->GetWidth();
-    int height = Input->GetHeight();
-    
-    List<VertexPosition> vertices;
-    for (int x = 0; x < width;  ++x)
-    for (int y = 0; y < height; ++y)
-        vertices.push_back(VertexPosition(Vector3(x, y, 0)));
-    
-    perPixelVertices = New<VertexBuffer>();
-    perPixelVertices->SetData(vertices);
-}
-
 void ConnectedComponentsFilter::PerformSteps(Ptr<Texture> output)
 {
     ReserveColorBuffers(2/*1*/);
     
     int width = Input->GetWidth();
     
-    // Compute vertical runs
-    Encode(Input, ColorBuffers[0]);
-    Decode(ColorBuffers[0], ColorBuffers[1]);
-    DEBUG_FB("lala");
-    VerticalRuns(ColorBuffers[0], output);
+    auto tex1  = ColorBuffers[0];
+    auto tex2  = output;
+    auto debug = ColorBuffers[1];
     
-    auto tex1 = output;
-    auto tex2 = ColorBuffers[0];
+    // Compute vertical runs
+    Encode(Input, tex2);
+    
+    // todo: for debug purposes
+    Decode(tex2, debug); DEBUG_FB("Encoded");
+
+    VerticalRuns(tex2, tex1);
     
     PrepareVerticalRuns();
     
@@ -151,41 +125,7 @@ void ConnectedComponentsFilter::PerformSteps(Ptr<Texture> output)
     
     UpdateChildren(tex1, tex2);
 
-    Decode(tex2, ColorBuffers[1]);
-    DEBUG_FB("Components");
-    
-    // Compute bounding boxes
-    PrepareBoundingBoxCalculation();
-    GraphicsDevice::SetBuffers(perPixelVertices, nullptr);
-    glEnable(GL_BLEND);
-    BoundingBoxes(tex2, tex1);
-    glDisable(GL_BLEND);
-    DEBUG_FB("BBoxes");
-    
-    GraphicsDevice::UseDefaultBuffers();
-    
-    FilterInvalidComponents(tex1, tex2);
-    ExtractBoundingBoxes();
-    DEBUG_FB("Invalids");
-    
-    // Count unique components
-    GraphicsDevice::SetBuffers(perPixelVertices, nullptr);
-    PrepareComponentCounting();
-    glEnable(GL_BLEND);
-    CountComponents(tex2, ColorBuffers[1]);
-    glDisable(GL_BLEND);
-    cv::Vec4f pixel = FrameBuffer::ReadPixel(1, 1);
-    printf("Number of unique components: %i\n", (int)pixel[0]);
-    
-    GraphicsDevice::UseDefaultBuffers();
-    
-    // Stencil routing
-    //glEnable(GL_STENCIL_TEST);
-    //glClear(GL_STENCIL_BUFFER_BIT);
-    
-    
-    
-    // Retrieve results
+    Decode(tex2, debug); DEBUG_FB("Components");
 }
 
 void ConnectedComponentsFilter::Encode(Ptr<Texture> input, Ptr<Texture> output)
@@ -253,13 +193,6 @@ void ConnectedComponentsFilter::UpdateChildren(Ptr<Texture> input, Ptr<Texture> 
     RenderToTexture(output, PrimitiveType::Unspecified, GL_COLOR_BUFFER_BIT);
 }
 
-void ConnectedComponentsFilter::BoundingBoxes(Ptr<Texture> input, Ptr<Texture> output)
-{
-    boundingBoxes->Use();
-    boundingBoxes->Uniforms["Texture"].SetValue(*input);
-    RenderToTexture(output, PrimitiveType::Points, GL_COLOR_BUFFER_BIT);
-}
-
 void ConnectedComponentsFilter::PrepareVerticalRuns()
 {
     glEnable(GL_BLEND);
@@ -270,39 +203,6 @@ void ConnectedComponentsFilter::PrepareVerticalRuns()
     glClearDepth(0);
     glClear(GL_DEPTH_BUFFER_BIT);
     glDepthMask(GL_FALSE);
-}
-
-void ConnectedComponentsFilter::FilterInvalidComponents(Ptr<Texture> input, Ptr<Texture> output)
-{
-    filterInvalidComponents->Use();
-    filterInvalidComponents->Uniforms["Texture"].SetValue(*input);
-    filterInvalidComponents->Uniforms["MinAspectRatio"].SetValue(MinAspectRatio);
-    filterInvalidComponents->Uniforms["MaxAspectRatio"].SetValue(MaxAspectRatio);
-    filterInvalidComponents->Uniforms["MinSizeRatio"].SetValue(0.0005f);
-    filterInvalidComponents->Uniforms["MaxSizeRatio"].SetValue(0.02f);
-    RenderToTexture(output);
-}
-
-void ConnectedComponentsFilter::CountComponents(Ptr<Texture> input, Ptr<Texture> output)
-{
-    countComponents->Use();
-    countComponents->Uniforms["Texture"].SetValue(*input);
-    RenderToTexture(output, PrimitiveType::Points, GL_COLOR_BUFFER_BIT);
-}
-
-void ConnectedComponentsFilter::ExtractBoundingBoxes()
-{
-    cv::Vec4f pixels[800 * 600];
-    glReadPixels(0, 0, 800, 600, GL_RGBA, GL_FLOAT, pixels);
-    for(auto& pixel : pixels)
-    {
-        int x1 = -((int)pixel[0] - 799);
-        int y1 = -((int)pixel[1] - 599);
-        int x2 = (int)pixel[2];
-        int y2 = (int)pixel[3];
-        if (x1 != x2 && y1 != y2 && x2 != 0 && y2 != 0)
-            ExtractedBoundingBoxes.push_back(BoundingBox(cv::Rect(x1, y1, x2 - x1, y2 - y1)));
-    }
 }
 
 void ConnectedComponentsFilter::Decode(Ptr<Texture> input, Ptr<Texture> output)

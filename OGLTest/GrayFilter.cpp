@@ -29,7 +29,8 @@ void GrayFilter::PerformSteps(Ptr<Texture> output)
     glClearColor(0, 0, 0, 1);
     RenderToTexture(output, PrimitiveType::Lines, GL_COLOR_BUFFER_BIT);
     GraphicsDevice::UseDefaultBuffers();*/
+    
     grayscale->Use();
     grayscale->Uniforms["Texture"].SetValue(*Input);
-    RenderToTexture(output);
+    RenderToTexture(output, PrimitiveType::Unspecified, GL_COLOR_BUFFER_BIT);
 }

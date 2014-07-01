@@ -108,10 +108,10 @@ void SWTFilter::PerformSteps(Ptr<Texture> output)
     auto oppositePositions = ColorBuffers[0];
     auto averageValues     = ColorBuffers[1];
     
-    glEnable(GL_STENCIL_TEST);
+    //glEnable(GL_STENCIL_TEST);
     PrepareEdgeOnlyStencil();
     CastRays(darkOnLight, oppositePositions);
-    glDisable(GL_STENCIL_TEST);
+    //glDisable(GL_STENCIL_TEST);
     DEBUG_FB("SWT 1");
     GraphicsDevice::SetBuffers(linesVertices, nullptr);
     glEnable(GL_BLEND);
@@ -121,9 +121,9 @@ void SWTFilter::PerformSteps(Ptr<Texture> output)
     glDisable(GL_BLEND);
     GraphicsDevice::UseDefaultBuffers();
     DEBUG_FB("SWT 2");
-    glEnable(GL_STENCIL_TEST);
+    //glEnable(GL_STENCIL_TEST);
     AverageRayValues(*oppositePositions, *swt, averageValues);
-    glDisable(GL_STENCIL_TEST);
+    //glDisable(GL_STENCIL_TEST);
     DEBUG_FB("SWT 3");
     GraphicsDevice::SetBuffers(linesVertices, nullptr);
     glEnable(GL_BLEND);

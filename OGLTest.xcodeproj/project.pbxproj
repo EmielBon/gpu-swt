@@ -113,6 +113,8 @@
 		17015B6A1952DE6600D8B268 /* VertexPosition2DCompressed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexPosition2DCompressed.cpp; sourceTree = "<group>"; };
 		17015B6B1952DE6600D8B268 /* VertexPosition2DCompressed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexPosition2DCompressed.h; sourceTree = "<group>"; };
 		17020A261958774700E37BAB /* RenderBufferType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RenderBufferType.h; sourceTree = "<group>"; };
+		1708A6131961A0ED00E89B2E /* StencilRouting.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StencilRouting.vs; sourceTree = "<group>"; };
+		1708A6141961AE2C00E89B2E /* StencilRouting.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StencilRouting.fs; sourceTree = "<group>"; };
 		1708D98719335746005BAB4C /* Histogram.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Histogram.vs; sourceTree = "<group>"; };
 		17096C891950513700F7933A /* VertexPosition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VertexPosition.cpp; sourceTree = "<group>"; };
 		17096C8A1950513700F7933A /* VertexPosition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexPosition.h; sourceTree = "<group>"; };
@@ -318,6 +320,8 @@
 				17ACBD7718FC1DA40052244F /* GatherNeighbor.vs */,
 				17ACBD7A18FD3A020052244F /* GatherScatter.fs */,
 				17ACBD7C18FFF1A70052244F /* ScatterBack.vs */,
+				1708A6141961AE2C00E89B2E /* StencilRouting.fs */,
+				1708A6131961A0ED00E89B2E /* StencilRouting.vs */,
 				1713C5A61913D4B000909BDB /* UpdateChildren.fs */,
 				17ACBD7B18FFC79F0052244F /* UpdateColumn.fs */,
 				177261181924D2E300E58ED5 /* UpdateColumn.vs */,

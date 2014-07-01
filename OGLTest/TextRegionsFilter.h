@@ -24,25 +24,44 @@ public:
     
     void Initialize();
     
+    void PrepareBoundingBoxCalculation();
+    
+    void PrepareComponentCounting();
+    
+    void PreparePerPixelVertices();
+    
+    void BoundingBoxes(Ptr<Texture> input, Ptr<Texture> output, bool clear);
+    
+    void FilterInvalidComponents(Ptr<Texture> input, Ptr<Texture> output);
+    
+    void CountComponents(Ptr<Texture> input, Ptr<Texture> output);
+    
+    void PrepareStencilRouting(int componentCount);
+    
+    void StencilRouting(Ptr<Texture> input, float N, Ptr<Texture> output);
+    
+    void ExtractBoundingBoxes(int N);
+    
     void PerformSteps(Ptr<Texture> output);
-    
-    List<BoundingBox> GetExtractedBoundingBoxes() const;
-    
+   
 public:
     
-    ::GradientDirection GradientDirection;
+    List<BoundingBox> ExtractedBoundingBoxes;
     
 private:
     
     Ptr<Filter> grayFilter;
     Ptr<SWTFilter> swtFilter;
     Ptr<ConnectedComponentsFilter> connectedComponentsFilter;
-    Ptr<Texture> gray;
+    Ptr<Texture> gray, stencil;
+    Ptr<Program> boundingBoxes, filterInvalidComponents, countComponents, stencilRouting;
+    // todo: for debug purposes
     Ptr<Program> vertexTexture;
+    Ptr<VertexBuffer> perPixelVertices;
 };
 
 inline TextRegionsFilter::TextRegionsFilter(Ptr<Texture> input)
-    : base("TextRegions", input), GradientDirection(GradientDirection::Unspecified)
+    : base("TextRegions", input)
 {
     
 }

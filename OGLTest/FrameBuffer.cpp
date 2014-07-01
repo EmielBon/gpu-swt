@@ -59,7 +59,7 @@ void FrameBuffer::SetDepthStencil(Ptr<Texture> depthStencil)
     
     DepthStencil = depthStencil;
     Bind();
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, depthStencil->GetHandle(), 0);
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, DepthStencil->GetHandle(), 0);
     AssertFrameBufferComplete();
 }
 

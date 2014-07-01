@@ -43,9 +43,9 @@ void CannyFilter::PerformSteps(Ptr<Texture> output)
     ScharrAveraging(*ColorBuffers[0], output);
     Differentiation(*output, ColorBuffers[0]);
     
-    glEnable(GL_STENCIL_TEST);
+    //glEnable(GL_STENCIL_TEST);
     DetectEdges(*ColorBuffers[0], output); // Buffer0 contains gradients
-    glDisable(GL_STENCIL_TEST);
+    //glDisable(GL_STENCIL_TEST);
 }
 
 void CannyFilter::DetectEdges(const Texture &gradients, Ptr<Texture> output)
@@ -53,7 +53,7 @@ void CannyFilter::DetectEdges(const Texture &gradients, Ptr<Texture> output)
     canny->Use();
     canny->Uniforms["Gradients"].SetValue(gradients);
     // Make sure the color buffer is empty because Canny discards non-edge pixels
-    RenderToTexture(output, PrimitiveType::Unspecified, GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    RenderToTexture(output, PrimitiveType::Unspecified, GL_COLOR_BUFFER_BIT/* | GL_STENCIL_BUFFER_BIT*/);
 }
 
 void CannyFilter::ScharrAveraging(const Texture &input, Ptr<Texture> output)
