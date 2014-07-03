@@ -42,7 +42,6 @@ void TextRegionsFilter::Initialize()
 {
     gray = GetColorAttachment()->GetEmptyClone();
     ApplyFilter(*grayFilter, gray); DEBUG_FB("Gray");
-    swtFilter->Input = gray;
     
     PreparePerPixelVertices();
 }
@@ -72,11 +71,15 @@ void TextRegionsFilter::PreparePerPixelVertices()
     perPixelVertices->SetData(vertices);
 }
 
-void TextRegionsFilter::BoundingBoxes(Ptr<Texture> input, Ptr<Texture> output, bool clear)
+void TextRegionsFilter::FindLetterCandidates(Ptr<Texture> input, GradientDirection gradientDirection, Ptr<Texture> output)
 {
-    boundingBoxes->Use();
-    boundingBoxes->Uniforms["Texture"].SetValue(*input);
-    RenderToTexture(output, PrimitiveType::Points, clear ? GL_COLOR_BUFFER_BIT : 0);
+    auto swt = input->GetEmptyClone();
+    
+    swtFilter->Input = input;
+    swtFilter->GradientDirection = gradientDirection;
+    ApplyFilter(*swtFilter, swt);
+    connectedComponentsFilter->Input = swt;
+    ApplyFilter(*connectedComponentsFilter, output);
 }
 
 void TextRegionsFilter::FilterInvalidComponents(Ptr<Texture> input, Ptr<Texture> output)
@@ -90,6 +93,13 @@ void TextRegionsFilter::FilterInvalidComponents(Ptr<Texture> input, Ptr<Texture>
     RenderToTexture(output);
 }
 
+void TextRegionsFilter::BoundingBoxes(Ptr<Texture> input, Ptr<Texture> output, bool clear)
+{
+    boundingBoxes->Use();
+    boundingBoxes->Uniforms["Texture"].SetValue(*input);
+    RenderToTexture(output, PrimitiveType::Points, clear ? GL_COLOR_BUFFER_BIT : 0);
+}
+
 void TextRegionsFilter::CountComponents(Ptr<Texture> input, Ptr<Texture> output)
 {
     countComponents->Use();
@@ -97,12 +107,10 @@ void TextRegionsFilter::CountComponents(Ptr<Texture> input, Ptr<Texture> output)
     RenderToTexture(output, PrimitiveType::Points, GL_COLOR_BUFFER_BIT);
 }
 
-void TextRegionsFilter::PrepareStencilRouting(int componentCount)
+void TextRegionsFilter::PrepareStencilRouting(int N)
 {
     int width  = Input->GetWidth();
     int height = Input->GetHeight();
-    
-    int N = (int)ceil(sqrt(componentCount));
     
     List<GLuint> pixels(N * N, 1);
     for(int i = 1; i < N * N; ++i)
@@ -110,8 +118,11 @@ void TextRegionsFilter::PrepareStencilRouting(int componentCount)
     
     stencil = New<Texture>(GL_DEPTH_STENCIL, width, height, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8);
     FrameBuffer::GetCurrentlyBound()->SetDepthStencil(stencil);
+    
     glClearStencil(0);
     glClear(GL_STENCIL_BUFFER_BIT);
+    glStencilFunc(GL_EQUAL, 1, 0xFF);
+    glStencilOp(GL_DECR, GL_DECR, GL_DECR);
     
     stencil->Bind();
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, N, N, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, pixels.data());
@@ -121,17 +132,6 @@ void TextRegionsFilter::PrepareStencilRouting(int componentCount)
 
 void TextRegionsFilter::ExtractBoundingBoxes(int N)
 {
-    /*cv::Vec4f pixels[800 * 600];
-    glReadPixels(0, 0, 800, 600, GL_RGBA, GL_FLOAT, pixels);
-    for(auto& pixel : pixels)
-    {
-        int x1 = -((int)pixel[0] - 799);
-        int y1 = -((int)pixel[1] - 599);
-        int x2 = (int)pixel[2];
-        int y2 = (int)pixel[3];
-        if (x1 != x2 && y1 != y2 && x2 != 0 && y2 != 0)
-            ExtractedBoundingBoxes.push_back(BoundingBox(cv::Rect(x1, y1, x2 - x1, y2 - y1)));
-    }*/
     List<cv::Vec4f> pixels(N * N);
     glReadPixels(0, 0, N, N, GL_RGBA, GL_FLOAT, pixels.data());
     for(auto& pixel : pixels)
@@ -155,42 +155,15 @@ void TextRegionsFilter::StencilRouting(Ptr<Texture> input, float N, Ptr<Texture>
 
 void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
 {
-    ReserveColorBuffers(6);
+    ReserveColorBuffers(4);
     
-    auto swt1        = ColorBuffers[0];
-    auto swt2        = ColorBuffers[1];
-    auto components1 = ColorBuffers[2];
-    auto components2 = ColorBuffers[3];
-    auto bboxes      = ColorBuffers[4];
-    auto filtered    = ColorBuffers[5];
-    /*int width  = Input->GetWidth();
-    int height = Input->GetHeight();
+    auto components1 = ColorBuffers[0];
+    auto components2 = ColorBuffers[1];
+    auto bboxes      = ColorBuffers[2];
+    auto filtered    = ColorBuffers[3];
     
-    List<VertexPosition> vertices;
-    for (int x = 0; x < width;  ++x)
-        for (int y = 0; y < height; ++y)
-            vertices.push_back(VertexPosition(Vector3(x, y, 0)));
-    
-    auto pixelVertices = New<VertexBuffer>();
-    pixelVertices->SetData(vertices);
-    
-    GraphicsDevice::SetBuffers(pixelVertices, nullptr);
-    
-    vertexTexture->Use();
-    vertexTexture->Uniforms["Texture"].SetValue(*Input);
-    RenderToTexture(output, PrimitiveType::Points, GL_COLOR_BUFFER_BIT);
-    
-    GraphicsDevice::UseDefaultBuffers();*/
-    
-    swtFilter->GradientDirection = GradientDirection::With;
-    ApplyFilter(*swtFilter, swt1);
-    swtFilter->GradientDirection = GradientDirection::Against;
-    ApplyFilter(*swtFilter, swt2);
-    
-    connectedComponentsFilter->Input = swt1;
-    ApplyFilter(*connectedComponentsFilter, components1);
-    connectedComponentsFilter->Input = swt2;
-    ApplyFilter(*connectedComponentsFilter, components2);
+    FindLetterCandidates(gray, GradientDirection::With,    components1);
+    FindLetterCandidates(gray, GradientDirection::Against, components2);
     
     // Compute bounding boxes
     PrepareBoundingBoxCalculation();
@@ -215,11 +188,11 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     int componentCount = (int)FrameBuffer::ReadPixel(1, 1)[0];
     int N = (int)ceil(sqrt(componentCount));
     printf("Number of unique components: %i\n", componentCount);
+    if (componentCount > 255)
+        printf("Warning: Component count > 255\n");
     
     // Stencil routing
-    PrepareStencilRouting(componentCount);
-    glStencilFunc(GL_EQUAL, 1, 0xFF);
-    glStencilOp(GL_DECR, GL_DECR, GL_DECR);
+    PrepareStencilRouting(N);
     glEnable(GL_STENCIL_TEST);
     StencilRouting(filtered, N, output);
     glDisable(GL_STENCIL_TEST);

@@ -21,6 +21,7 @@ void GraphicsDevice::DrawPrimitives()
     // bind the index buffer
     IndexBuffer->Bind();
     // draw the VAO
+    // todo: kan miss een kleiner datatype dan int, omdat er voor per pixel geen indices gebruikt worden
     glDrawElements((GLenum)(IndexBuffer->PrimitiveType), IndexBuffer->Count(), GL_UNSIGNED_INT, (GLvoid*)NULL);
 }
 

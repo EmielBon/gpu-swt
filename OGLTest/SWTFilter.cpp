@@ -75,20 +75,16 @@ void SWTFilter::PrepareRayLines(const Texture &input)
             count++;
     }
     
-    List<VertexPosition> vertices;
-    vertices.reserve(count);
-    
+    List<VertexPosition> vertices(count);
+    int index = 0;
     for(int i = 0; i < width;  ++i)
     for(int j = 0; j < height; ++j)
     {
         if (buffer[i + j * width] == 0.0f)
             continue;
         
-        VertexPosition v1, v2;
-        v1.Position = Vector3(i, j, 0); // z == 0 = Use directly
-        v2.Position = Vector3(i, j, 1); // z == 1 = Scatter position to end point
-        vertices.push_back(v1);
-        vertices.push_back(v2);
+        vertices[index++].Position = Vector3(i, j, 0);
+        vertices[index++].Position = Vector3(i, j, 1);
     }
     
     linesVertices = New<VertexBuffer>();

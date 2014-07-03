@@ -30,13 +30,15 @@ public:
     
     void PreparePerPixelVertices();
     
-    void BoundingBoxes(Ptr<Texture> input, Ptr<Texture> output, bool clear);
+    void FindLetterCandidates(Ptr<Texture> input, GradientDirection gradientDirection, Ptr<Texture> output);
     
     void FilterInvalidComponents(Ptr<Texture> input, Ptr<Texture> output);
     
+    void BoundingBoxes(Ptr<Texture> input, Ptr<Texture> output, bool clear);
+    
     void CountComponents(Ptr<Texture> input, Ptr<Texture> output);
     
-    void PrepareStencilRouting(int componentCount);
+    void PrepareStencilRouting(int N);
     
     void StencilRouting(Ptr<Texture> input, float N, Ptr<Texture> output);
     

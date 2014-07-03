@@ -98,6 +98,10 @@ void ConnectedComponentsFilter::PerformSteps(Ptr<Texture> output)
     
     PrepareVerticalRuns();
     
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    
     // hmm nu die swaps goed zijn, was die copy misschien niet eens nodig en kan het misschien nog steeds zonder min/max
     // Column processing
     for(int column = width - 2; column >= 0; --column)
@@ -114,10 +118,13 @@ void ConnectedComponentsFilter::PerformSteps(Ptr<Texture> output)
         glDepthMask(GL_FALSE);
     }
     
+    //FrameBuffer::GetCurrentlyBound()->Print(RenderBufferType::Depth);
+    
     GraphicsDevice::UseDefaultBuffers();
     
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST); // should enable, but gives incorrect results
+    
     // Post column processing
     glDepthFunc(GL_EQUAL);
     UpdateRoots(tex2, tex1);
@@ -195,13 +202,9 @@ void ConnectedComponentsFilter::UpdateChildren(Ptr<Texture> input, Ptr<Texture> 
 
 void ConnectedComponentsFilter::PrepareVerticalRuns()
 {
-    glEnable(GL_BLEND);
     glBlendEquation(GL_MAX);
-    
-    glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_ALWAYS);
     glClearDepth(0);
-    glClear(GL_DEPTH_BUFFER_BIT);
     glDepthMask(GL_FALSE);
 }
 

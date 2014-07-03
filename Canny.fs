@@ -51,8 +51,8 @@ void main()
     bool acceptedWeakEdge = weakEdge && sum / 9 >= UpperThreshold;
     bool isEdgePixel      = localMaximum && (strongEdge || acceptedWeakEdge);
     
-    if (!isEdgePixel)
-        discard; // used to directly build the stencil buffer
-    
-    FragColor = vec4(1, 1, 1, 1);
+    //if (!isEdgePixel)
+    //    discard; // used to directly build the stencil buffer
+    //FragColor = vec4(1, 1, 1, 1);
+    FragColor = vec4(int(isEdgePixel));
 }
