@@ -71,6 +71,7 @@ void FrameBuffer::SetDepthStencil(Ptr<RenderBuffer> renderBufferAttachment)
     RenderBufferAttachment = renderBufferAttachment;
     Bind();
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, (GLenum)(RenderBufferAttachment->BufferType), GL_RENDERBUFFER, RenderBufferAttachment->GetHandle());
+    AssertFrameBufferComplete();
 }
 
 void FrameBuffer::CopyColorAttachment(const Texture &dest) const

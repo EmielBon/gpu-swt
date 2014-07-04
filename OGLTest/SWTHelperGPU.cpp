@@ -51,10 +51,10 @@ List<BoundingBox> SWTHelperGPU::StrokeWidthTransform(const cv::Mat &input)
     
     // Create and setup framebuffer
     FrameBuffer frameBuffer(colorf);
-    frameBuffer.SetDepthStencil(depthStencil);
+    //frameBuffer.SetDepthStencil(depthStencil);
     
     // Create a full-screen rect
-    DrawableRect rect(-1, -1, 1, 1, 1, 1);
+    DrawableRect rect(-1, -1, 1, 1);
     GraphicsDevice::SetDefaultBuffers(rect.VertexBuffer, rect.IndexBuffer);
     GraphicsDevice::UseDefaultBuffers();
     

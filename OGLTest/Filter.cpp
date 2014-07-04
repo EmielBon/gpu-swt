@@ -13,12 +13,13 @@
 #include "GraphicsDevice.h"
 #include "Texture.h"
 #include "ContentLoader.h"
+#include "FrameBuffer.h"
 
 void Filter::ReserveColorBuffers(int count)
 {
     ColorBuffers.clear();
     for(int i = 0; i < count; ++i)
-        ColorBuffers.push_back( Input->GetEmptyClone() );
+        ColorBuffers.push_back( GetColorAttachment()->GetEmptyClone() );
 }
 
 void Filter::DoLoadShaderPrograms()
@@ -103,6 +104,8 @@ Ptr<Program> Filter::LoadProgram(const String &vertexShaderSource, const String 
 
 void Filter::ApplyFilter(Filter &filter, Ptr<Texture> output)
 {
+    if (!output)
+        throw std::runtime_error("Error: output is null");
     filter.Apply(output);
     RenderTime  += filter.RenderTime;
     CompileTime += filter.CompileTime;

@@ -17,7 +17,7 @@ void main()
     if (pos1_id == 0)
         Value = 0;
     else
-        Value = 100 - distance(pos0, pos1);
+        Value = 50 - distance(pos0, pos1);
     
     vec2 p1 = getScreenSpaceCoord(OppositePositions, pos0);
     vec2 p2 = getScreenSpaceCoord(OppositePositions, pos1);

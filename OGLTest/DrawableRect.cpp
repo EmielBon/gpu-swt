@@ -12,7 +12,7 @@
 #include "VertexArray.h"
 #include "VertexPosition.h"
 
-DrawableRect::DrawableRect(float x1, float y1, float x2, float y2, float width, float height)
+DrawableRect::DrawableRect(float x1, float y1, float x2, float y2)
 {
     List<VertexPosition> vertices(4);
     

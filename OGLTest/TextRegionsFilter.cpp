@@ -155,15 +155,29 @@ void TextRegionsFilter::StencilRouting(Ptr<Texture> input, float N, Ptr<Texture>
 
 void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
 {
-    ReserveColorBuffers(4);
+    ReserveColorBuffers(6);
     
     auto components1 = ColorBuffers[0];
     auto components2 = ColorBuffers[1];
     auto bboxes      = ColorBuffers[2];
     auto filtered    = ColorBuffers[3];
+    auto swt1        = ColorBuffers[4];
+    auto swt2        = ColorBuffers[5];
     
-    FindLetterCandidates(gray, GradientDirection::With,    components1);
-    FindLetterCandidates(gray, GradientDirection::Against, components2);
+    swtFilter->Input = gray;
+    swtFilter->GradientDirection = GradientDirection::With;
+    ApplyFilter(*swtFilter, swt1);
+    connectedComponentsFilter->Input = swt1;
+    ApplyFilter(*connectedComponentsFilter, components1);
+    
+    swtFilter->Input = gray;
+    swtFilter->GradientDirection = GradientDirection::Against;
+    ApplyFilter(*swtFilter, swt2);
+    connectedComponentsFilter->Input = swt2;
+    ApplyFilter(*connectedComponentsFilter, components2);
+    
+    //FindLetterCandidates(gray, GradientDirection::With,    components1);
+    //FindLetterCandidates(gray, GradientDirection::Against, components2);
     
     // Compute bounding boxes
     PrepareBoundingBoxCalculation();

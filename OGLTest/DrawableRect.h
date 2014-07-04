@@ -14,7 +14,7 @@ class DrawableRect
 {
 public:
     
-    DrawableRect(float x1, float y1, float x2, float y2, float width = 1, float height = 1);
+    DrawableRect(float x1, float y1, float x2, float y2);
     
 public:
     

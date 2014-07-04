@@ -105,7 +105,10 @@ void SWTFilter::PerformSteps(Ptr<Texture> output)
     auto averageValues     = ColorBuffers[1];
     
     //glEnable(GL_STENCIL_TEST);
+    GraphicsDevice::UseDefaultBuffers();
     PrepareEdgeOnlyStencil();
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_DEPTH_TEST);
     CastRays(darkOnLight, oppositePositions);
     //glDisable(GL_STENCIL_TEST);
     DEBUG_FB("SWT 1");

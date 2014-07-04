@@ -22,6 +22,7 @@ bool inRange(ivec2 xy)
     return clamp(xy, ivec2(0), size(Edges)) == xy;
 }
 
+// todo: maybe optimize in the same way as gaussian, by sampling in between pixels instead of fetching
 bool isEdgePixel(ivec2 xy)
 {
     return fetch(Edges, xy).r == 1.0;
