@@ -58,7 +58,7 @@ void TextRegionsFilter::PrepareComponentCounting()
     glBlendFunc(GL_ONE, GL_ONE);
 }
 
-void TextRegionsFilter::PreparePerPixelVertices()
+/*void TextRegionsFilter::PreparePerPixelVertices()
 {
     int width  = Input->GetWidth();
     int height = Input->GetHeight();
@@ -70,7 +70,7 @@ void TextRegionsFilter::PreparePerPixelVertices()
     
     perPixelVertices = New<VertexBuffer>();
     perPixelVertices->SetData(vertices);
-}
+}*/
 
 void TextRegionsFilter::FindLetterCandidates(Ptr<Texture> input, GradientDirection gradientDirection, Ptr<Texture> output)
 {
@@ -137,8 +137,8 @@ void TextRegionsFilter::ExtractBoundingBoxes(int N)
     glReadPixels(0, 0, N, N, GL_RGBA, GL_FLOAT, pixels.data());
     for(auto& pixel : pixels)
     {
-        int x1 = -((int)pixel[0] - 799);
-        int y1 = -((int)pixel[1] - 599);
+        int x1 = -((int)pixel[0] - Input->GetWidth() - 1);
+        int y1 = -((int)pixel[1] - Input->GetHeight() - 1);
         int x2 = (int)pixel[2];
         int y2 = (int)pixel[3];
         if (x1 != x2 && y1 != y2 && x2 != 0 && y2 != 0)
@@ -168,7 +168,7 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     
     // Compute bounding boxes
     PrepareBoundingBoxCalculation();
-    GraphicsDevice::SetBuffers(perPixelVertices, nullptr);
+    GraphicsDevice::SetBuffers(PerPixelVertices, nullptr);
     glEnable(GL_BLEND);
     BoundingBoxes(components1, bboxes, true);
     BoundingBoxes(components2, bboxes, false);
@@ -181,7 +181,7 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     DEBUG_FB("Valids");
     
     // Count unique components
-    GraphicsDevice::SetBuffers(perPixelVertices, nullptr);
+    GraphicsDevice::SetBuffers(PerPixelVertices, nullptr);
     PrepareComponentCounting();
     glEnable(GL_BLEND);
     CountComponents(filtered, ColorBuffers[1]);

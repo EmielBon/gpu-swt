@@ -3,8 +3,8 @@
 #pragma include TextureUtil.fsh
 
 uniform sampler2D Gradients;
-uniform float LowerThreshold = 0.08;
-uniform float UpperThreshold = 0.16;
+uniform float LowerThreshold;// = 0.08;
+uniform float UpperThreshold;// = 0.16;
 
 out vec4 FragColor;
 

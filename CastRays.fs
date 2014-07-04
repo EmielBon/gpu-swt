@@ -11,9 +11,9 @@ uniform bool      DarkOnLight;
 const lowp    float prec = 0.2;
 const mediump float Pi   = 3.14159265359;
 const mediump float MaxOppositeEdgeGradientDifference = Pi / 2;
-const lowp    int   MaxRayLength = 100;
+const lowp    int   MaxRayLength = 100; // todo: somehow setting this to 50 messes everything up
 const lowp    vec4  Black = vec4(0, 0, 0, 1);
-const lowp    int   MaxIterations = int(MaxRayLength / prec); // misschien beter mediump als dit nog groter wordt
+const lowp    int   MaxIterations = int(MaxRayLength / prec); // todo: misschien beter mediump als dit nog groter wordt
 
 out vec4 FragColor;
 
@@ -32,7 +32,7 @@ void main()
 {
     ivec2 pos0 = ivec2(gl_FragCoord.xy);
     // todo: choose better variable name
-    lowp int bla  = ifelse(DarkOnLight, 1, -1);
+    lowp int bla = ifelse(DarkOnLight, 1, -1);
     
     // todo: should not be needed with stencil test, but removing it does not function as expected
     if (!isEdgePixel(pos0))

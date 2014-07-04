@@ -28,5 +28,5 @@ vec2 getScreenSpaceCoord(sampler2D sampler, vec2 screenCoord)
 
 vec2 getScreenSpaceTexCoord(sampler2D sampler, vec2 screenCoord)
 {
-    return (getScreenSpaceTexCoord(sampler, screenCoord) + 1) / 2;
+    return (getScreenSpaceCoord(sampler, screenCoord) + 1) / 2;
 }

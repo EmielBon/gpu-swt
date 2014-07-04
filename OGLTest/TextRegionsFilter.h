@@ -28,7 +28,7 @@ public:
     
     void PrepareComponentCounting();
     
-    void PreparePerPixelVertices();
+    //void PreparePerPixelVertices();
     
     void FindLetterCandidates(Ptr<Texture> input, GradientDirection gradientDirection, Ptr<Texture> output);
     
@@ -59,7 +59,7 @@ private:
     Ptr<Program> boundingBoxes, filterInvalidComponents, countComponents, stencilRouting;
     // todo: for debug purposes
     Ptr<Program> vertexTexture;
-    Ptr<VertexBuffer> perPixelVertices;
+    //Ptr<VertexBuffer> perPixelVertices;
 };
 
 inline TextRegionsFilter::TextRegionsFilter(Ptr<Texture> input)

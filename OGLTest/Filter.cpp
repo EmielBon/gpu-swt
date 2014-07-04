@@ -14,6 +14,10 @@
 #include "Texture.h"
 #include "ContentLoader.h"
 #include "FrameBuffer.h"
+#include "VertexPosition.h"
+#include "VertexBuffer.h"
+
+Ptr<VertexBuffer> Filter::PerPixelVertices = nullptr;
 
 void Filter::ReserveColorBuffers(int count)
 {
@@ -42,6 +46,10 @@ void Filter::DoInitialize()
     {
         Initialize();
         ColorBuffers.clear();
+        if (!PerPixelVertices && !Input)
+            throw std::runtime_error("Cannot initialize per pixel vertex buffer without input texture");
+        if (!PerPixelVertices) // initialize the static per pixel vertexbuffer once
+            PreparePerPixelVertices();
     }
     initialized = true;
 }
@@ -124,4 +132,18 @@ void Filter::PrintProfilingInfo() const
            CompileTime * 100.0f / TotalTime,
            GetTimeMsec(misc),
            misc * 100.0f / TotalTime);
+}
+
+void Filter::PreparePerPixelVertices()
+{
+    int width  = Input->GetWidth();
+    int height = Input->GetHeight();
+    
+    List<VertexPosition> vertices;
+    for (int x = 0; x < width;  ++x)
+    for (int y = 0; y < height; ++y)
+        vertices.push_back(VertexPosition(Vector3(x, y, 0)));
+    
+    PerPixelVertices = New<VertexBuffer>();
+    PerPixelVertices->SetData(vertices);
 }

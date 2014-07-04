@@ -79,15 +79,15 @@ void FrameBuffer::CopyColorAttachment(const Texture &dest) const
     auto prev = Texture::GetCurrentlyBound();
     
     dest.Bind();
-    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, dest.GetWidth(), dest.GetHeight());
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, dest.GetWidth(), dest.GetHeight()); // todo: does not work with float textures in OpenGL ES 2.0 accoring to the extension
     
     if (prev)
         prev->Bind();
 }
 
-void FrameBuffer::Print()
+void FrameBuffer::Print(int x, int y, int width, int height)
 {
-    auto pixels = ReadPixels(0, 0, ColorAttachment0->GetWidth(), ColorAttachment0->GetHeight());
+    auto pixels = ReadPixels(x, y, width == 0 ? ColorAttachment0->GetWidth() : width, height == 0 ? ColorAttachment0->GetHeight() : height);
     for(auto pixel : pixels)
         printf("(%.2f,%.2f,%.2f,%.2f)", pixel[0], pixel[1], pixel[2], pixel[3]);
 }

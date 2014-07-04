@@ -42,7 +42,7 @@ public:
     
     static List<GLfloat> ReadDepth(int x, int y, int width, int height);
     
-    void Print();
+    void Print(int x = 0, int y = 0, int width = 0, int height = 0);
     
     void Print(RenderBufferType renderBuffer, int rowCount = 0);
     

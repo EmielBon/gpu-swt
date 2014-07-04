@@ -28,7 +28,7 @@ public:
     
 private:
     
-    void DetectEdges(const Texture &gradients, Ptr<Texture> output);
+    void DetectEdges(const Texture &gradients, float lowerThreshold, float upperThreshold, Ptr<Texture> output);
     
     void ScharrAveraging(const Texture &input, Ptr<Texture> output);
     
@@ -43,7 +43,7 @@ public:
 private:
     
     Ptr<Filter> gaussian;
-    Ptr<Program> canny, scharr, diffCanny;
+    Ptr<Program> histogram, canny, scharr, diffCanny;
 };
 
 inline CannyFilter::CannyFilter(Ptr<Texture> input) : base("Canny", input)

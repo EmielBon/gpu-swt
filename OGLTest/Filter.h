@@ -57,6 +57,8 @@ protected:
     
     void PrintProfilingInfo() const;
     
+    void PreparePerPixelVertices();
+    
 private:
     
     bool shadersLoaded;
@@ -65,6 +67,7 @@ private:
 protected:
     
     List< Ptr<Texture> > ColorBuffers;
+    static Ptr<VertexBuffer> PerPixelVertices;
     
 public:
     

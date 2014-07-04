@@ -17,20 +17,6 @@ using namespace std;
 
 String ContentLoader::ContentPath = "";
 
-/*template<>
-Ptr<VertexShader> ContentLoader::Load(const String &resourceName)
-{
-    String sourceText = FileReadAll(ContentPath + resourceName + ".vs");
-    return New<VertexShader>(resourceName, sourceText);
-}
-
-template<>
-Ptr<FragmentShader> ContentLoader::Load(const String &resourceName)
-{
-    String sourceText = FileReadAll(ContentPath + resourceName + ".fs");
-    return New<FragmentShader>(resourceName, sourceText);
-}*/
-
 template<>
 Ptr<Program> ContentLoader::Load(const String &vertexShaderSource, const String &fragmentShaderSource)
 {
@@ -41,9 +27,6 @@ Ptr<Program> ContentLoader::Load(const String &vertexShaderSource, const String 
     
     auto vs = New<Shader>(vertexShaderSource,   vsSourceText, GL_VERTEX_SHADER);
     auto fs = New<Shader>(fragmentShaderSource, fsSourceText, GL_FRAGMENT_SHADER);
-    
-    //shaders.push_back(std::dynamic_pointer_cast<Shader>(vs));
-    //shaders.push_back(std::dynamic_pointer_cast<Shader>(fs));
     
     shaders.push_back(vs);
     shaders.push_back(fs);

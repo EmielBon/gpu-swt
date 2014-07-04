@@ -124,7 +124,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1700060418EEEE8800B1D45C /* WriteRays.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = WriteRays.fs; sourceTree = "<group>"; };
+		1700060418EEEE8800B1D45C /* Value.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Value.fs; sourceTree = "<group>"; };
 		1700060718EEEF1400B1D45C /* WriteRays.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = WriteRays.vs; sourceTree = "<group>"; };
 		1700060818F297B400B1D45C /* RenderBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderBuffer.cpp; sourceTree = "<group>"; };
 		1700060918F297B400B1D45C /* RenderBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderBuffer.h; sourceTree = "<group>"; };
@@ -595,6 +595,7 @@
 				17B473AF18EAEE250012148E /* TextureUtil.fsh */,
 				17658F27189FA6AC003A8B11 /* Trivial.vs */,
 				17096C8C1950804A00F7933A /* Util.fsh */,
+				1700060418EEEE8800B1D45C /* Value.fs */,
 				170B02231949DC6A00E45664 /* VertexTexture.fs */,
 				170B02221949D6B600E45664 /* VertexTexture.vs */,
 			);
@@ -659,7 +660,6 @@
 				1700060B18F4399B00B1D45C /* AverageRays.fs */,
 				17B473AE18EAD9DC0012148E /* CastRays.fs */,
 				17FE531A194ADBBB00F6D8FE /* WriteAverageRays.vs */,
-				1700060418EEEE8800B1D45C /* WriteRays.fs */,
 				1700060718EEEF1400B1D45C /* WriteRays.vs */,
 			);
 			name = "Stroke Width Transform";

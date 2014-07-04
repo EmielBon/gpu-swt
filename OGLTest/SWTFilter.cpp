@@ -27,9 +27,9 @@ void SWTFilter::LoadShaderPrograms()
     canny->DoLoadShaderPrograms();
     
     cast     = LoadScreenSpaceProgram("CastRays");
-    write    =            LoadProgram("WriteRays");
+    write    = LoadProgram("WriteRays", "Value");
     avg      = LoadScreenSpaceProgram("AverageRays");
-    writeAvg = LoadProgram("WriteAverageRays", "WriteRays");
+    writeAvg = LoadProgram("WriteAverageRays", "Value");
     scale    = LoadScreenSpaceProgram("ScaleColor");
 }
 
