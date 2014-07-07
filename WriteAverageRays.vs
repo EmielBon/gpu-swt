@@ -1,5 +1,3 @@
-#version 150
-
 #pragma include Codec.fsh
 #pragma include TextureUtil.fsh
 

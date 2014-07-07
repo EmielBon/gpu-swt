@@ -1,5 +1,3 @@
-#version 150
-
 uniform vec3 Color;
 
 out vec4 FragColor;

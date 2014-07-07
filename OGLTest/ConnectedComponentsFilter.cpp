@@ -148,7 +148,8 @@ void ConnectedComponentsFilter::VerticalRuns(Ptr<Texture> input, Ptr<Texture> ou
     int height = input->GetHeight();
     
     verticalRun->Use();
-    verticalRun->Uniforms["Texture"].SetValue(*input);
+    verticalRun->Uniforms["Encoded"].SetValue(*input);
+    verticalRun->Uniforms["StrokeWidths"].SetValue(*Input);
     verticalRun->Uniforms["PassIndex"].SetValue(0);
     RenderToTexture(output);
     
@@ -156,7 +157,8 @@ void ConnectedComponentsFilter::VerticalRuns(Ptr<Texture> input, Ptr<Texture> ou
     for(int i = 1; i <= log_h; ++i)
     {
         std::swap(input, output);
-        verticalRun->Uniforms["Texture"].SetValue(*input);
+        verticalRun->Uniforms["Encoded"].SetValue(*input);
+        verticalRun->Uniforms["StrokeWidths"].SetValue(*Input);
         verticalRun->Uniforms["PassIndex"].SetValue(i);
         RenderToTexture(output);
     }

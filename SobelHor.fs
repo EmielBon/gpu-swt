@@ -1,5 +1,3 @@
-#version 150
-
 uniform sampler2D Texture;
 
 out vec4 FragColor;

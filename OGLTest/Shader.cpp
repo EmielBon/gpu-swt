@@ -18,7 +18,8 @@ Shader::Shader(const String &name, const String &sourceText, GLenum shaderType) 
     if(shaderId == 0)
         throw runtime_error("glCreateShader failed");
     
-    fullSource = ResolveIncludes(source);
+    String versionDirective = "#version 150\n";
+    fullSource = versionDirective + ResolveIncludes(source);
     
     //set the source code
     const char* code = fullSource.c_str();

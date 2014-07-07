@@ -1,5 +1,3 @@
-#version 150
-
 uniform sampler2D SobelHor;
 uniform sampler2D SobelVer;
 

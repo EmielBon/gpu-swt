@@ -1,5 +1,3 @@
-#version 150
-
 uniform sampler2D Gradients;
 uniform vec2 TextureSize = vec2(1, 1);
 uniform float LowerThreshold = 0.10;

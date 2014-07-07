@@ -172,6 +172,7 @@
 		171A0317189BD85A00A72B91 /* RenderWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderWindow.cpp; sourceTree = "<group>"; };
 		171A0318189BD85A00A72B91 /* RenderWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderWindow.h; sourceTree = "<group>"; };
 		171A031C189BDD2600A72B91 /* types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
+		17257169196A9C4900D04ECE /* SWTUtil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SWTUtil.fsh; sourceTree = "<group>"; };
 		1739564418CDE7DE003BF7D0 /* SWTParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWTParameters.h; sourceTree = "<group>"; };
 		1744D95618C09130004605D1 /* BoundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBox.cpp; sourceTree = "<group>"; };
 		1744D95718C09130004605D1 /* BoundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoundingBox.h; sourceTree = "<group>"; };
@@ -598,6 +599,7 @@
 				1700060418EEEE8800B1D45C /* Value.fs */,
 				170B02231949DC6A00E45664 /* VertexTexture.fs */,
 				170B02221949D6B600E45664 /* VertexTexture.vs */,
+				17257169196A9C4900D04ECE /* SWTUtil.fsh */,
 			);
 			name = shaders;
 			sourceTree = "<group>";

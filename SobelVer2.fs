@@ -1,5 +1,3 @@
-#version 150
-
 uniform sampler2D Texture;
 
 const vec2 weights = vec2(-1,/*0,*/1);
