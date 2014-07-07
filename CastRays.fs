@@ -48,6 +48,7 @@ void main()
     
     bool found = false;
     
+    // todo: maybe optimize in the same way as gaussian, by sampling in between pixels instead of fetching
     for (int i = 0; i <= MaxIterations; ++i)
     {
         realPos1 += dp * int(!found);
@@ -55,10 +56,10 @@ void main()
         found     = found || isEdgePixel(pos1);
     }
     
-    //vec2 gradient1 = fetch(Gradients, pos1).xy;
-    //vec2 dq = normalize(gradient1) * bla;
+    vec2 gradient1 = fetch(Gradients, pos1).xy;
+    vec2 dq = normalize(gradient1) * bla;
     //int keep = int(acos(dot(dp, -dq)) < MaxOppositeEdgeGradientDifference);
     // todo: include above
-    bool keep = found && inRange(pos1);
+    bool keep = found && /*(int(acos(dot(dp, -dq))) < MaxOppositeEdgeGradientDifference) &&*/ inRange(pos1);
     FragColor = vec4(encode(pos1) * int(keep), 0, 0, 1);
 }

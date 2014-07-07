@@ -121,6 +121,7 @@ void SWTFilter::PerformSteps(Ptr<Texture> output)
     glBlendFunc(GL_ONE, GL_ONE);
     glBlendEquation(GL_MAX);
     WriteRayValues(*oppositePositions, swt);
+    WriteRayValues2(*oppositePositions, swt);
     glDisable(GL_BLEND);
     GraphicsDevice::UseDefaultBuffers();
     DEBUG_FB("SWT 2");
@@ -131,6 +132,7 @@ void SWTFilter::PerformSteps(Ptr<Texture> output)
     GraphicsDevice::SetBuffers(linesVertices, nullptr);
     glEnable(GL_BLEND);
     WriteAverageRayValues(*oppositePositions, *averageValues, output);
+    WriteAverageRayValues2(*oppositePositions, *averageValues, output);
     glDisable(GL_BLEND);
     DEBUG_FB("SWT 4");
     
@@ -153,6 +155,13 @@ void SWTFilter::WriteRayValues(const Texture &oppositePositions, Ptr<Texture> ou
     RenderToTexture(output, PrimitiveType::Lines, GL_COLOR_BUFFER_BIT);
 }
 
+void SWTFilter::WriteRayValues2(const Texture &oppositePositions, Ptr<Texture> output)
+{
+    write->Use();
+    write->Uniforms["OppositePositions"].SetValue(oppositePositions);
+    RenderToTexture(output, PrimitiveType::Points);
+}
+
 void SWTFilter::AverageRayValues(const Texture &oppositePositions, const Texture &values, Ptr<Texture> output)
 {
     avg->Use();
@@ -167,6 +176,14 @@ void SWTFilter::WriteAverageRayValues(const Texture &oppositePositions, const Te
     writeAvg->Uniforms["OppositePositions"].SetValue(oppositePositions);
     writeAvg->Uniforms["AverageValues"].SetValue(averageValues);
     RenderToTexture(output, PrimitiveType::Lines, GL_COLOR_BUFFER_BIT);
+}
+
+void SWTFilter::WriteAverageRayValues2(const Texture &oppositePositions, const Texture &averageValues, Ptr<Texture> output)
+{
+    writeAvg->Use();
+    writeAvg->Uniforms["OppositePositions"].SetValue(oppositePositions);
+    writeAvg->Uniforms["AverageValues"].SetValue(averageValues);
+    RenderToTexture(output, PrimitiveType::Points);
 }
 
 void SWTFilter::ScaleResult(const Texture &input, float scaleFactor, Ptr<Texture> output)

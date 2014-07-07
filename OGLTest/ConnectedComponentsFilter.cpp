@@ -168,6 +168,7 @@ void ConnectedComponentsFilter::GatherNeighbor(Ptr<Texture> input, int column, P
 {
     gatherNeighbor->Use();
     gatherNeighbor->Uniforms["Texture"].SetValue(*input);
+    gatherNeighbor->Uniforms["StrokeWidths"].SetValue(*Input);
     gatherNeighbor->Uniforms["Column"].SetValue(column);
     RenderToTexture(output, PrimitiveType::Points);
 }
@@ -184,6 +185,7 @@ void ConnectedComponentsFilter::ScatterBack(Ptr<Texture> input, int column, Ptr<
 {
     scatterBack->Use();
     scatterBack->Uniforms["Texture"].SetValue(*input);
+    scatterBack->Uniforms["StrokeWidths"].SetValue(*Input);
     scatterBack->Uniforms["Column"].SetValue(column);
     RenderToTexture(output, PrimitiveType::Points);
 }

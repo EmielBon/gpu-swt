@@ -173,6 +173,7 @@
 		171A0318189BD85A00A72B91 /* RenderWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderWindow.h; sourceTree = "<group>"; };
 		171A031C189BDD2600A72B91 /* types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
 		17257169196A9C4900D04ECE /* SWTUtil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SWTUtil.fsh; sourceTree = "<group>"; };
+		1725716A196AC36000D04ECE /* GatherScatter.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = GatherScatter.fs; sourceTree = "<group>"; };
 		1739564418CDE7DE003BF7D0 /* SWTParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWTParameters.h; sourceTree = "<group>"; };
 		1744D95618C09130004605D1 /* BoundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBox.cpp; sourceTree = "<group>"; };
 		1744D95718C09130004605D1 /* BoundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoundingBox.h; sourceTree = "<group>"; };
@@ -252,7 +253,6 @@
 		1776532C18C8A13A004553B6 /* ConnectedComponentsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectedComponentsHelper.h; sourceTree = "<group>"; };
 		17ACBD7718FC1DA40052244F /* GatherNeighbor.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = GatherNeighbor.vs; sourceTree = "<group>"; };
 		17ACBD7918FC20E90052244F /* Color.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Color.fs; sourceTree = "<group>"; };
-		17ACBD7A18FD3A020052244F /* GatherScatter.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = GatherScatter.fs; sourceTree = "<group>"; };
 		17ACBD7B18FFC79F0052244F /* UpdateColumn.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = UpdateColumn.fs; sourceTree = "<group>"; };
 		17ACBD7C18FFF1A70052244F /* ScatterBack.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ScatterBack.vs; sourceTree = "<group>"; };
 		17ACBD80190695130052244F /* GLError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLError.cpp; sourceTree = "<group>"; };
@@ -263,9 +263,6 @@
 		17ACBD871906A2BF0052244F /* Filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Filter.h; sourceTree = "<group>"; };
 		17B473A618E444FD0012148E /* Canny.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Canny.fs; sourceTree = "<group>"; };
 		17B473A918EABD870012148E /* CannySobel2.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CannySobel2.fs; sourceTree = "<group>"; };
-		17B473AA18EACA5B0012148E /* NonMaximumSuppression.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = NonMaximumSuppression.fs; sourceTree = "<group>"; };
-		17B473AB18EACDBA0012148E /* NeighbourSum1.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = NeighbourSum1.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
-		17B473AC18EAD8610012148E /* NeighbourSum2.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = NeighbourSum2.fs; sourceTree = "<group>"; };
 		17B473AE18EAD9DC0012148E /* CastRays.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CastRays.fs; sourceTree = "<group>"; };
 		17B473AF18EAEE250012148E /* TextureUtil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TextureUtil.fsh; sourceTree = "<group>"; };
 		17EED2D818A392280094A37D /* DrawableRect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DrawableRect.cpp; sourceTree = "<group>"; };
@@ -396,7 +393,7 @@
 				1700061318F8069B00B1D45C /* Encode.fs */,
 				1700A2A7194B182200FE8EDC /* FilterInvalidComponents.fs */,
 				17ACBD7718FC1DA40052244F /* GatherNeighbor.vs */,
-				17ACBD7A18FD3A020052244F /* GatherScatter.fs */,
+				1725716A196AC36000D04ECE /* GatherScatter.fs */,
 				17ACBD7C18FFF1A70052244F /* ScatterBack.vs */,
 				1708A6141961AE2C00E89B2E /* StencilRouting.fs */,
 				1708A6131961A0ED00E89B2E /* StencilRouting.vs */,
@@ -649,9 +646,6 @@
 			children = (
 				17B473A618E444FD0012148E /* Canny.fs */,
 				17B473A918EABD870012148E /* CannySobel2.fs */,
-				17B473AA18EACA5B0012148E /* NonMaximumSuppression.fs */,
-				17B473AB18EACDBA0012148E /* NeighbourSum1.fs */,
-				17B473AC18EAD8610012148E /* NeighbourSum2.fs */,
 			);
 			name = Canny;
 			sourceTree = "<group>";
