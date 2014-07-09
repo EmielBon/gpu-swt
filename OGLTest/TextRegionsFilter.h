@@ -26,9 +26,7 @@ public:
     
     void PrepareBoundingBoxCalculation();
     
-    void PrepareComponentCounting();
-    
-    //void PreparePerPixelVertices();
+    void PrepareSummationOperations();
     
     void FindLetterCandidates(Ptr<Texture> input, GradientDirection gradientDirection, Ptr<Texture> output);
     
@@ -38,14 +36,20 @@ public:
     
     void CountComponents(Ptr<Texture> input, Ptr<Texture> output);
     
+    void Occupancy(Ptr<Texture> input, Ptr<Texture> output, bool clear);
+    
+    void AverageColorAndSWT(Ptr<Texture> components, Ptr<Texture> occupancy, Ptr<Texture> inputImage, Ptr<Texture> swt, Ptr<Texture> output, bool clear);
+    
     void PrepareStencilRouting(int N);
     
     void StencilRouting(Ptr<Texture> input, float N, Ptr<Texture> output);
     
-    void ExtractBoundingBoxes(int N);
+    //void WriteIDs(Ptr<Texture> input, Ptr<Texture> output);
+    
+    void ExtractBoundingBoxes(int N, int count);
     
     void PerformSteps(Ptr<Texture> output);
-   
+    
 public:
     
     List<BoundingBox> ExtractedBoundingBoxes;
@@ -56,10 +60,9 @@ private:
     Ptr<SWTFilter> swtFilter;
     Ptr<ConnectedComponentsFilter> connectedComponentsFilter;
     Ptr<Texture> gray, stencil;
-    Ptr<Program> boundingBoxes, filterInvalidComponents, countComponents, stencilRouting;
+    Ptr<Program> boundingBoxes, filterInvalidComponents, countComponents, stencilRouting, calculateOccupancy, average, writeIDs;
     // todo: for debug purposes
     Ptr<Program> vertexTexture;
-    //Ptr<VertexBuffer> perPixelVertices;
 };
 
 inline TextRegionsFilter::TextRegionsFilter(Ptr<Texture> input)
