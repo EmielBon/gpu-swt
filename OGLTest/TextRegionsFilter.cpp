@@ -37,6 +37,7 @@ void TextRegionsFilter::LoadShaderPrograms()
     stencilRouting          = LoadProgram("StencilRouting");
     calculateOccupancy      = LoadProgram("ScatterToRoot", "Occupancy");
     average                 = LoadProgram("ScatterToRoot", "AverageColorAndSWT");
+    variance                = LoadProgram("ScatterToRoot", "Variance");
     //writeIDs                = LoadScreenSpaceProgram("WriteIDs");
     //vertexTexture = LoadProgram("VertexTexture");
 }
@@ -72,21 +73,20 @@ void TextRegionsFilter::FindLetterCandidates(Ptr<Texture> input, GradientDirecti
     ApplyFilter(*connectedComponentsFilter, output);
 }
 
-void TextRegionsFilter::FilterInvalidComponents(Ptr<Texture> input, Ptr<Texture> output)
+void TextRegionsFilter::FilterInvalidComponents(Ptr<Texture> boundingBoxes, Ptr<Texture> averages, Ptr<Texture> occupancy, Ptr<Texture> variances, Ptr<Texture> output)
 {
     filterInvalidComponents->Use();
-    filterInvalidComponents->Uniforms["Texture"].SetValue(*input);
-    filterInvalidComponents->Uniforms["MinAspectRatio"].SetValue(MinAspectRatio);
-    filterInvalidComponents->Uniforms["MaxAspectRatio"].SetValue(MaxAspectRatio);
-    filterInvalidComponents->Uniforms["MinSizeRatio"].SetValue(0.0005f);
-    filterInvalidComponents->Uniforms["MaxSizeRatio"].SetValue(0.02f);
+    filterInvalidComponents->Uniforms["BoundingBoxes"].SetValue(*boundingBoxes);
+    filterInvalidComponents->Uniforms["Averages"].SetValue(*averages);
+    filterInvalidComponents->Uniforms["Occupancy"].SetValue(*occupancy);
+    filterInvalidComponents->Uniforms["Variances"].SetValue(*variances);
     RenderToTexture(output);
 }
 
-void TextRegionsFilter::BoundingBoxes(Ptr<Texture> input, Ptr<Texture> output, bool clear)
+void TextRegionsFilter::BoundingBoxes(Ptr<Texture> components, Ptr<Texture> output, bool clear)
 {
     boundingBoxes->Use();
-    boundingBoxes->Uniforms["Texture"].SetValue(*input);
+    boundingBoxes->Uniforms["Components"].SetValue(*components);
     RenderToTexture(output, PrimitiveType::Points, clear ? GL_COLOR_BUFFER_BIT : 0);
 }
 
@@ -97,20 +97,30 @@ void TextRegionsFilter::CountComponents(Ptr<Texture> input, Ptr<Texture> output)
     RenderToTexture(output, PrimitiveType::Points, GL_COLOR_BUFFER_BIT);
 }
 
-void TextRegionsFilter::Occupancy(Ptr<Texture> input, Ptr<Texture> output, bool clear)
+void TextRegionsFilter::Occupancy(Ptr<Texture> components, Ptr<Texture> output, bool clear)
 {
     calculateOccupancy->Use();
-    calculateOccupancy->Uniforms["Texture"].SetValue(*input);
+    calculateOccupancy->Uniforms["Components"].SetValue(*components);
     RenderToTexture(output, PrimitiveType::Points, clear ? GL_COLOR_BUFFER_BIT : 0);
 }
 
 void TextRegionsFilter::AverageColorAndSWT(Ptr<Texture> components, Ptr<Texture> occupancy, Ptr<Texture> inputImage, Ptr<Texture> swt, Ptr<Texture> output, bool clear)
 {
     average->Use();
-    average->Uniforms["Texture"].SetValue(*components);
+    average->Uniforms["Components"].SetValue(*components);
     average->Uniforms["Occupancy"].SetValue(*occupancy);
     average->Uniforms["InputImage"].SetValue(*inputImage);
-    average->Uniforms["SWT"].SetValue(*swt);
+    average->Uniforms["StrokeWidths"].SetValue(*swt);
+    RenderToTexture(output, PrimitiveType::Points, clear ? GL_COLOR_BUFFER_BIT : 0);
+}
+
+void TextRegionsFilter::Variance(Ptr<Texture> components, Ptr<Texture> occupancy, Ptr<Texture> strokeWidths, Ptr<Texture> averages, Ptr<Texture> output, bool clear)
+{
+    variance->Use();
+    variance->Uniforms["Components"].SetValue(*components);
+    variance->Uniforms["Occupancy"].SetValue(*occupancy);
+    variance->Uniforms["StrokeWidths"].SetValue(*strokeWidths);
+    variance->Uniforms["Averages"].SetValue(*averages);
     RenderToTexture(output, PrimitiveType::Points, clear ? GL_COLOR_BUFFER_BIT : 0);
 }
 
@@ -169,7 +179,7 @@ void TextRegionsFilter::StencilRouting(Ptr<Texture> input, float N, Ptr<Texture>
 
 void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
 {
-    ReserveColorBuffers(9);
+    ReserveColorBuffers(10);
     
     auto swt1        = ColorBuffers[0];
     auto swt2        = ColorBuffers[1];
@@ -179,7 +189,8 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     auto filtered    = ColorBuffers[5];
     auto occupancy   = ColorBuffers[6];
     auto averages    = ColorBuffers[7];
-    auto temp        = ColorBuffers[8];
+    auto variances   = ColorBuffers[8];
+    auto temp        = ColorBuffers[9];
     
     //FindLetterCandidates(gray, GradientDirection::With,    components1);
     //FindLetterCandidates(gray, GradientDirection::Against, components2);
@@ -212,6 +223,17 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     AverageColorAndSWT(components2, occupancy, Input, swt2, averages, false);
     DEBUG_FB("Average component colors");
     
+    // Calculate variance
+    Variance(components1, occupancy, swt1, averages, variances, true);
+    Variance(components2, occupancy, swt2, averages, variances, false);
+    /*auto pixels = FrameBuffer::GetCurrentlyBound()->ReadPixels<float>(0, 0, 800, 600, GL_RED, GL_FLOAT);
+    for(auto pixel : pixels)
+    {
+        if (pixel != 0.0)
+            printf("%f ", pixel);
+    }*/
+    DEBUG_FB("Component variances");
+    
     // Compute bounding boxes
     PrepareBoundingBoxCalculation();
     BoundingBoxes(components1, bboxes, true);
@@ -223,7 +245,7 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     glDisable(GL_BLEND);
     
     // Filter invalid components
-    FilterInvalidComponents(bboxes, filtered);
+    FilterInvalidComponents(bboxes, averages, occupancy, variances, filtered);
     DEBUG_FB("Valids");
     
     // Count unique components

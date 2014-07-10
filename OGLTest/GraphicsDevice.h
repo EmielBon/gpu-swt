@@ -25,6 +25,8 @@ public:
     
     static void UseDefaultBuffers();
     
+    static void AssertCompleteProgram();
+    
 public:
     
     static Ptr<::VertexBuffer> VertexBuffer;

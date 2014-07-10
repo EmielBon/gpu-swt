@@ -11,6 +11,8 @@
 
 void Uniform::SetValue(const Texture &texture)
 {
+    AssertLocation();
+    initialized = true;
     // resolved: couple GL_TEXTURE[n] and SetValue(n)
     glActiveTexture(GL_TEXTURE0 + index);
     glBindTexture(GL_TEXTURE_2D, texture.GetHandle());

@@ -17,6 +17,8 @@
 
 #include <GL/glew.h>
 
+Program* Program::currentlyUsedProgram = nullptr;
+
 Program::Program(const List< Ptr<Shader>> &shaders) : programId(0)
 {
     programId = CreateFromShaders(shaders);
@@ -124,6 +126,7 @@ void Program::Use()
     
     vertexBuffer.Unbind();
     
+    currentlyUsedProgram = this;
     glUseProgram(programId);
 }
 

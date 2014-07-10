@@ -1,13 +1,13 @@
 #pragma include TextureUtil.fsh
 
-uniform sampler2D Texture;
+uniform sampler2D Components;
 
 flat in  ivec2 CurrentXY;
      out vec4  FragColor;
 
 void main()
 {
-    ivec2 texSize = size(Texture);
+    ivec2 texSize = size(Components);
     float x1 = float(texSize.x - 1) - CurrentXY.x;
     float y1 = float(texSize.y - 1) - CurrentXY.y;
     float x2 = CurrentXY.x;

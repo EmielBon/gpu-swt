@@ -31,6 +31,8 @@ public:
     
     static Ptr<Program> LoadScreenSpaceProgram(const String &fragmentShaderSource);
     
+    static Program* GetCurrentlyUsed();
+    
 private:
     
     static GLuint CreateFromShaders(const List< Ptr<Shader> > &shaders);
@@ -42,6 +44,7 @@ private:
 private:
     
     GLuint programId;
+    static Program *currentlyUsedProgram;
     
 public:
     
@@ -61,4 +64,9 @@ inline void Program::Dispose()
 inline void Program::UseDefault()
 {
     glUseProgram(0);
+}
+
+inline Program* Program::GetCurrentlyUsed()
+{
+    return currentlyUsedProgram;
 }

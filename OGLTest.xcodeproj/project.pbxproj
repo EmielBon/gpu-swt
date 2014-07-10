@@ -170,6 +170,7 @@
 		1725716B196C0C2800D04ECE /* WriteIDs.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = WriteIDs.fs; sourceTree = "<group>"; };
 		1725716F196D55EF00D04ECE /* Occupancy.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Occupancy.fs; sourceTree = "<group>"; };
 		17257170196D672800D04ECE /* AverageColorAndSWT.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = AverageColorAndSWT.fs; sourceTree = "<group>"; };
+		17257171196D95F600D04ECE /* Variance.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Variance.fs; sourceTree = "<group>"; };
 		1739564418CDE7DE003BF7D0 /* SWTParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWTParameters.h; sourceTree = "<group>"; };
 		1744D95618C09130004605D1 /* BoundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBox.cpp; sourceTree = "<group>"; };
 		1744D95718C09130004605D1 /* BoundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoundingBox.h; sourceTree = "<group>"; };
@@ -377,21 +378,12 @@
 		1700061118F7E0A300B1D45C /* Connected Components */ = {
 			isa = PBXGroup;
 			children = (
-				17257170196D672800D04ECE /* AverageColorAndSWT.fs */,
-				17005B45192E20980052C611 /* BoundingBoxes.fs */,
 				1700061218F8062700B1D45C /* Codec.fsh */,
-				170B02211949BC5100E45664 /* CountComponents.fs */,
-				170B02201949BBC600E45664 /* CountComponents.vs */,
 				170B021F194730AE00E45664 /* Decode.fs */,
 				1700061318F8069B00B1D45C /* Encode.fs */,
-				1700A2A7194B182200FE8EDC /* FilterInvalidComponents.fs */,
 				17ACBD7718FC1DA40052244F /* GatherNeighbor.vs */,
 				1725716A196AC36000D04ECE /* GatherScatter.fs */,
-				1725716F196D55EF00D04ECE /* Occupancy.fs */,
 				17ACBD7C18FFF1A70052244F /* ScatterBack.vs */,
-				17005B44192E1D7F0052C611 /* ScatterToRoot.vs */,
-				1708A6141961AE2C00E89B2E /* StencilRouting.fs */,
-				1708A6131961A0ED00E89B2E /* StencilRouting.vs */,
 				1713C5A61913D4B000909BDB /* UpdateChildren.fs */,
 				17ACBD7B18FFC79F0052244F /* UpdateColumn.fs */,
 				177261181924D2E300E58ED5 /* UpdateColumn.vs */,
@@ -589,9 +581,27 @@
 			name = Util;
 			sourceTree = "<group>";
 		};
+		17257172196D967A00D04ECE /* Text Regions */ = {
+			isa = PBXGroup;
+			children = (
+				17257170196D672800D04ECE /* AverageColorAndSWT.fs */,
+				17005B45192E20980052C611 /* BoundingBoxes.fs */,
+				170B02211949BC5100E45664 /* CountComponents.fs */,
+				170B02201949BBC600E45664 /* CountComponents.vs */,
+				1700A2A7194B182200FE8EDC /* FilterInvalidComponents.fs */,
+				1725716F196D55EF00D04ECE /* Occupancy.fs */,
+				17005B44192E1D7F0052C611 /* ScatterToRoot.vs */,
+				1708A6141961AE2C00E89B2E /* StencilRouting.fs */,
+				1708A6131961A0ED00E89B2E /* StencilRouting.vs */,
+				17257171196D95F600D04ECE /* Variance.fs */,
+			);
+			name = "Text Regions";
+			sourceTree = "<group>";
+		};
 		17658F26189FA645003A8B11 /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				17257172196D967A00D04ECE /* Text Regions */,
 				17B473A718E445020012148E /* Canny */,
 				1700061118F7E0A300B1D45C /* Connected Components */,
 				1725716C196D3B2C00D04ECE /* Debug */,

@@ -1,7 +1,7 @@
-flat in  vec4 BoundingBox;
+flat in  vec4 Color;
      out vec4 FragColor;
 
 void main()
 {
-    FragColor = BoundingBox;
+    FragColor = Color;
 }

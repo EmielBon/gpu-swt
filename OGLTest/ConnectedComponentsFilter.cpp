@@ -118,8 +118,6 @@ void ConnectedComponentsFilter::PerformSteps(Ptr<Texture> output)
         glDepthMask(GL_FALSE);
     }
     
-    //FrameBuffer::GetCurrentlyBound()->Print(RenderBufferType::Depth);
-    
     GraphicsDevice::UseDefaultBuffers();
     
     glDisable(GL_BLEND);

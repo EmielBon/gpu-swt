@@ -30,7 +30,7 @@ public:
     
     void FindLetterCandidates(Ptr<Texture> input, GradientDirection gradientDirection, Ptr<Texture> output);
     
-    void FilterInvalidComponents(Ptr<Texture> input, Ptr<Texture> output);
+    void FilterInvalidComponents(Ptr<Texture> boundingBoxes, Ptr<Texture> averages, Ptr<Texture> occupancy, Ptr<Texture> variances, Ptr<Texture> output);
     
     void BoundingBoxes(Ptr<Texture> input, Ptr<Texture> output, bool clear);
     
@@ -38,7 +38,9 @@ public:
     
     void Occupancy(Ptr<Texture> input, Ptr<Texture> output, bool clear);
     
-    void AverageColorAndSWT(Ptr<Texture> components, Ptr<Texture> occupancy, Ptr<Texture> inputImage, Ptr<Texture> swt, Ptr<Texture> output, bool clear);
+    void AverageColorAndSWT(Ptr<Texture> components, Ptr<Texture> occupancy, Ptr<Texture> inputImage, Ptr<Texture> strokeWidths, Ptr<Texture> output, bool clear);
+    
+    void Variance(Ptr<Texture> components, Ptr<Texture> occupancy, Ptr<Texture> strokeWidths, Ptr<Texture> averages, Ptr<Texture> output, bool clear);
     
     void PrepareStencilRouting(int N);
     
@@ -60,7 +62,7 @@ private:
     Ptr<SWTFilter> swtFilter;
     Ptr<ConnectedComponentsFilter> connectedComponentsFilter;
     Ptr<Texture> gray, stencil;
-    Ptr<Program> boundingBoxes, filterInvalidComponents, countComponents, stencilRouting, calculateOccupancy, average, writeIDs;
+    Ptr<Program> boundingBoxes, filterInvalidComponents, countComponents, stencilRouting, calculateOccupancy, average, variance, writeIDs;
     // todo: for debug purposes
     Ptr<Program> vertexTexture;
 };

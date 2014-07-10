@@ -9,6 +9,7 @@
 #include "GraphicsDevice.h"
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
+#include "Program.h"
 
 Ptr<::VertexBuffer> GraphicsDevice::VertexBuffer = nullptr;
 Ptr<::IndexBuffer>  GraphicsDevice::IndexBuffer  = nullptr;
@@ -18,6 +19,7 @@ Ptr<::IndexBuffer>  GraphicsDevice::DefaultIndexBuffer  = nullptr;
 
 void GraphicsDevice::DrawPrimitives()
 {
+    AssertCompleteProgram();
     // bind the index buffer
     IndexBuffer->Bind();
     // draw the VAO
@@ -27,6 +29,20 @@ void GraphicsDevice::DrawPrimitives()
 
 void GraphicsDevice::DrawArrays(PrimitiveType primitiveType)
 {
+    AssertCompleteProgram();
     // Draw without index buffer
     glDrawArrays((GLenum)primitiveType, 0, VertexBuffer->Count());
+}
+
+void GraphicsDevice::AssertCompleteProgram()
+{
+    if (Program::GetCurrentlyUsed() == nullptr)
+        throw std::runtime_error("Error: Rendering without program");
+        
+    for (auto& keyValues : Program::GetCurrentlyUsed()->Uniforms)
+    {
+        auto &uniform = keyValues.second;
+        if (!uniform.IsInitialized())
+            throw std::runtime_error("Error: No value specified for uniform \"" + uniform.GetName() + "\"");
+    }
 }

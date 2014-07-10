@@ -7,9 +7,9 @@ uniform sampler2D Gradients;
 uniform bool      DarkOnLight;
 
 const lowp    float prec = 0.2;
-const mediump float Pi   = 3.14159265359;
-const mediump float MaxOppositeEdgeGradientDifference = Pi / 2;
-const lowp    int   MaxRayLength = 100; // todo: somehow setting this to 50 messes everything up
+const float         Pi   = 3.14159265359;
+const float         MaxOppositeEdgeGradientDifference = Pi / 2;
+const lowp    int   MaxRayLength = 50; // todo: somehow setting this to 50 messes everything up
 const lowp    vec4  Black = vec4(0, 0, 0, 1);
 const lowp    int   MaxIterations = int(MaxRayLength / prec); // todo: misschien beter mediump als dit nog groter wordt
 
@@ -58,8 +58,7 @@ void main()
     
     vec2 gradient1 = fetch(Gradients, pos1).xy;
     vec2 dq = normalize(gradient1) * bla;
-    //int keep = int(acos(dot(dp, -dq)) < MaxOppositeEdgeGradientDifference);
-    // todo: include above
-    bool keep = found && /*(int(acos(dot(dp, -dq))) < MaxOppositeEdgeGradientDifference) &&*/ inRange(pos1);
+    float edgeDifference = acos(dot(dp, -dq));
+    bool keep = found && edgeDifference < MaxOppositeEdgeGradientDifference;
     FragColor = vec4(encode(pos1) * int(keep), 0, 0, 1);
 }

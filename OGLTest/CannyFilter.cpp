@@ -51,6 +51,7 @@ void CannyFilter::PerformSteps(Ptr<Texture> output)
     glDisable(GL_BLEND);
     GraphicsDevice::UseDefaultBuffers();
     
+    // todo: maybe the histogram generation can be done in the gray filter. Slower because of the per pixel vertices, but probably faster than a whole extra pass
     auto pixels = FrameBuffer::GetCurrentlyBound()->ReadPixels<float>(0, 0, 255, 1, GL_RED, GL_FLOAT);
     // Estimate median from frequencies
     float percentile = 0;
@@ -66,6 +67,7 @@ void CannyFilter::PerformSteps(Ptr<Texture> output)
     Differentiation(*output, ColorBuffers[0]);
     
     //glEnable(GL_STENCIL_TEST);
+    // todo: why / 2 ? Would it benefit from contrast stretch? Or should I use the 0.33rd and 0.66th percentile?? That would actually make a lot more sense...
     DetectEdges(*ColorBuffers[0], 0.33f/2 * median, 0.66f/2 * median, output); // Buffer0 contains gradients
     DEBUG_FB("Edges");
     //glDisable(GL_STENCIL_TEST);

@@ -7,7 +7,6 @@
 //
 
 #include "GaussianFilter.h"
-#include "Texture.h"
 
 void GaussianFilter::PerformSteps(Ptr<Texture> output)
 {
