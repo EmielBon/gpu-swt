@@ -38,7 +38,7 @@ void TextRegionsFilter::LoadShaderPrograms()
     calculateOccupancy      = LoadProgram("ScatterToRoot", "Occupancy");
     average                 = LoadProgram("ScatterToRoot", "AverageColorAndSWT");
     variance                = LoadProgram("ScatterToRoot", "Variance");
-    //writeIDs                = LoadScreenSpaceProgram("WriteIDs");
+    //writeIDs              = LoadScreenSpaceProgram("WriteIDs");
     //vertexTexture = LoadProgram("VertexTexture");
 }
 
@@ -60,17 +60,6 @@ void TextRegionsFilter::PrepareSummationOperations()
 {
     glBlendEquation(GL_FUNC_ADD);
     glBlendFunc(GL_ONE, GL_ONE);
-}
-
-void TextRegionsFilter::FindLetterCandidates(Ptr<Texture> input, GradientDirection gradientDirection, Ptr<Texture> output)
-{
-    auto swt = input->GetEmptyClone();
-    
-    swtFilter->Input = input;
-    swtFilter->GradientDirection = gradientDirection;
-    ApplyFilter(*swtFilter, swt);
-    connectedComponentsFilter->Input = swt;
-    ApplyFilter(*connectedComponentsFilter, output);
 }
 
 void TextRegionsFilter::FilterInvalidComponents(Ptr<Texture> boundingBoxes, Ptr<Texture> averages, Ptr<Texture> occupancy, Ptr<Texture> variances, Ptr<Texture> output)
@@ -144,21 +133,27 @@ void TextRegionsFilter::PrepareStencilRouting(int N)
     stencil->Bind();
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, N, N, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, pixels.data());
     
-    glPointSize(N);
+    glPointSize(N + 1); // todo: why is +1 needed? Or maybe it just needs to be an even number, in the test case it was 7 and the first column of pixels was not drawn
 }
 
 void TextRegionsFilter::ExtractBoundingBoxes(int N, int count)
 {
     auto pixels = FrameBuffer::GetCurrentlyBound()->ReadPixels<cv::Vec4f>(0, 0, N, N, GL_RGBA, GL_FLOAT);
-    for(int i = 0; i < count; ++i)
+    if (pixels.size() != N * N)
+        throw std::runtime_error("adad");
+    
+    for(auto &pixel : pixels)
     {
-        auto &pixel = pixels[i];
         int x1 = -((int)pixel[0] - (Input->GetWidth() - 1));
         int y1 = -((int)pixel[1] - (Input->GetHeight() - 1));
         int x2 = (int)pixel[2];
         int y2 = (int)pixel[3];
+        if (x2 - x1 < 0 || y2 - y1 < 0)
+            continue;
         ExtractedBoundingBoxes.push_back(BoundingBox(cv::Rect(x1, y1, x2 - x1, y2 - y1)));
     }
+    if (ExtractedBoundingBoxes.size() != count)
+        throw std::runtime_error("Error: Missing some bounding boxes");
 }
 
 void TextRegionsFilter::StencilRouting(Ptr<Texture> input, float N, Ptr<Texture> output)
@@ -191,9 +186,6 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     auto variances   = ColorBuffers[8];
     auto temp        = ColorBuffers[9];
     
-    //FindLetterCandidates(gray, GradientDirection::With,    components1);
-    //FindLetterCandidates(gray, GradientDirection::Against, components2);
-    
     // Calculate SWT
     swtFilter->Input = gray;
     swtFilter->GradientDirection = GradientDirection::With;
@@ -214,32 +206,32 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     glEnable(GL_BLEND);
     
     // Calculate component occupancy
-    Occupancy(components2, occupancy, true);
-    //Occupancy(components1, occupancy, false);
+    Occupancy(components1, occupancy, true);
+    Occupancy(components2, occupancy, false);
     DEBUG_FB("Component occupancy");
     
     // Average component color and SWT
-    //AverageColorAndSWT(components1, occupancy, Input, swt1, averages, true);
-    AverageColorAndSWT(components2, occupancy, Input, swt2, averages, true);
+    AverageColorAndSWT(components1, occupancy, Input, swt1, averages, true);
+    AverageColorAndSWT(components2, occupancy, Input, swt2, averages, false);
     
-    auto pixels = FrameBuffer::GetCurrentlyBound()->ReadPixels<cv::Vec4f>(0, 0, 800, 600, GL_RGBA, GL_FLOAT);
+    /*auto pixels = FrameBuffer::GetCurrentlyBound()->ReadPixels<cv::Vec4f>(0, 0, 800, 600, GL_RGBA, GL_FLOAT);
     for(auto& pixel : pixels)
     {
         if (pixel[3] != 0.0)
             printf("%f ", pixel[3]);
-    }
+    }*/
     
     DEBUG_FB("Average component colors");
     
     // Calculate variance
-    //Variance(components1, occupancy, swt1, averages, variances, true);
-    Variance(components2, occupancy, swt2, averages, variances, true);
+    Variance(components1, occupancy, swt1, averages, variances, true);
+    Variance(components2, occupancy, swt2, averages, variances, false);
     DEBUG_FB("Component variances");
     
     // Compute bounding boxes
     PrepareBoundingBoxCalculation();
-    //BoundingBoxes(components1, bboxes, true);
-    BoundingBoxes(components2, bboxes, true);
+    BoundingBoxes(components1, bboxes, true);
+    BoundingBoxes(components2, bboxes, false);
     DEBUG_FB("Bounding Boxes");
     
     // End summations

@@ -13,5 +13,5 @@ void main()
     Color            = fetch(Texture, current_xy);
     int   keep       = ifelse(Color.r == 0.0, -1, 1);
     vec2  pos        = getScreenSpaceCoord(Texture, StencilCenter * keep);
-    gl_Position      = vec4(pos, keep, ifelse(keep == 1, 1, 0));
+    gl_Position      = vec4(pos, 0, 1);
 }

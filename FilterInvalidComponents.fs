@@ -41,10 +41,10 @@ void main()
     float aspectRatio   = dims.x / dims.y;
     float sizeRatio     = area(dims) / area(texSize);
     bool  goodAspect    = aspectRatio >= MinAspectRatio && aspectRatio <= MaxAspectRatio;
-    bool  goodSize      = sizeRatio >= MinSizeRatio && sizeRatio <= MaxSizeRatio;
+    bool  goodSize      = area(dims) > 100;//sizeRatio >= MinSizeRatio && sizeRatio <= MaxSizeRatio;
     bool  goodOccupancy = occupancy >= MinOccupancy && (aspectRatio < 1 || occupancy <= MaxOccupancy);
     bool  goodVariance  = variance <= mean / MaxVarianceToMeanRatio;
     
     FragColor = ifelse(goodAspect && goodSize && goodOccupancy && goodVariance, bbox, vec4(0));
-    //FragColor = vec4(int(!goodAspect), 0, 0, 1);
+    //FragColor = vec4(int(goodAspect && goodSize && goodOccupancy && goodVariance), int(sizeRatio < MinSizeRatio), 0, 1);
 }

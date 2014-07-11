@@ -28,8 +28,6 @@ public:
     
     void PrepareSummationOperations();
     
-    void FindLetterCandidates(Ptr<Texture> input, GradientDirection gradientDirection, Ptr<Texture> output);
-    
     void FilterInvalidComponents(Ptr<Texture> boundingBoxes, Ptr<Texture> averages, Ptr<Texture> occupancy, Ptr<Texture> variances, Ptr<Texture> output);
     
     void BoundingBoxes(Ptr<Texture> input, Ptr<Texture> output, bool clear);
