@@ -32,7 +32,7 @@ void main()
     // todo: choose better variable name
     lowp int bla = ifelse(DarkOnLight, 1, -1);
     
-    // todo: should not be needed with stencil test, but removing it does not function as expected
+    // todo: should not be needed with stencil test, but removing it did not function as expected (should retest)
     if (!isEdgePixel(pos0))
     {
         FragColor = Black;

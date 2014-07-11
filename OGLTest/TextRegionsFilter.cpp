@@ -153,11 +153,10 @@ void TextRegionsFilter::ExtractBoundingBoxes(int N, int count)
     for(int i = 0; i < count; ++i)
     {
         auto &pixel = pixels[i];
-        int x1 = -((int)pixel[0] - Input->GetWidth() - 1);
-        int y1 = -((int)pixel[1] - Input->GetHeight() - 1);
+        int x1 = -((int)pixel[0] - (Input->GetWidth() - 1));
+        int y1 = -((int)pixel[1] - (Input->GetHeight() - 1));
         int x2 = (int)pixel[2];
         int y2 = (int)pixel[3];
-        //if (x1 != x2 && y1 != y2 && x2 != 0 && y2 != 0)
         ExtractedBoundingBoxes.push_back(BoundingBox(cv::Rect(x1, y1, x2 - x1, y2 - y1)));
     }
 }
@@ -199,6 +198,7 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     swtFilter->Input = gray;
     swtFilter->GradientDirection = GradientDirection::With;
     ApplyFilter(*swtFilter, swt1);
+    
     swtFilter->GradientDirection = GradientDirection::Against;
     ApplyFilter(*swtFilter, swt2);
     
@@ -214,30 +214,32 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     glEnable(GL_BLEND);
     
     // Calculate component occupancy
-    Occupancy(components1, occupancy, true);
-    Occupancy(components2, occupancy, false);
+    Occupancy(components2, occupancy, true);
+    //Occupancy(components1, occupancy, false);
     DEBUG_FB("Component occupancy");
     
     // Average component color and SWT
-    AverageColorAndSWT(components1, occupancy, Input, swt1, averages, true);
-    AverageColorAndSWT(components2, occupancy, Input, swt2, averages, false);
+    //AverageColorAndSWT(components1, occupancy, Input, swt1, averages, true);
+    AverageColorAndSWT(components2, occupancy, Input, swt2, averages, true);
+    
+    auto pixels = FrameBuffer::GetCurrentlyBound()->ReadPixels<cv::Vec4f>(0, 0, 800, 600, GL_RGBA, GL_FLOAT);
+    for(auto& pixel : pixels)
+    {
+        if (pixel[3] != 0.0)
+            printf("%f ", pixel[3]);
+    }
+    
     DEBUG_FB("Average component colors");
     
     // Calculate variance
-    Variance(components1, occupancy, swt1, averages, variances, true);
-    Variance(components2, occupancy, swt2, averages, variances, false);
-    /*auto pixels = FrameBuffer::GetCurrentlyBound()->ReadPixels<float>(0, 0, 800, 600, GL_RED, GL_FLOAT);
-    for(auto pixel : pixels)
-    {
-        if (pixel != 0.0)
-            printf("%f ", pixel);
-    }*/
+    //Variance(components1, occupancy, swt1, averages, variances, true);
+    Variance(components2, occupancy, swt2, averages, variances, true);
     DEBUG_FB("Component variances");
     
     // Compute bounding boxes
     PrepareBoundingBoxCalculation();
-    BoundingBoxes(components1, bboxes, true);
-    BoundingBoxes(components2, bboxes, false);
+    //BoundingBoxes(components1, bboxes, true);
+    BoundingBoxes(components2, bboxes, true);
     DEBUG_FB("Bounding Boxes");
     
     // End summations

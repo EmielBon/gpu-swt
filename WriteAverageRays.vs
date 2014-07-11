@@ -1,3 +1,4 @@
+#pragma include Util.fsh
 #pragma include Codec.fsh
 #pragma include TextureUtil.fsh
 
@@ -12,7 +13,8 @@ void main()
     ivec2 pos0    = ivec2(Position.xy);
     float pos1_id = fetch(OppositePositions, pos0).r;
     ivec2 pos1    = decode(pos1_id);
-    Value         = fetch(AverageValues, pos0).r;
+    
+    Value = fetch(AverageValues, pos0).r;
     
     vec2 p1 = getScreenSpaceCoord(OppositePositions, pos0);
     vec2 p2 = getScreenSpaceCoord(OppositePositions, pos1);

@@ -133,6 +133,12 @@ void SWTFilter::PerformSteps(Ptr<Texture> output)
     glEnable(GL_BLEND);
     WriteAverageRayValues(*oppositePositions, *averageValues, output);
     WriteAverageRayValues2(*oppositePositions, *averageValues, output);
+    /*auto pixels = FrameBuffer::GetCurrentlyBound()->ReadPixels<cv::Vec4f>(0, 0, 800, 600, GL_RGBA, GL_FLOAT);
+    for(auto& pixel : pixels)
+    {
+        if (pixel[0] > 0 && pixel[0] < 950)
+            printf("%f ", pixel[0]);
+    }*/
     glDisable(GL_BLEND);
     DEBUG_FB("SWT 4");
     

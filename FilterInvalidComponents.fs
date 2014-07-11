@@ -3,7 +3,7 @@
 
 const float MinSizeRatio = 0.0005;
 const float MaxSizeRatio = 0.02;
-const float MinAspectRatio = 0.2; // Paper says 0.1
+const float MinAspectRatio = 0.1; // Paper says 0.1
 const float MaxAspectRatio = 2; // Paper says 10, but this allows for very short, broad shapes which are generally not letters
 const float MinOccupancy = 0.2;
 const float MaxOccupancy = 0.9;
@@ -27,9 +27,9 @@ void main()
     ivec2 texSize    = size(BoundingBoxes);
     
     vec4  bbox      = fetch(BoundingBoxes, current_xy);
-    float mean      = fetch(Averages, current_xy).a;
+    float mean      = fetch(Averages,  current_xy).a;
     float occupancy = fetch(Occupancy, current_xy).r;
-    float variance  = fetch(Variances, current_xy).r / occupancy;
+    float variance  = fetch(Variances, current_xy).r;
 
     float x1 = abs(bbox.x - float(texSize.x - 1));
     float y1 = abs(bbox.y - float(texSize.y - 1));
@@ -46,4 +46,5 @@ void main()
     bool  goodVariance  = variance <= mean / MaxVarianceToMeanRatio;
     
     FragColor = ifelse(goodAspect && goodSize && goodOccupancy && goodVariance, bbox, vec4(0));
+    //FragColor = vec4(int(!goodAspect), 0, 0, 1);
 }
