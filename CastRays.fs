@@ -17,7 +17,8 @@ out vec4 FragColor;
 
 bool inRange(ivec2 xy)
 {
-    return clamp(xy, ivec2(0), size(Edges)) == xy;
+    // from 1,1 tot w-1,h-1 because edge pixels are often incorrectly classified
+    return clamp(xy, ivec2(1), size(Edges) - ivec2(2)) == xy;
 }
 
 // todo: maybe optimize in the same way as gaussian, by sampling in between pixels instead of fetching
@@ -59,6 +60,6 @@ void main()
     vec2 gradient1 = fetch(Gradients, pos1).xy;
     vec2 dq = normalize(gradient1) * bla;
     float edgeDifference = acos(dot(dp, -dq));
-    bool keep = found && edgeDifference < MaxOppositeEdgeGradientDifference;
+    bool keep = found && inRange(pos0) && inRange(pos1) && edgeDifference < MaxOppositeEdgeGradientDifference;
     FragColor = vec4(encode(pos1) * int(keep), 0, 0, 1);
 }

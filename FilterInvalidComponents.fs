@@ -11,12 +11,17 @@ const float MaxVarianceToMeanRatio = 1.5;
 
 uniform sampler2D BoundingBoxes;
 uniform sampler2D Averages;
-uniform sampler2D Occupancy;
-uniform sampler2D Variances;
+uniform sampler2D PixelCounts;
+uniform sampler2D VarianceSums;
 
 out vec4 FragColor;
 
-float area(vec2 dimensions)
+float getArea(vec2 dimensions)
+{
+    return dimensions.x * dimensions.y;
+}
+
+int getArea(ivec2 dimensions)
 {
     return dimensions.x * dimensions.y;
 }
@@ -27,8 +32,7 @@ void main()
     ivec2 texSize    = size(BoundingBoxes);
     
     vec4  bbox      = fetch(BoundingBoxes, current_xy);
-    float mean      = fetch(Averages,  current_xy).a;
-    float variance  = fetch(Variances, current_xy).r;
+    float mean      = fetch(Averages, current_xy).a;
 
     float x1 = abs(bbox.x - float(texSize.x - 1));
     float y1 = abs(bbox.y - float(texSize.y - 1));
@@ -37,12 +41,15 @@ void main()
     
     vec2 dims = vec2(x2 - x1, y2 - y1);
     
-    float occupancy = fetch(Occupancy, current_xy).r / area(dims);
+    float area       = getArea(dims);
+    float pixelCount = fetch(PixelCounts, current_xy).r;
+    float occupancy  = pixelCount / pixelCount;
+    float variance   = fetch(VarianceSums, current_xy).r / pixelCount;
     
     float aspectRatio   = dims.x / dims.y;
-    float sizeRatio     = area(dims) / area(texSize);
+    float sizeRatio     = area / getArea(texSize);
     bool  goodAspect    = aspectRatio >= MinAspectRatio && aspectRatio <= MaxAspectRatio;
-    bool  goodSize      = dims.y >= MinHeight && dims.y <= MaxHeight && area(dims) > 64;
+    bool  goodSize      = dims.y >= MinHeight && dims.y <= MaxHeight && area > 64;
     bool  goodOccupancy = occupancy >= MinOccupancy && (aspectRatio < 1 || occupancy <= MaxOccupancy);
     bool  goodVariance  = variance <= mean / MaxVarianceToMeanRatio;
     

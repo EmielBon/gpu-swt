@@ -35,7 +35,7 @@ void TextRegionsFilter::LoadShaderPrograms()
     filterInvalidComponents = LoadScreenSpaceProgram("FilterInvalidComponents");
     countComponents         = LoadProgram("CountComponents");
     stencilRouting          = LoadProgram("StencilRouting");
-    calculateOccupancy      = LoadProgram("ScatterToRoot", "Occupancy");
+    countPixels             = LoadProgram("ScatterToRoot", "Increment");
     average                 = LoadProgram("ScatterToRoot", "AverageColorAndSWT");
     variance                = LoadProgram("ScatterToRoot", "Variance");
     //writeIDs              = LoadScreenSpaceProgram("WriteIDs");
@@ -62,13 +62,13 @@ void TextRegionsFilter::PrepareSummationOperations()
     glBlendFunc(GL_ONE, GL_ONE);
 }
 
-void TextRegionsFilter::FilterInvalidComponents(Ptr<Texture> boundingBoxes, Ptr<Texture> averages, Ptr<Texture> occupancy, Ptr<Texture> variances, Ptr<Texture> output)
+void TextRegionsFilter::FilterInvalidComponents(Ptr<Texture> boundingBoxes, Ptr<Texture> averages, Ptr<Texture> pixelCounts, Ptr<Texture> varianceSums, Ptr<Texture> output)
 {
     filterInvalidComponents->Use();
     filterInvalidComponents->Uniforms["BoundingBoxes"].SetValue(*boundingBoxes);
     filterInvalidComponents->Uniforms["Averages"].SetValue(*averages);
-    filterInvalidComponents->Uniforms["Occupancy"].SetValue(*occupancy);
-    filterInvalidComponents->Uniforms["Variances"].SetValue(*variances);
+    filterInvalidComponents->Uniforms["PixelCounts"].SetValue(*pixelCounts);
+    filterInvalidComponents->Uniforms["VarianceSums"].SetValue(*varianceSums);
     RenderToTexture(output);
 }
 
@@ -86,28 +86,28 @@ void TextRegionsFilter::CountComponents(Ptr<Texture> input, Ptr<Texture> output)
     RenderToTexture(output, PrimitiveType::Points, GL_COLOR_BUFFER_BIT);
 }
 
-void TextRegionsFilter::Occupancy(Ptr<Texture> components, Ptr<Texture> output, bool clear)
+void TextRegionsFilter::CountPixels(Ptr<Texture> components, Ptr<Texture> output, bool clear)
 {
-    calculateOccupancy->Use();
-    calculateOccupancy->Uniforms["Components"].SetValue(*components);
+    countPixels->Use();
+    countPixels->Uniforms["Components"].SetValue(*components);
     RenderToTexture(output, PrimitiveType::Points, clear ? GL_COLOR_BUFFER_BIT : 0);
 }
 
-void TextRegionsFilter::AverageColorAndSWT(Ptr<Texture> components, Ptr<Texture> occupancy, Ptr<Texture> inputImage, Ptr<Texture> swt, Ptr<Texture> output, bool clear)
+void TextRegionsFilter::AverageColorAndSWT(Ptr<Texture> components, Ptr<Texture> pixelCounts, Ptr<Texture> inputImage, Ptr<Texture> swt, Ptr<Texture> output, bool clear)
 {
     average->Use();
     average->Uniforms["Components"].SetValue(*components);
-    average->Uniforms["Occupancy"].SetValue(*occupancy);
+    average->Uniforms["PixelCounts"].SetValue(*pixelCounts);
     average->Uniforms["InputImage"].SetValue(*inputImage);
     average->Uniforms["StrokeWidths"].SetValue(*swt);
     RenderToTexture(output, PrimitiveType::Points, clear ? GL_COLOR_BUFFER_BIT : 0);
 }
 
-void TextRegionsFilter::Variance(Ptr<Texture> components, Ptr<Texture> occupancy, Ptr<Texture> strokeWidths, Ptr<Texture> averages, Ptr<Texture> output, bool clear)
+void TextRegionsFilter::Variance(Ptr<Texture> components, Ptr<Texture> pixelCounts, Ptr<Texture> strokeWidths, Ptr<Texture> averages, Ptr<Texture> output, bool clear)
 {
     variance->Use();
     variance->Uniforms["Components"].SetValue(*components);
-    variance->Uniforms["Occupancy"].SetValue(*occupancy);
+    variance->Uniforms["PixelCounts"].SetValue(*pixelCounts);
     variance->Uniforms["StrokeWidths"].SetValue(*strokeWidths);
     variance->Uniforms["Averages"].SetValue(*averages);
     RenderToTexture(output, PrimitiveType::Points, clear ? GL_COLOR_BUFFER_BIT : 0);
@@ -179,9 +179,9 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     auto components2 = ColorBuffers[3];
     auto bboxes      = ColorBuffers[4];
     auto filtered    = ColorBuffers[5];
-    auto occupancy   = ColorBuffers[6];
+    auto pixelCount  = ColorBuffers[6];
     auto averages    = ColorBuffers[7];
-    auto variances   = ColorBuffers[8];
+    auto varianceSum = ColorBuffers[8];
     auto temp        = ColorBuffers[9];
     
     // Calculate SWT
@@ -203,14 +203,14 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     GraphicsDevice::SetBuffers(PerPixelVertices, nullptr);
     glEnable(GL_BLEND);
     
-    // Calculate component occupancy
-    Occupancy(components1, occupancy, true);
-    Occupancy(components2, occupancy, false);
-    DEBUG_FB("Component occupancy");
+    // Calculate pixel count in components
+    CountPixels(components1, pixelCount, true);
+    CountPixels(components2, pixelCount, false);
+    DEBUG_FB("Component pixel counts");
     
     // Average component color and SWT
-    AverageColorAndSWT(components1, occupancy, Input, swt1, averages, true);
-    AverageColorAndSWT(components2, occupancy, Input, swt2, averages, false);
+    AverageColorAndSWT(components1, pixelCount, Input, swt1, averages, true);
+    AverageColorAndSWT(components2, pixelCount, Input, swt2, averages, false);
     
     /*auto pixels = FrameBuffer::GetCurrentlyBound()->ReadPixels<cv::Vec4f>(0, 0, 800, 600, GL_RGBA, GL_FLOAT);
     for(auto& pixel : pixels)
@@ -222,8 +222,8 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     DEBUG_FB("Average component colors");
     
     // Calculate variance
-    Variance(components1, occupancy, swt1, averages, variances, true);
-    Variance(components2, occupancy, swt2, averages, variances, false);
+    Variance(components1, pixelCount, swt1, averages, varianceSum, true);
+    Variance(components2, pixelCount, swt2, averages, varianceSum, false);
     DEBUG_FB("Component variances");
     
     // Compute bounding boxes
@@ -237,7 +237,7 @@ void TextRegionsFilter::PerformSteps(Ptr<Texture> output)
     glDisable(GL_BLEND);
     
     // Filter invalid components
-    FilterInvalidComponents(bboxes, averages, occupancy, variances, filtered);
+    FilterInvalidComponents(bboxes, averages, pixelCount, varianceSum, filtered);
     DEBUG_FB("Valids");
     
     // Count unique components

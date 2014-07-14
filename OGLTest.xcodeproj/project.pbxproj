@@ -168,9 +168,9 @@
 		17257169196A9C4900D04ECE /* SWTUtil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SWTUtil.fsh; sourceTree = "<group>"; };
 		1725716A196AC36000D04ECE /* GatherScatter.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = GatherScatter.fs; sourceTree = "<group>"; };
 		1725716B196C0C2800D04ECE /* WriteIDs.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = WriteIDs.fs; sourceTree = "<group>"; };
-		1725716F196D55EF00D04ECE /* Occupancy.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Occupancy.fs; sourceTree = "<group>"; };
 		17257170196D672800D04ECE /* AverageColorAndSWT.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = AverageColorAndSWT.fs; sourceTree = "<group>"; };
 		17257171196D95F600D04ECE /* Variance.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Variance.fs; sourceTree = "<group>"; };
+		172571731973DCB400D04ECE /* Increment.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Increment.fs; sourceTree = "<group>"; };
 		1739564418CDE7DE003BF7D0 /* SWTParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWTParameters.h; sourceTree = "<group>"; };
 		1744D95618C09130004605D1 /* BoundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBox.cpp; sourceTree = "<group>"; };
 		1744D95718C09130004605D1 /* BoundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoundingBox.h; sourceTree = "<group>"; };
@@ -589,7 +589,7 @@
 				170B02211949BC5100E45664 /* CountComponents.fs */,
 				170B02201949BBC600E45664 /* CountComponents.vs */,
 				1700A2A7194B182200FE8EDC /* FilterInvalidComponents.fs */,
-				1725716F196D55EF00D04ECE /* Occupancy.fs */,
+				172571731973DCB400D04ECE /* Increment.fs */,
 				17005B44192E1D7F0052C611 /* ScatterToRoot.vs */,
 				1708A6141961AE2C00E89B2E /* StencilRouting.fs */,
 				1708A6131961A0ED00E89B2E /* StencilRouting.vs */,

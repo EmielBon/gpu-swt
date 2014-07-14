@@ -33,7 +33,7 @@ RenderWindow::RenderWindow(int width, int height, const String &title)
     ContentLoader::ContentPath = "/Users/emiel/Desktop/OGLTest/OGLTest/";
     
     // Load the input image as a cv::Mat
-    cv::Mat input = ContentLoader::LoadV<cv::Mat>("chep3");
+    cv::Mat input = ContentLoader::LoadV<cv::Mat>("sign800x600");
     cv::flip(input, input, 0);
     AddTexture(input, "Input image");
     SetWindowSize(input.size(), {1024, 1024});
