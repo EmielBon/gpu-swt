@@ -139,8 +139,6 @@ void TextRegionsFilter::PrepareStencilRouting(int N)
 void TextRegionsFilter::ExtractBoundingBoxes(int N, int count)
 {
     auto pixels = FrameBuffer::GetCurrentlyBound()->ReadPixels<cv::Vec4f>(0, 0, N, N, GL_RGBA, GL_FLOAT);
-    if (pixels.size() != N * N)
-        throw std::runtime_error("adad");
     
     for(auto &pixel : pixels)
     {
@@ -152,8 +150,8 @@ void TextRegionsFilter::ExtractBoundingBoxes(int N, int count)
             continue;
         ExtractedBoundingBoxes.push_back(BoundingBox(cv::Rect(x1, y1, x2 - x1, y2 - y1)));
     }
-    if (ExtractedBoundingBoxes.size() != count)
-        throw std::runtime_error("Error: Missing some bounding boxes");
+    //if (ExtractedBoundingBoxes.size() != count)
+    //    throw std::runtime_error("Error: Missing some bounding boxes");
 }
 
 void TextRegionsFilter::StencilRouting(Ptr<Texture> input, float N, Ptr<Texture> output)

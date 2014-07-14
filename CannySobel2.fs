@@ -27,7 +27,7 @@ void main()
     float vVer = dot(vResult, weights);
     
     // Gradients can potentially range between [-16, 16] with the Scharr operator, this normalizes that range to [-1, 1]
-    vec2 gradient = vec2(vHor, vVer) / 16;
+    vec2 gradient = vec2(vHor, vVer) / /*16*/5;
     float angle = max(atan2(gradient), atan2(-gradient));
     
     FragColor = vec4(angle, length(gradient), 0, 1);
